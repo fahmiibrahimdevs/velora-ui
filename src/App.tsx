@@ -36,6 +36,14 @@ import {
   Info,
   User,
   X,
+  Minus,
+  ChevronDown,
+  Mail,
+  Lock,
+  GripVertical,
+  Image as ImageIcon,
+  ExternalLink,
+  Maximize2,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -1188,11 +1196,78 @@ function ButtonsView() {
   );
 }
 
-// Dedicated Cards Showcase matching user's reference screenshot
+// Dedicated Cards Showcase matching ShizueFI & Stisla with Modern Gradients & Interactive Features
 function CardsView() {
+  // State for Section 3: Button Group & Dropdown
+  const [activeTabButtonGroup, setActiveTabButtonGroup] = useState<'Home' | 'Profile' | 'Setting'>('Home');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // State for Section 4: Functionality Cards
+  const [isCardCollapsed, setIsCardCollapsed] = useState(false);
+  const [isCardDismissed, setIsCardDismissed] = useState(false);
+  const [isPictureModalOpen, setIsPictureModalOpen] = useState(false);
+  const [isLoginProgress, setIsLoginProgress] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // State for Section 5: Sortable Cards
+  const initialSortableCards = [
+    { id: 'primary', label: '.card-primary', title: 'Card Header', border: 'border-t-[#1351b8]', titleColor: 'text-[#1351b8]' },
+    { id: 'secondary', label: '.card-secondary', title: 'Card Header', border: 'border-t-slate-400', titleColor: 'text-slate-600' },
+    { id: 'danger', label: '.card-danger', title: 'Card Header', border: 'border-t-rose-500', titleColor: 'text-rose-600' },
+    { id: 'warning', label: '.card-warning', title: 'Card Header', border: 'border-t-amber-500', titleColor: 'text-amber-600' },
+  ];
+  const [sortableCards, setSortableCards] = useState(initialSortableCards);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const cardVariants = [
+    { name: '.card-primary', border: 'border-t-[#1351b8]', titleColor: 'text-[#1351b8]' },
+    { name: '.card-secondary', border: 'border-t-slate-400', titleColor: 'text-slate-600' },
+    { name: '.card-danger', border: 'border-t-rose-500', titleColor: 'text-rose-600' },
+    { name: '.card-warning', border: 'border-t-amber-500', titleColor: 'text-amber-600' },
+    { name: '.card-info', border: 'border-t-sky-500', titleColor: 'text-sky-600' },
+    { name: '.card-success', border: 'border-t-emerald-500', titleColor: 'text-emerald-600' },
+    { name: '.card-light', border: 'border-t-slate-200', titleColor: 'text-slate-700' },
+    { name: '.card-dark', border: 'border-t-slate-800', titleColor: 'text-slate-900' },
+  ];
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+    const updated = [...sortableCards];
+    const [moved] = updated.splice(draggedIndex, 1);
+    updated.splice(targetIndex, 0, moved);
+    setSortableCards(updated);
+    setDraggedIndex(null);
+    showToast('Posisi card berhasil ditukar!', 'info');
+  };
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoginProgress(true);
+    // Simulates Stisla / ShizueFI $.cardProgress()
+    setTimeout(() => {
+      setIsLoginProgress(false);
+      showToast('Login berhasil! Progress mode selesai.', 'success');
+    }, 2200);
+  };
+
   return (
-    <div className="space-y-8">
-      {/* Section 1: Cards */}
+    <div className="space-y-10">
+      {/* ======================================================== */}
+      {/* SECTION 1: CARDS */}
+      {/* ======================================================== */}
       <div className="space-y-4">
         {/* Section Header with Blue Pill Accent */}
         <div>
@@ -1201,76 +1276,113 @@ function CardsView() {
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Cards</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
-            Bootstrap's cards provide a flexible and extensible content container with multiple variants and options.
+            Bootstrap’s cards provide a flexible and extensible content container with multiple variants and options.
           </p>
         </div>
 
         {/* 2-Column Responsive Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Card 1: Basic with Footer */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-            <div className="p-6">
-              <h3 className="text-base font-bold text-[#1351b8] mb-4">Card Title</h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                This is some text within a card body.
-              </p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {/* Column Left */}
+          <div className="space-y-6">
+            {/* Card 1: Card Title with Footer */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
+              <div className="px-6 py-4.5 border-b border-slate-100">
+                <h4 className="text-base font-bold text-[#1351b8]">Card Title</h4>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  This is some text within a card body.
+                </p>
+              </div>
+              <div className="px-6 py-3.5 border-t border-slate-100 text-xs font-medium text-slate-500">
+                Footer Card
+              </div>
             </div>
-            <div className="px-6 py-4 border-t border-slate-100 text-xs text-slate-500">
-              Footer Card
+
+            {/* Card 2: Card Action Button */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
+              <div className="px-6 py-4.5 border-b border-slate-100">
+                <h4 className="text-base font-bold text-[#1351b8]">Card Action Button</h4>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  This is some text within a card body.
+                </p>
+              </div>
+              <div className="px-6 py-3.5 border-t border-slate-100 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => showToast('Form submitted successfully!', 'success')}
+                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg transition-all shadow-xs active:scale-95 cursor-pointer"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Card 2: Links */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6">
-            <h3 className="text-base font-bold text-[#1351b8] mb-4">Card Title</h3>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
-            </p>
-            <div className="flex items-center gap-4 text-xs font-semibold text-[#1351b8]">
-              <a href="#card-link" className="hover:underline">
-                Card link
-              </a>
-              <a href="#another-link" className="hover:underline">
-                Another link
-              </a>
+          {/* Column Right */}
+          <div className="space-y-6">
+            {/* Card 3: Card Title with Links */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4.5 border-b border-slate-100">
+                <h4 className="text-base font-bold text-[#1351b8]">Card Title</h4>
+              </div>
+              <div className="p-6 space-y-4">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                </p>
+                <div className="flex items-center gap-4 text-xs font-semibold text-[#1351b8] pt-1">
+                  <a
+                    href="#card-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showToast('Clicked: Card link', 'info');
+                    }}
+                    className="inline-flex items-center gap-1 hover:underline cursor-pointer"
+                  >
+                    Card link
+                    <ExternalLink className="w-3 h-3 text-[#1351b8]" />
+                  </a>
+                  <a
+                    href="#another-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showToast('Clicked: Another link', 'info');
+                    }}
+                    className="inline-flex items-center gap-1 hover:underline cursor-pointer"
+                  >
+                    Another link
+                    <ExternalLink className="w-3 h-3 text-[#1351b8]" />
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Card 3: Action Button */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 flex flex-col justify-between min-h-[160px]">
-            <div>
-              <h3 className="text-base font-bold text-[#1351b8] mb-4">Card Action Button</h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                This is some text within a card body.
-              </p>
-            </div>
-            <div className="flex justify-end pt-4">
-              <button
-                onClick={() => showToast('Form submitted successfully!', 'success')}
-                className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-md transition-all shadow-xs"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-
-          {/* Card 4: Footer bg-whitesmoke */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-            <div className="p-6">
-              <h3 className="text-base font-bold text-[#1351b8] mb-4">Footer bg-whitesmoke</h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                This is some text within a card body.
-              </p>
-            </div>
-            <div className="px-6 py-4 bg-slate-50/90 border-t border-slate-200/80 rounded-b-xl text-xs text-slate-500">
-              Footer Card
+            {/* Card 4: Footer bg-whitesmoke */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
+              <div className="px-6 py-4.5 border-b border-slate-100">
+                <h4 className="text-base font-bold text-[#1351b8]">
+                  Footer <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal">bg-whitesmoke</code>
+                </h4>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  This is some text within a card body.
+                </p>
+              </div>
+              <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-200/80 text-xs font-medium text-slate-600">
+                Footer Card
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Section 2: Card Variants */}
-      <div className="space-y-4 pt-2">
+      {/* ======================================================== */}
+      {/* SECTION 2: CARD VARIANTS (8 Colors) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
         {/* Section Header with Blue Pill Accent */}
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -1284,31 +1396,590 @@ function CardsView() {
 
         {/* 4-Column Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Variant 1: Primary */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs border-t-4 border-t-[#1351b8] p-5">
-            <h3 className="text-sm font-bold text-[#1351b8] mb-3">Card Header</h3>
-            <p className="text-xs text-slate-500 font-mono">Card .card-primary</p>
+          {cardVariants.map((variant, idx) => (
+            <div
+              key={idx}
+              className={`bg-white rounded-2xl border border-slate-100 shadow-xs border-t-4 ${variant.border} overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200`}
+            >
+              <div className="px-6 py-4.5 border-b border-slate-100/80">
+                <h4 className={`text-sm sm:text-base font-bold ${variant.titleColor}`}>Card Header</h4>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                  Card <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal">{variant.name}</code>
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 3: CARD BUTTON & INPUT */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        {/* Section Header with Blue Pill Accent */}
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Card Button &amp; Input</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Also, you can give a button or input on the card header.
+          </p>
+        </div>
+
+        {/* 2-Column Responsive Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {/* Column Left */}
+          <div className="space-y-6">
+            {/* 1. Card Header with Single Button */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-[#1351b8]">Card Header</h4>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action: View All triggered', 'info')}
+                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    View All
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
+
+            {/* 2. Button Group */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-[#1351b8]">Button Group</h4>
+                <div>
+                  <div className="inline-flex rounded-full bg-slate-100 p-0.5 border border-slate-200/80">
+                    {(['Home', 'Profile', 'Setting'] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => {
+                          setActiveTabButtonGroup(tab);
+                          showToast(`Selected tab: ${tab}`, 'info');
+                        }}
+                        className={`px-3.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                          activeTabButtonGroup === tab
+                            ? 'bg-[#1351b8] text-white shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
+
+            {/* 3. Input Text */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-emerald-600">Input Text</h4>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-40 sm:w-56 px-4 py-1.5 text-xs rounded-full border border-slate-200/90 text-slate-700 placeholder:text-slate-400 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
           </div>
 
-          {/* Variant 2: Secondary */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs border-t-4 border-t-slate-400 p-5">
-            <h3 className="text-sm font-bold text-slate-600 mb-3">Card Header</h3>
-            <p className="text-xs text-slate-500 font-mono">Card .card-secondary</p>
-          </div>
+          {/* Column Right */}
+          <div className="space-y-6">
+            {/* 4. Card Header with Two Buttons */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-slate-700">Card Header</h4>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action: View All triggered', 'info')}
+                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    View All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action: Delete All triggered', 'warning')}
+                    className="px-4 py-1.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    Delete All
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
 
-          {/* Variant 3: Danger */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs border-t-4 border-t-rose-500 p-5">
-            <h3 className="text-sm font-bold text-rose-600 mb-3">Card Header</h3>
-            <p className="text-xs text-slate-500 font-mono">Card .card-danger</p>
-          </div>
+            {/* 5. Dropdown Button */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible relative">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-rose-600">Dropdown Button</h4>
+                <div className="flex items-center gap-2 relative">
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action: View All triggered', 'info')}
+                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    View All
+                  </button>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      Options
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </button>
 
-          {/* Variant 4: Warning */}
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs border-t-4 border-t-amber-400 p-5">
-            <h3 className="text-sm font-bold text-amber-600 mb-3">Card Header</h3>
-            <p className="text-xs text-slate-500 font-mono">Card .card-warning</p>
+                    {/* Interactive Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-30 animate-in fade-in zoom-in-95 duration-150">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            showToast('View detail option selected', 'info');
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5 text-slate-500" />
+                          View
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            showToast('Edit item option selected', 'info');
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Edit3 className="w-3.5 h-3.5 text-slate-500" />
+                          Edit
+                        </button>
+                        <div className="my-1 border-t border-slate-100" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            showToast('Delete option selected', 'warning');
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
+
+            {/* 6. Input Button */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-amber-600">Input Button</h4>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-36 sm:w-48 px-3.5 py-1.5 text-xs rounded-l-full border border-r-0 border-slate-200/90 text-slate-700 placeholder:text-slate-400 focus:outline-hidden focus:border-[#1351b8] focus:ring-1 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => showToast('Search query executed', 'info')}
+                    className="px-3 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white rounded-r-full flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                  >
+                    <Search className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs sm:text-sm text-slate-600">Write something here</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 4: FUNCTIONALITY CARD */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        {/* Section Header with Blue Pill Accent */}
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Functionality Card</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            You can provide functionality on the card.
+          </p>
+        </div>
+
+        {/* 2-Column Responsive Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {/* Column Left: Show/Hide & My Picture */}
+          <div className="space-y-6">
+            {/* 1. Show/Hide (Collapse) */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden transition-all duration-300">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-slate-800">Show/Hide</h4>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCardCollapsed(!isCardCollapsed)}
+                    aria-label={isCardCollapsed ? 'Expand Card' : 'Collapse Card'}
+                    className="w-7 h-7 rounded-full bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center shadow-xs active:scale-90 transition-all cursor-pointer"
+                  >
+                    {isCardCollapsed ? <Plus className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Animated Collapsible Body & Footer */}
+              {!isCardCollapsed && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-6">
+                    <p className="text-xs sm:text-sm text-slate-600">
+                      You can show or hide this card.
+                    </p>
+                  </div>
+                  <div className="px-6 py-3.5 border-t border-slate-100 text-xs font-medium text-slate-500">
+                    Card Footer
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 2. My Picture Card with Interactive Preview Modal */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                <h4 className="text-base font-bold text-slate-800">My Picture</h4>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIsPictureModalOpen(true)}
+                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    View All
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <p className="text-xs sm:text-sm text-slate-500">
+                  Click the picture below to see the magic!
+                </p>
+
+                {/* Picture Container with Interactive Hover & Zoom Trigger */}
+                <div
+                  onClick={() => setIsPictureModalOpen(true)}
+                  className="relative group rounded-xl overflow-hidden border border-slate-200/90 bg-gradient-to-br from-indigo-50/70 via-sky-50/60 to-purple-50/70 aspect-[16/9] flex items-center justify-center cursor-pointer shadow-xs hover:shadow-md transition-all duration-300"
+                >
+                  {/* Decorative Illustration graphic */}
+                  <div className="flex flex-col items-center justify-center text-center p-6 space-y-2.5">
+                    <div className="w-16 h-16 rounded-2xl bg-white shadow-sm border border-indigo-100 flex items-center justify-center text-[#1351b8] group-hover:scale-110 transition-transform duration-300">
+                      <ImageIcon className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-700 group-hover:text-[#1351b8] transition-colors">
+                        Velora Design System Showcase
+                      </p>
+                      <p className="text-xs text-slate-400">Click to preview in Lightbox</p>
+                    </div>
+                  </div>
+
+                  {/* Hover Overlay with Zoom Icon */}
+                  <div className="absolute inset-0 bg-[#1351b8]/60 backdrop-blur-2xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white gap-2 font-semibold text-xs">
+                    <Maximize2 className="w-4 h-4" />
+                    <span>Lihat Ukuran Penuh</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Column Right: Dismiss Card & Sample Login Card */}
+          <div className="space-y-6">
+            {/* 3. Dismiss Card */}
+            {!isCardDismissed ? (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden transition-all duration-300">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+                  <h4 className="text-base font-bold text-slate-800">Dismiss</h4>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCardDismissed(true);
+                        showToast('Card berhasil di-dismiss!', 'warning');
+                      }}
+                      aria-label="Dismiss Card"
+                      className="w-7 h-7 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xs active:scale-90 transition-all cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    You can dimiss this card.
+                  </p>
+                </div>
+                <div className="px-6 py-3.5 border-t border-slate-100 text-xs font-medium text-slate-500">
+                  Card Footer
+                </div>
+              </div>
+            ) : (
+              <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-6 text-center space-y-3">
+                <p className="text-xs sm:text-sm text-slate-500">
+                  Card telah di-dismiss (disembunyikan).
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsCardDismissed(false)}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-[#1351b8]" />
+                  Kembalikan Card
+                </button>
+              </div>
+            )}
+
+            {/* 4. Login Card with Progress Mode Overlay */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden relative">
+              {/* Progress Mode Overlay matching Stisla $.cardProgress */}
+              {isLoginProgress && (
+                <div className="absolute inset-0 bg-white/92 backdrop-blur-2xs z-20 flex flex-col items-center justify-center p-6 space-y-3 animate-in fade-in duration-200">
+                  <Loader2 className="w-9 h-9 text-[#1351b8] animate-spin" />
+                  <p className="text-xs sm:text-sm font-semibold text-slate-700">
+                    Mengautentikasi pengguna...
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsLoginProgress(false);
+                      showToast('Login progress dibatalkan', 'info');
+                    }}
+                    className="px-3.5 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-full transition-colors cursor-pointer"
+                  >
+                    Batal (Dismiss)
+                  </button>
+                </div>
+              )}
+
+              <form onSubmit={handleLoginSubmit}>
+                <div className="px-6 py-4.5 border-b border-slate-100">
+                  <h4 className="text-base font-bold text-slate-800">Login</h4>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="text-xs text-slate-500">
+                    Click login to change the card to progress mode.
+                  </p>
+
+                  {/* Username (Email) input group */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">Username</label>
+                    <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                      <div className="px-3 py-2 bg-slate-50 border-r border-slate-200/80 flex items-center justify-center text-slate-500">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        placeholder="Email"
+                        className="flex-1 px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password input group */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">Password</label>
+                    <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                      <div className="px-3 py-2 bg-slate-50 border-r border-slate-200/80 flex items-center justify-center text-slate-500">
+                        <Lock className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="password"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        placeholder="Password"
+                        className="flex-1 px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Remember Me Checkbox */}
+                  <div className="flex items-center gap-2 pt-1">
+                    <input
+                      type="checkbox"
+                      id="remember-me"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20 cursor-pointer"
+                    />
+                    <label htmlFor="remember-me" className="text-xs text-slate-600 cursor-pointer select-none">
+                      Remember Me
+                    </label>
+                  </div>
+                </div>
+
+                {/* Form Footer */}
+                <div className="px-6 py-4 bg-slate-50/60 border-t border-slate-100 flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    Login
+                  </button>
+                  <a
+                    href="#register"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showToast('Navigasi ke pembuatan akun baru', 'info');
+                    }}
+                    className="text-xs font-medium text-[#1351b8] hover:underline"
+                  >
+                    Create new Account?
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 5: SORTABLE CARD (Interactive Drag & Drop) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        {/* Section Header with Blue Pill Accent & Reset Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">Sortable Card</h2>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-500">
+              Other cool cards, this one can be sorted. Geser (drag &amp; drop) untuk menukar urutan posisi card.
+            </p>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                setSortableCards(initialSortableCards);
+                showToast('Urutan card dikembalikan ke default!', 'info');
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+              Reset Urutan
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Responsive Grid with HTML5 Drag & Drop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {sortableCards.map((card, idx) => (
+            <div
+              key={card.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, idx)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, idx)}
+              className={`bg-white rounded-2xl border border-slate-100 shadow-xs border-t-4 ${card.border} overflow-hidden cursor-grab active:cursor-grabbing hover:-translate-y-1 hover:shadow-md transition-all duration-200 select-none ${
+                draggedIndex === idx ? 'opacity-40 scale-95 border-dashed border-[#1351b8]' : ''
+              }`}
+            >
+              <div className="px-5 py-4 border-b border-slate-100/80 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center">
+                    {idx + 1}
+                  </span>
+                  <h4 className={`text-sm sm:text-base font-bold ${card.titleColor}`}>{card.title}</h4>
+                </div>
+                <span title="Tahan dan geser untuk menukar posisi" className="text-slate-400 hover:text-slate-600 p-1">
+                  <GripVertical className="w-4 h-4" />
+                </span>
+              </div>
+              <div className="p-5">
+                <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                  Card <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal">{card.label}</code>
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* Lightbox Modal for "My Picture" */}
+      {/* ======================================================== */}
+      {isPictureModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <h3 className="text-sm sm:text-base font-bold text-slate-800">Magic Picture Preview</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPictureModalOpen(false)}
+                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="rounded-xl overflow-hidden aspect-[16/10] bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex flex-col items-center justify-center text-white p-6 shadow-inner relative">
+                <ImageIcon className="w-16 h-16 opacity-90 mb-3" />
+                <h4 className="text-lg font-bold">Velora UI Design Suite</h4>
+                <p className="text-xs text-blue-100 text-center max-w-xs mt-1">
+                  Komponen antarmuka modern terintegrasi dengan gradien elegan dan standar clean executive design.
+                </p>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Ini adalah simulasi fitur Chocolat lightbox image modal dari template Stisla / ShizueFI yang telah ditingkatkan menjadi komponen React modal interaktif.
+              </p>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsPictureModalOpen(false)}
+                className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs"
+              >
+                Tutup Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2050,8 +2721,8 @@ export function App() {
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Buttons'],
     },
     card: {
-      title: 'Card Showcase',
-      breadcrumbs: ['Velora UI', 'Bootstrap', 'Card'],
+      title: 'Card',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Card'],
     },
     form: {
       title: 'Form Elements',
