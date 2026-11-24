@@ -23,6 +23,7 @@ import {
   Award,
   Lightbulb,
   RotateCcw,
+  Plane,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -254,6 +255,283 @@ function AlertView() {
                   </button>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Dedicated Badges Showcase matching ShizueFI & Stisla with Modern Gradient improvements
+function BadgeView() {
+  const badgeVariants = [
+    {
+      name: 'Primary',
+      gradient: 'bg-gradient-to-r from-[#175cd3] via-[#1450be] to-[#0f3ba0] text-white shadow-xs',
+      soft: 'bg-blue-50 text-[#1351b8] border border-blue-200/80',
+    },
+    {
+      name: 'Secondary',
+      gradient: 'bg-gradient-to-r from-[#cbd5e1] via-[#b8c2cc] to-[#94a3b8] text-white shadow-xs',
+      soft: 'bg-slate-100 text-slate-700 border border-slate-200/80',
+    },
+    {
+      name: 'Success',
+      gradient: 'bg-gradient-to-r from-[#22c55e] via-[#16a34a] to-[#15803d] text-white shadow-xs',
+      soft: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
+    },
+    {
+      name: 'Danger',
+      gradient: 'bg-gradient-to-r from-[#ef4444] via-[#dc2626] to-[#b91c1c] text-white shadow-xs',
+      soft: 'bg-rose-50 text-rose-700 border border-rose-200/80',
+    },
+    {
+      name: 'Warning',
+      gradient: 'bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#d97706] text-white shadow-xs',
+      soft: 'bg-amber-50 text-amber-700 border border-amber-200/80',
+    },
+    {
+      name: 'Info',
+      gradient: 'bg-gradient-to-r from-[#0ea5e9] via-[#0284c7] to-[#0369a1] text-white shadow-xs',
+      soft: 'bg-sky-50 text-sky-700 border border-sky-200/80',
+    },
+    {
+      name: 'Light',
+      gradient: 'bg-gradient-to-r from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-slate-800 border border-slate-200/80 shadow-xs',
+      soft: 'bg-slate-50 text-slate-600 border border-slate-200/60',
+      isLight: true,
+    },
+    {
+      name: 'Dark',
+      gradient: 'bg-gradient-to-r from-[#1e293b] via-[#0f172a] to-[#020617] text-white shadow-xs',
+      soft: 'bg-slate-800 text-slate-100 border border-slate-900',
+    },
+  ];
+
+  const simpleButtons = [
+    { name: 'Primary', bg: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white' },
+    { name: 'Danger', bg: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white' },
+    { name: 'Warning', bg: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white' },
+    { name: 'Success', bg: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white' },
+    { name: 'Dark', bg: 'bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white' },
+  ];
+
+  const iconButtons = [
+    { name: 'Primary', bg: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white' },
+    { name: 'Danger', bg: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white' },
+    { name: 'Warning', bg: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white' },
+    { name: 'Success', bg: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Badges</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for badges, our small count and labeling component.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Grid matching ShizueFI Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left Column: Heading & Variation & Improvements */}
+        <div className="space-y-6">
+          {/* Card 1: Heading */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Heading</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Heading 1</h1>
+                <span className="px-3 py-1 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Heading 2</h2>
+                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">Heading 3</h3>
+                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <h4 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">Heading 4</h4>
+                <span className="px-2 py-0.5 text-[11px] font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <h5 className="text-base sm:text-lg font-bold text-slate-800 tracking-tight">Heading 5</h5>
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <h6 className="text-sm font-bold text-slate-800 tracking-tight">Heading 6</h6>
+                <span className="px-1.5 py-0.5 text-[9px] font-semibold rounded-sm bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs">New</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Variation */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Variation</h3>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap gap-2.5 items-center">
+                {badgeVariants.map((item) => (
+                  <span
+                    key={item.name}
+                    className={`px-3 py-1 text-xs font-semibold rounded-md shadow-xs transition-transform hover:scale-105 select-none ${item.gradient}`}
+                  >
+                    {item.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Modern Improvements - Pill & Live Status Badges */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Pill &amp; Live Status Badges (Modern)</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Pill Gradient Badges</p>
+                <div className="flex flex-wrap gap-2 items-center">
+                  {badgeVariants.map((item) => (
+                    <span
+                      key={`pill-${item.name}`}
+                      className={`px-3.5 py-1 text-xs font-semibold rounded-full shadow-xs transition-transform hover:scale-105 select-none ${item.gradient}`}
+                    >
+                      {item.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Live Status Indicators</p>
+                <div className="flex flex-wrap gap-2.5 items-center text-xs font-semibold">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2" />
+                    Live System
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 mr-2" />
+                    Active Node
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200/80">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
+                    Pending Review
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200/80">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 mr-2" />
+                    Critical Alert
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Button & Link & Soft Badges */}
+        <div className="space-y-6">
+          {/* Card 4: Button */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Button</h3>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* Simple Subheading */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-4 h-1 bg-[#1351b8] rounded-full inline-block" />
+                  <h4 className="text-sm font-bold text-slate-800">Simple</h4>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {simpleButtons.map((btn) => (
+                    <button
+                      key={`btn-simple-${btn.name}`}
+                      onClick={() => showToast(`Tombol notifikasi ${btn.name} diklik!`, 'info')}
+                      className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95 shadow-xs hover:shadow-md ${btn.bg}`}
+                    >
+                      Notifications
+                      <span className="px-2 py-0.5 rounded-md bg-white/25 backdrop-blur-xs font-bold text-[11px] leading-tight text-white">
+                        4
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Icons Subheading */}
+              <div className="pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-4 h-1 bg-[#1351b8] rounded-full inline-block" />
+                  <h4 className="text-sm font-bold text-slate-800">Icons</h4>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {iconButtons.map((btn) => (
+                    <button
+                      key={`btn-icon-${btn.name}`}
+                      onClick={() => showToast(`Notifikasi dengan icon ${btn.name} diklik!`, 'info')}
+                      className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95 shadow-xs hover:shadow-md ${btn.bg}`}
+                    >
+                      <Plane className="w-3.5 h-3.5" />
+                      Notifications
+                      <span className="px-2 py-0.5 rounded-md bg-white/25 backdrop-blur-xs font-bold text-[11px] leading-tight text-white">
+                        4
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 5: Link */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Link</h3>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap gap-2.5 items-center">
+                {badgeVariants.map((item) => (
+                  <button
+                    key={`link-${item.name}`}
+                    onClick={() => showToast(`Badge link ${item.name} berhasil diakses!`, 'info')}
+                    className={`px-3 py-1 text-xs font-semibold rounded-md shadow-xs transition-all hover:scale-105 hover:shadow-md cursor-pointer select-none ${item.gradient}`}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 6: Modern Improvements - Soft Tint Badges */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Soft &amp; Outline Badges (Modern)</h3>
+            </div>
+            <div className="p-6">
+              <p className="text-xs text-slate-500 mb-3">
+                Modern soft-tinted badges with gentle contrast and subtle border accents for tags and metadata.
+              </p>
+              <div className="flex flex-wrap gap-2.5 items-center">
+                {badgeVariants.map((item) => (
+                  <span
+                    key={`soft-${item.name}`}
+                    className={`px-3 py-1 text-xs font-semibold rounded-lg shadow-2xs transition-transform hover:scale-105 select-none ${item.soft}`}
+                  >
+                    {item.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -1182,6 +1460,8 @@ export function App() {
         return <CardsView />;
       case 'alert':
         return <AlertView />;
+      case 'badge':
+        return <BadgeView />;
       case 'blank-page':
         return <BlankPageView />;
       case 'credits':
