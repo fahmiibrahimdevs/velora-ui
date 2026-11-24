@@ -6168,6 +6168,129 @@ function NavView() {
   );
 }
 
+// Dedicated Navbar Showcase matching ShizueFI & Stisla with Master Gradients & Interactivity
+function NavbarView() {
+  const [activeItemIdx, setActiveItemIdx] = useState<number>(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Navbar</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for Bootstrap’s powerful, responsive navigation header, the navbar. Includes support for branding, navigation, and more, including support for our collapse plugin.
+        </p>
+      </div>
+
+      {/* Full-width Stacked Cards Layout matching ShizueFI */}
+      <div className="space-y-6">
+        {/* 1. Brand */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Brand</h4>
+          </div>
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-xl px-5 sm:px-6 py-3.5 sm:py-4 shadow-xs flex items-center justify-between">
+              <span className="font-bold tracking-widest text-white uppercase text-sm sm:text-base select-none">
+                MY APP
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Items */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Items</h4>
+          </div>
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-xl px-5 sm:px-6 py-3 sm:py-3.5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <span className="font-bold tracking-widest text-white uppercase text-sm sm:text-base select-none">
+                MY APP
+              </span>
+              <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium">
+                {['Home', 'Features', 'Pricing', 'About'].map((item, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setActiveItemIdx(idx);
+                      showToast(`Navigasi ke "${item}"`, 'info');
+                    }}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer select-none ${
+                      activeItemIdx === idx
+                        ? 'bg-white/20 text-white font-bold shadow-2xs'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Form */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Form</h4>
+          </div>
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-xl px-5 sm:px-6 py-3.5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <span className="font-bold tracking-widest text-white uppercase text-sm sm:text-base select-none">
+                MY APP
+              </span>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  showToast(`Mencari: "${searchQuery || 'Semua Data'}"`, 'info');
+                }}
+                className="flex rounded-lg overflow-hidden bg-white shadow-2xs border border-slate-200/80"
+              >
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="px-3.5 py-1.5 text-xs text-slate-800 outline-none w-36 sm:w-48 placeholder:text-slate-400"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#1351b8] bg-slate-50 hover:bg-slate-100 border-l border-slate-200 transition-colors cursor-pointer"
+                >
+                  Search
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Text */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Text</h4>
+          </div>
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-xl px-5 sm:px-6 py-3.5 sm:py-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <span className="font-bold tracking-widest text-white uppercase text-sm sm:text-base select-none">
+                MY APP
+              </span>
+              <span className="text-xs sm:text-sm text-white/90 font-medium">
+                Navbar text with an inline element
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -6309,6 +6432,10 @@ export function App() {
       title: 'Nav',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Nav'],
     },
+    navbar: {
+      title: 'Navbar',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Navbar'],
+    },
     pagination: {
       title: 'Pagination & Data Table',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Pagination'],
@@ -6370,6 +6497,8 @@ export function App() {
         return <ModalView />;
       case 'nav':
         return <NavView />;
+      case 'navbar':
+        return <NavbarView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
