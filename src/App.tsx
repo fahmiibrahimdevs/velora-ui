@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -1038,9 +1038,57 @@ function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: Rea
   );
 }
 
+// Helper to get initial active menu from URL hash (e.g. #/alert) or localStorage
+const getInitialMenu = (): string => {
+  if (typeof window !== 'undefined') {
+    const hash = window.location.hash.replace(/^#\/?/, '').trim();
+    if (hash) {
+      return hash;
+    }
+    try {
+      const saved = localStorage.getItem('velora_active_menu');
+      if (saved) return saved;
+    } catch {}
+  }
+  return 'general-dashboard';
+};
+
 export function App() {
-  // Default to General Dashboard
-  const [activeMenu, setActiveMenu] = useState('general-dashboard');
+  const [activeMenu, setActiveMenu] = useState<string>(getInitialMenu);
+
+  const handleSelectMenu = (id: string) => {
+    setActiveMenu(id);
+    if (typeof window !== 'undefined') {
+      window.location.hash = `#/${id}`;
+      try {
+        localStorage.setItem('velora_active_menu', id);
+      } catch {}
+    }
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace(/^#\/?/, '').trim();
+      if (hash && hash !== activeMenu) {
+        setActiveMenu(hash);
+        try {
+          localStorage.setItem('velora_active_menu', hash);
+        } catch {}
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    // Initial sync of URL hash
+    if (typeof window !== 'undefined') {
+      const currentHash = window.location.hash.replace(/^#\/?/, '').trim();
+      if (!currentHash) {
+        window.history.replaceState(null, '', `#/${activeMenu}`);
+      }
+    }
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [activeMenu]);
 
   const pageMeta: Record<string, { title: string; breadcrumbs: string[] }> = {
     'general-dashboard': {
@@ -1167,7 +1215,7 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <AdminLayout
         activeMenu={activeMenu}
-        onSelectMenu={setActiveMenu}
+        onSelectMenu={handleSelectMenu}
         pageTitle={currentMeta.title}
         breadcrumbs={currentMeta.breadcrumbs}
       >
