@@ -3298,8 +3298,8 @@ function FormView() {
                 {/* Checkbox */}
                 <div className="space-y-2">
                   <label className="text-xs font-medium text-slate-700 block">Checkbox</label>
-                  <div className="space-y-1.5">
-                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                  <div className="flex flex-col gap-2.5 pt-0.5">
+                    <label className="inline-flex items-center gap-2.5 cursor-pointer select-none text-xs text-slate-700">
                       <input
                         type="checkbox"
                         checked={html5Form.checkbox1}
@@ -3308,7 +3308,7 @@ function FormView() {
                       />
                       <span>Checkbox 1</span>
                     </label>
-                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                    <label className="inline-flex items-center gap-2.5 cursor-pointer select-none text-xs text-slate-700">
                       <input
                         type="checkbox"
                         checked={html5Form.checkbox2}
@@ -3402,8 +3402,8 @@ function FormView() {
                 {/* Radio */}
                 <div className="space-y-2">
                   <label className="text-xs font-medium text-slate-700 block">Radio</label>
-                  <div className="space-y-1.5">
-                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                  <div className="flex flex-col gap-2.5 pt-0.5">
+                    <label className="inline-flex items-center gap-2.5 cursor-pointer select-none text-xs text-slate-700">
                       <input
                         type="radio"
                         name="html5Radio"
@@ -3413,7 +3413,7 @@ function FormView() {
                       />
                       <span>Radio 1</span>
                     </label>
-                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                    <label className="inline-flex items-center gap-2.5 cursor-pointer select-none text-xs text-slate-700">
                       <input
                         type="radio"
                         name="html5Radio"
@@ -3762,33 +3762,39 @@ function FormView() {
             <div className="px-6 py-4.5 border-b border-slate-100">
               <h4 className="text-base font-bold text-[#1351b8]">Sizing</h4>
             </div>
-            <div className="p-6 space-y-5">
+            <div className="p-6 space-y-6">
               <div>
                 <FormSectionTitle title="Text" />
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">
-                      Text <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-sm</code>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                      <span>Text</span>
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                        .form-control-sm
+                      </code>
                     </label>
                     <input
                       type="text"
-                      className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                      className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">Text (Normal)</label>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 block">Text (Normal)</label>
                     <input
                       type="text"
-                      className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                      className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">
-                      Text <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-lg</code>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                      <span>Text</span>
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                        .form-control-lg
+                      </code>
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                      className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
                     />
                   </div>
                 </div>
@@ -3796,28 +3802,34 @@ function FormView() {
 
               <div>
                 <FormSectionTitle title="Select" />
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">
-                      Select <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-sm</code>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                      <span>Select</span>
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                        .form-control-sm
+                      </code>
                     </label>
-                    <select className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 bg-white">
+                    <select className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer">
                       <option>Option 1</option>
                       <option>Option 2</option>
                     </select>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">Select (Normal)</label>
-                    <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 block">Select (Normal)</label>
+                    <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer">
                       <option>Option 1</option>
                       <option>Option 2</option>
                     </select>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-600">
-                      Select <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-lg</code>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                      <span>Select</span>
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                        .form-control-lg
+                      </code>
                     </label>
-                    <select className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 bg-white">
+                    <select className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer">
                       <option>Option 1</option>
                       <option>Option 2</option>
                     </select>
