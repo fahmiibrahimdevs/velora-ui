@@ -136,7 +136,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 onClick={() => onPageChange(pageNum)}
                 className={`min-w-[32px] h-8 px-2 flex items-center justify-center rounded-lg text-xs transition-colors ${
                   isActive
-                    ? 'bg-[#1351b8] text-white font-bold shadow-xs'
+                    ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-bold shadow-xs'
                     : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 font-medium'
                 }`}
               >

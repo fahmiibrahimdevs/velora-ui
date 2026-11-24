@@ -272,7 +272,7 @@ function AlertView() {
                   </p>
                   <button
                     onClick={handleResetDismissed}
-                    className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#1351b8] text-white hover:bg-[#0c2869] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     Tampilkan Kembali Semua Alert
@@ -1069,19 +1069,19 @@ function ButtonsView() {
             <div className="inline-flex rounded-xl shadow-xs overflow-hidden" role="group">
               <button
                 onClick={() => showToast('Left clicked', 'info')}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer"
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer transition-all"
               >
                 Left
               </button>
               <button
                 onClick={() => showToast('Middle clicked', 'info')}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer"
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer transition-all"
               >
                 Middle
               </button>
               <button
                 onClick={() => showToast('Right clicked', 'info')}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer"
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 cursor-pointer transition-all"
               >
                 Right
               </button>
@@ -1170,25 +1170,25 @@ function ButtonsView() {
             <div className="inline-flex flex-col rounded-xl shadow-xs overflow-hidden w-28" role="group">
               <button
                 onClick={() => showToast('Vertical: Left', 'info')}
-                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left transition-all"
               >
                 Left
               </button>
               <button
                 onClick={() => showToast('Vertical: Middle', 'info')}
-                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left transition-all"
               >
                 Middle
               </button>
               <button
                 onClick={() => showToast('Vertical: Right', 'info')}
-                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left transition-all"
               >
                 Right
               </button>
               <button
                 onClick={() => showToast('Vertical: Justify', 'info')}
-                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer text-left"
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 cursor-pointer text-left transition-all"
               >
                 Justify
               </button>
@@ -1317,7 +1317,7 @@ function CardsView() {
                 <button
                   type="button"
                   onClick={() => showToast('Form submitted successfully!', 'success')}
-                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg transition-all shadow-xs active:scale-95 cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg transition-all shadow-xs active:scale-95 cursor-pointer"
                 >
                   Submit
                 </button>
@@ -1445,7 +1445,7 @@ function CardsView() {
                   <button
                     type="button"
                     onClick={() => showToast('Action: View All triggered', 'info')}
-                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-4 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     View All
                   </button>
@@ -1472,7 +1472,7 @@ function CardsView() {
                         }}
                         className={`px-3.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
                           activeTabButtonGroup === tab
-                            ? 'bg-[#1351b8] text-white shadow-xs'
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
@@ -1515,14 +1515,14 @@ function CardsView() {
                   <button
                     type="button"
                     onClick={() => showToast('Action: View All triggered', 'info')}
-                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-4 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     View All
                   </button>
                   <button
                     type="button"
                     onClick={() => showToast('Action: Delete All triggered', 'warning')}
-                    className="px-4 py-1.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-4 py-1.5 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     Delete All
                   </button>
@@ -1541,7 +1541,7 @@ function CardsView() {
                   <button
                     type="button"
                     onClick={() => showToast('Action: View All triggered', 'info')}
-                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-4 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     View All
                   </button>
@@ -1549,7 +1549,7 @@ function CardsView() {
                     <button
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all inline-flex items-center gap-1 cursor-pointer"
+                      className="px-3.5 py-1.5 bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all inline-flex items-center gap-1 cursor-pointer"
                     >
                       Options
                       <ChevronDown className="w-3.5 h-3.5" />
@@ -1615,7 +1615,7 @@ function CardsView() {
                   <button
                     type="button"
                     onClick={() => showToast('Search query executed', 'info')}
-                    className="px-3 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white rounded-r-full flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+                    className="px-3 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white rounded-r-full flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
                   >
                     <Search className="w-3.5 h-3.5" />
                   </button>
@@ -1657,7 +1657,7 @@ function CardsView() {
                     type="button"
                     onClick={() => setIsCardCollapsed(!isCardCollapsed)}
                     aria-label={isCardCollapsed ? 'Expand Card' : 'Collapse Card'}
-                    className="w-7 h-7 rounded-full bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center shadow-xs active:scale-90 transition-all cursor-pointer"
+                    className="w-7 h-7 rounded-full bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white flex items-center justify-center shadow-xs active:scale-90 transition-all cursor-pointer"
                   >
                     {isCardCollapsed ? <Plus className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
                   </button>
@@ -1687,7 +1687,7 @@ function CardsView() {
                   <button
                     type="button"
                     onClick={() => setIsPictureModalOpen(true)}
-                    className="px-4 py-1.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-4 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-full shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     View All
                   </button>
@@ -1856,7 +1856,7 @@ function CardsView() {
                 <div className="px-6 py-4 bg-slate-50/60 border-t border-slate-100 flex items-center gap-3">
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     Login
                   </button>
@@ -1976,7 +1976,7 @@ function CardsView() {
               <button
                 type="button"
                 onClick={() => setIsPictureModalOpen(false)}
-                className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs"
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
               >
                 Tutup Preview
               </button>
@@ -2392,14 +2392,14 @@ function CollapseView() {
                 <button
                   type="button"
                   onClick={() => setIsSimpleOpen(!isSimpleOpen)}
-                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Link with href
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsSimpleOpen(!isSimpleOpen)}
-                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Button with data-target
                 </button>
@@ -2426,21 +2426,21 @@ function CollapseView() {
                 <button
                   type="button"
                   onClick={() => setIsTarget1Open(!isTarget1Open)}
-                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Toggle first element
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsTarget2Open(!isTarget2Open)}
-                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Toggle second element
                 </button>
                 <button
                   type="button"
                   onClick={toggleBothTargets}
-                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Toggle both elements
                 </button>
@@ -2490,7 +2490,7 @@ function CollapseView() {
                       }}
                       className={`w-full text-left px-5 py-3 rounded-lg font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer select-none flex items-center justify-between ${
                         isActive
-                          ? 'bg-[#1351b8] text-white shadow-xs'
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
                           : 'bg-[#f4f6f9] hover:bg-slate-200/80 text-slate-700'
                       }`}
                     >
@@ -2571,7 +2571,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('simple-blue', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Easy Dropdown</span>
                     <ChevronDown className="w-3.5 h-3.5" />
@@ -2609,7 +2609,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('simple-green', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Easy Dropdown</span>
                     <ChevronDown className="w-3.5 h-3.5" />
@@ -2647,7 +2647,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('simple-dark', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Easy Dropdown</span>
                     <ChevronDown className="w-3.5 h-3.5" />
@@ -2693,7 +2693,7 @@ function DropdownView() {
                 <button
                   type="button"
                   onClick={() => showToast('Tombol Split Dropdown utama diklik!', 'success')}
-                  className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-l-lg border-r border-rose-600/40 active:scale-98 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#ef4444] to-[#dc2626] hover:from-[#dc2626] hover:to-[#b91c1c] text-white text-xs font-semibold rounded-l-lg border-r border-red-700/40 active:scale-98 transition-all cursor-pointer"
                 >
                   Split Dropdown
                 </button>
@@ -2701,7 +2701,7 @@ function DropdownView() {
                   type="button"
                   onClick={(e) => toggleDropdown('split-red', e)}
                   aria-label="Toggle split dropdown"
-                  className="px-2.5 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-r-lg active:scale-98 transition-all cursor-pointer"
+                  className="px-2.5 py-2 bg-gradient-to-r from-[#dc2626] to-[#b91c1c] hover:from-[#b91c1c] hover:to-[#991b1b] text-white text-xs font-semibold rounded-r-lg active:scale-98 transition-all cursor-pointer"
                 >
                   <ChevronDown className="w-3.5 h-3.5" />
                 </button>
@@ -2755,7 +2755,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('dir-dropup', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Dropup</span>
                     <ChevronUp className="w-3.5 h-3.5" />
@@ -2801,7 +2801,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('dir-dropright', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Dropright</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -2847,7 +2847,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('dir-dropleft', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <ChevronLeft className="w-3.5 h-3.5" />
                     <span>Dropleft</span>
@@ -2904,7 +2904,7 @@ function DropdownView() {
                 <button
                   type="button"
                   onClick={(e) => toggleDropdown('icon-blue', e)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   <span>With Icon</span>
                   <ChevronDown className="w-3.5 h-3.5" />
@@ -2954,7 +2954,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('size-sm', e)}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-[11px] font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white text-[11px] font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Small button</span>
                     <ChevronDown className="w-3 h-3" />
@@ -3000,7 +3000,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('size-normal', e)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Normal button</span>
                     <ChevronDown className="w-3.5 h-3.5" />
@@ -3046,7 +3046,7 @@ function DropdownView() {
                   <button
                     type="button"
                     onClick={(e) => toggleDropdown('size-large', e)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white text-sm font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Large button</span>
                     <ChevronDown className="w-4 h-4" />
@@ -3100,7 +3100,7 @@ function DropdownView() {
                 <button
                   type="button"
                   onClick={(e) => toggleDropdown('title-green', e)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   <span>Options</span>
                   <ChevronDown className="w-3.5 h-3.5" />
@@ -3507,14 +3507,14 @@ function FormView() {
               <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Submit
                 </button>
                 <button
                   type="button"
                   onClick={handleResetHtml5}
-                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 text-xs font-semibold rounded-lg border border-slate-200/80 shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Reset
                 </button>
@@ -3699,7 +3699,7 @@ function FormView() {
                   <button
                     type="button"
                     onClick={() => showToast('Tombol Action Input Group diklik', 'info')}
-                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                    className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
                   >
                     Button
                   </button>
@@ -3719,7 +3719,7 @@ function FormView() {
                   <button
                     type="button"
                     onClick={() => showToast('Action Select With Button diklik', 'info')}
-                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                    className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
                   >
                     Button
                   </button>
@@ -3743,7 +3743,7 @@ function FormView() {
                   <button
                     type="button"
                     onClick={() => showToast('Action Select, Button & Input diklik', 'info')}
-                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                    className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
                   >
                     Button
                   </button>
@@ -3991,7 +3991,7 @@ function FormView() {
                 <button
                   type="button"
                   onClick={() => showToast('Horizontal form submitted!', 'success')}
-                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   Submit
                 </button>
@@ -4051,7 +4051,7 @@ function FormView() {
               <button
                 type="button"
                 onClick={() => showToast('Sign in berhasil!', 'success')}
-                className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
               >
                 Sign in
               </button>
@@ -4131,7 +4131,7 @@ function FormView() {
                   href="https://getbootstrap.com/docs/4.0/components/forms/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   <span>Learn more</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -4225,7 +4225,7 @@ function BlankPageView() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => showToast('Memulai komponen baru di Blank Page...', 'success')}
-          className="px-5 py-2.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-xl transition-all shadow-sm"
+          className="px-5 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           Mulai Tambah Komponen
         </button>
@@ -4309,7 +4309,7 @@ function KelasView() {
         </div>
         <button
           onClick={handleAddClass}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1351b8] hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition-colors self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition-all self-start sm:self-auto cursor-pointer active:scale-95"
         >
           <Plus className="w-4 h-4" />
           Tambah Rombel Baru
@@ -4395,9 +4395,9 @@ function KelasView() {
                 <button
                   key={t}
                   onClick={() => handleFilterTingkat(t)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     selectedTingkat === t
-                      ? 'bg-[#1351b8] text-white shadow-xs'
+                      ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -4582,7 +4582,7 @@ function MataPelajaranView() {
         </div>
         <button
           onClick={handleAddSubject}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1351b8] hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition-colors self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition-all self-start sm:self-auto cursor-pointer active:scale-95"
         >
           <Plus className="w-4 h-4" />
           Tambah Mapel Baru
@@ -4668,9 +4668,9 @@ function MataPelajaranView() {
                 <button
                   key={k}
                   onClick={() => handleFilterKelompok(k)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     selectedKelompok === k
-                      ? 'bg-[#1351b8] text-white shadow-xs'
+                      ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -4788,7 +4788,7 @@ function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: Rea
       </p>
       <button
         onClick={() => showToast(`Modul ${title} siap dikonfigurasi.`, 'info')}
-        className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-xl transition-all shadow-sm"
+        className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
       >
         Konfigurasi Modul Ini
       </button>
