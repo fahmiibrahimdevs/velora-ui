@@ -6547,24 +6547,13 @@ function PaginationView() {
 
 // Dedicated Popover Showcase matching ShizueFI & Stisla with Master Gradients & Interactivity
 function PopoverView() {
-  const [openDirections, setOpenDirections] = useState<{
-    top: boolean;
-    right: boolean;
-    bottom: boolean;
-    left: boolean;
-  }>({
-    top: false,
-    right: false,
-    bottom: false,
-    left: false,
-  });
-
+  const [activeDirection, setActiveDirection] = useState<'top' | 'right' | 'bottom' | 'left' | null>(null);
   const [isDisabledPopoverOpen, setIsDisabledPopoverOpen] = useState(false);
   const [isDismissibleOpen, setIsDismissibleOpen] = useState(false);
   const [isLinkPopoverOpen, setIsLinkPopoverOpen] = useState(false);
 
   const toggleDirection = (dir: 'top' | 'right' | 'bottom' | 'left') => {
-    setOpenDirections((prev) => ({ ...prev, [dir]: !prev[dir] }));
+    setActiveDirection((prev) => (prev === dir ? null : dir));
   };
 
   return (
@@ -6587,24 +6576,28 @@ function PopoverView() {
         {/* ======================================================== */}
         <div className="space-y-6">
           {/* 1. Card: Directions */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-            <div className="px-6 py-4.5 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
               <h4 className="text-base font-bold text-[#1351b8]">Directions</h4>
             </div>
             <div className="p-6">
-              <div className="flex flex-wrap items-center gap-4 py-8">
+              <div className="flex flex-wrap items-center gap-3">
                 {/* On Top */}
                 <div className="relative inline-block">
                   <button
                     type="button"
                     onClick={() => toggleDirection('top')}
-                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                    className={`px-4 py-2 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer ${
+                      activeDirection === 'top'
+                        ? 'bg-slate-300 text-slate-800 font-bold'
+                        : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                    }`}
                   >
                     On top
                   </button>
-                  {openDirections.top && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
-                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                  {activeDirection === 'top' && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed font-normal">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
                       <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
                     </div>
                   )}
@@ -6615,13 +6608,17 @@ function PopoverView() {
                   <button
                     type="button"
                     onClick={() => toggleDirection('right')}
-                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                    className={`px-4 py-2 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer ${
+                      activeDirection === 'right'
+                        ? 'bg-slate-300 text-slate-800 font-bold'
+                        : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                    }`}
                   >
                     On right
                   </button>
-                  {openDirections.right && (
-                    <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
-                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                  {activeDirection === 'right' && (
+                    <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-48 p-2.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed font-normal">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
                       <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-white" />
                     </div>
                   )}
@@ -6632,13 +6629,17 @@ function PopoverView() {
                   <button
                     type="button"
                     onClick={() => toggleDirection('bottom')}
-                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                    className={`px-4 py-2 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer ${
+                      activeDirection === 'bottom'
+                        ? 'bg-slate-300 text-slate-800 font-bold'
+                        : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                    }`}
                   >
                     On bottom
                   </button>
-                  {openDirections.bottom && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
-                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                  {activeDirection === 'bottom' && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 p-2.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed font-normal">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-b-6 border-b-white" />
                     </div>
                   )}
@@ -6649,13 +6650,17 @@ function PopoverView() {
                   <button
                     type="button"
                     onClick={() => toggleDirection('left')}
-                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                    className={`px-4 py-2 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer ${
+                      activeDirection === 'left'
+                        ? 'bg-slate-300 text-slate-800 font-bold'
+                        : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                    }`}
                   >
                     On left
                   </button>
-                  {openDirections.left && (
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
-                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                  {activeDirection === 'left' && (
+                    <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 w-48 p-2.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed font-normal">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
                       <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-l-6 border-l-white" />
                     </div>
                   )}
@@ -6665,15 +6670,16 @@ function PopoverView() {
           </div>
 
           {/* 2. Card: Disabled Popover */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-            <div className="px-6 py-4.5 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
               <h4 className="text-base font-bold text-[#1351b8]">Disabled Popover</h4>
             </div>
-            <div className="p-6 py-8">
+            <div className="p-6">
               <div
                 className="relative inline-block"
                 onMouseEnter={() => setIsDisabledPopoverOpen(true)}
                 onMouseLeave={() => setIsDisabledPopoverOpen(false)}
+                onClick={() => setIsDisabledPopoverOpen(!isDisabledPopoverOpen)}
               >
                 <button
                   type="button"
@@ -6683,9 +6689,9 @@ function PopoverView() {
                   Disabled button
                 </button>
                 {isDisabledPopoverOpen && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <p className="font-bold text-slate-800 mb-0.5">Disabled Popover</p>
-                    <p className="leading-relaxed text-slate-600">Tombol ini dalam status disabled namun tetap dapat memicu popover saat dihover.</p>
+                    <p className="leading-relaxed text-slate-600 font-normal">Tombol ini dalam status disabled namun tetap dapat memicu popover.</p>
                     <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
                   </div>
                 )}
@@ -6699,11 +6705,11 @@ function PopoverView() {
         {/* ======================================================== */}
         <div className="space-y-6">
           {/* 3. Card: Dismiss */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-            <div className="px-6 py-4.5 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
               <h4 className="text-base font-bold text-[#1351b8]">Dismiss</h4>
             </div>
-            <div className="p-6 py-8">
+            <div className="p-6">
               <div className="relative inline-block">
                 <button
                   type="button"
@@ -6713,18 +6719,21 @@ function PopoverView() {
                   Dismissible popover
                 </button>
                 {isDismissibleOpen && (
-                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-60 p-3.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-56 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-100">
                       <span className="font-bold text-slate-800">Dismissible popover</span>
                       <button
                         type="button"
-                        onClick={() => setIsDismissibleOpen(false)}
-                        className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsDismissibleOpen(false);
+                        }}
+                        className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
-                    <p className="leading-relaxed text-slate-600">
+                    <p className="leading-relaxed text-slate-600 font-normal">
                       And here's some amazing content. It's very engaging. Right?
                     </p>
                     <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-white" />
@@ -6735,12 +6744,12 @@ function PopoverView() {
           </div>
 
           {/* 4. Card: Link */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-            <div className="px-6 py-4.5 border-b border-slate-100">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
               <h4 className="text-base font-bold text-[#1351b8]">Link</h4>
             </div>
-            <div className="p-6 py-8">
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                 Lorem ipsum dolor sit amet, consectetur{' '}
                 <span className="relative inline-block">
                   <button
@@ -6753,9 +6762,9 @@ function PopoverView() {
                     adipisicing elit
                   </button>
                   {isLinkPopoverOpen && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-50 animate-in fade-in zoom-in-95 duration-150">
                       <p className="font-bold text-[#1351b8] mb-1">Adipisicing elit</p>
-                      <p className="leading-relaxed text-slate-600">
+                      <p className="leading-relaxed text-slate-600 font-normal">
                         Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                       </p>
                       <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
