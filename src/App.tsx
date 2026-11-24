@@ -5247,6 +5247,683 @@ function MediaObjectView() {
   );
 }
 
+// Dedicated Modal Showcase matching ShizueFI & Stisla with Master Gradients & Full Interactivity
+function ModalView() {
+  const [activeModal, setActiveModal] = useState<
+    'demo' | 'center' | 'confirm' | 'bootstrap' | 'buttons' | 'footer-bg' | 'login' | 'footer-extra' | null
+  >(null);
+
+  // Login form state inside Login modal
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginRemember, setLoginRemember] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveModal(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const closeModal = () => setActiveModal(null);
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Modal</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Use Bootstrap's JavaScript modal plugin to add dialogs to your site for lightboxes, user notifications, or completely custom content.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Modal Template */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Modal Template</h4>
+            </div>
+            <div className="p-6">
+              <div className="rounded-xl border border-slate-200/90 shadow-sm overflow-hidden bg-white max-w-md">
+                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+                  <h5 className="text-sm font-bold text-slate-800">Modal Template</h5>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Modal template preview close icon', 'info')}
+                    className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal">
+                    Modal body text goes here.
+                  </p>
+                </div>
+                <div className="px-5 py-3 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => showToast('Perubahan disimpan!', 'success')}
+                    className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    Save changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Modal ditutup', 'info')}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Modal Confirm */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Modal Confirm</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                You can easily change the default browser confirmation box with a bootstrap modal.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveModal('confirm')}
+                className="px-4 py-2 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+
+          {/* 3. The Bootstrap Way */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">The Bootstrap Way</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                Use the Bootstrap method to create modal. You need to create an HTML structure for modal and the following button will trigger it.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveModal('bootstrap')}
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Aw, yeah!
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 4. Modal Demo */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Modal Demo</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                We've created a plugin to easily create a bootstrap modal.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveModal('demo')}
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Launch Modal
+              </button>
+            </div>
+          </div>
+
+          {/* 5. Modal Center */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Modal Center</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                You can change the modal position to center.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveModal('center')}
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Launch Modal
+              </button>
+            </div>
+          </div>
+
+          {/* 6. The Others */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">The Others</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                Check the modal.js code in the dist/js/page folder to get the source code.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveModal('buttons')}
+                  className="px-3.5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Buttons
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveModal('footer-bg')}
+                  className="px-3.5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Footer Background
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveModal('login')}
+                  className="px-3.5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveModal('footer-extra')}
+                  className="px-3.5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Something in the Footer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* INTERACTIVE MODAL DIALOGS */}
+      {/* ======================================================== */}
+
+      {/* 1. Modal Demo (Top Aligned matching Image 1) */}
+      {activeModal === 'demo' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-start justify-center pt-16 sm:pt-24 p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Modal Title</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal body text goes here. Posisi modal ini berada di bagian atas layar (top-aligned) sesuai dengan standar Bootstrap modal demo.
+              </p>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Perubahan berhasil disimpan!', 'success');
+                  closeModal();
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Save changes
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Modal Center (Center Aligned matching Image 2) */}
+      {activeModal === 'center' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Modal Title</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal body text goes here. Posisi modal ini secara presisi berada di tengah layar secara vertikal dan horizontal (vertically centered).
+              </p>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Perubahan berhasil disimpan!', 'success');
+                  closeModal();
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Save changes
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Modal Confirm (Delete Alert) */}
+      {activeModal === 'confirm' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shadow-inner">
+                <AlertTriangle className="w-7 h-7" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="text-base font-bold text-slate-800">Konfirmasi Penghapusan</h4>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Apakah Anda yakin ingin menghapus data ini? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.
+                </p>
+              </div>
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast('Data berhasil dihapus!', 'warning');
+                    closeModal();
+                  }}
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Ya, Hapus Data
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. The Bootstrap Way Modal */}
+      {activeModal === 'bootstrap' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#1351b8]" />
+                <h4 className="text-base font-bold text-slate-800">Aw, yeah! Bootstrap Modal</h4>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6 space-y-3">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal ini dipicu dengan metode standar HTML structure &amp; JavaScript event handler. Terintegrasi sempurna dengan animasi Tailwind CSS dan ekosistem React.
+              </p>
+              <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-100/80 text-xs text-[#1351b8] leading-relaxed font-medium">
+                💡 <b>Tips:</b> Anda dapat menekan tombol <b>Escape</b> pada keyboard atau mengklik di luar area modal untuk menutup jendela ini secara instan.
+              </div>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Keren, Mengerti!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Custom Buttons Modal */}
+      {activeModal === 'buttons' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Multiple Action Buttons</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal ini mendemonstrasikan berbagai varian tombol tindakan di footer modal dengan gradien warna dasar yang konsisten.
+              </p>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex flex-wrap items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Aksi Danger diklik', 'warning');
+                  closeModal();
+                }}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Danger
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Aksi Success diklik', 'success');
+                  closeModal();
+                }}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Success
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Aksi Info diklik', 'info');
+                  closeModal();
+                }}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                Info
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Footer Background Modal */}
+      {activeModal === 'footer-bg' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Footer Background Variant</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal ini menampilkan kustomisasi footer dengan warna latar belakang khusus yang elegan dan kontras.
+              </p>
+            </div>
+            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+              <span className="text-xs text-slate-400 font-medium">Dark Footer Styling</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast('Tersimpan di Dark Footer!', 'success');
+                    closeModal();
+                  }}
+                  className="px-4 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Login Form Modal */}
+      {activeModal === 'login' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Login to Account</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                showToast(`Login berhasil sebagai ${loginEmail || 'pengguna'}!`, 'success');
+                closeModal();
+              }}
+              className="p-6 space-y-4"
+            >
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">Email Address</label>
+                <div className="flex rounded-lg border border-slate-200 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <div className="px-3 py-2 bg-slate-50 border-r border-slate-200 flex items-center justify-center text-slate-500">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@example.com"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">Password</label>
+                <div className="flex rounded-lg border border-slate-200 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <div className="px-3 py-2 bg-slate-50 border-r border-slate-200 flex items-center justify-center text-slate-500">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600">
+                  <input
+                    type="checkbox"
+                    checked={loginRemember}
+                    onChange={(e) => setLoginRemember(e.target.checked)}
+                    className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20"
+                  />
+                  <span>Remember Me</span>
+                </label>
+                <a
+                  href="#forgot"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showToast('Navigasi reset password', 'info');
+                  }}
+                  className="text-[#1351b8] hover:underline font-semibold"
+                >
+                  Forgot Password?
+                </a>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-xs transition-all active:scale-98 cursor-pointer"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Something in the Footer Modal */}
+      {activeModal === 'footer-extra' && (
+        <div
+          onClick={closeModal}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200"
+          >
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <h4 className="text-base font-bold text-slate-800">Something in the Footer</h4>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Modal ini menampilkan elemen tambahan di bagian kiri footer (seperti checkbox persetujuan atau opsi "Jangan tampilkan lagi").
+              </p>
+            </div>
+            <div className="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={dontShowAgain}
+                  onChange={(e) => setDontShowAgain(e.target.checked)}
+                  className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20"
+                />
+                <span>Jangan tampilkan lagi</span>
+              </label>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast('Pilihan disimpan!', 'success');
+                    closeModal();
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Save changes
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all active:scale-95 cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -5381,8 +6058,8 @@ export function App() {
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Media Object'],
     },
     modal: {
-      title: 'Modal & Dialog',
-      breadcrumbs: ['Velora UI', 'Bootstrap', 'Modal'],
+      title: 'Modal',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Modal'],
     },
     pagination: {
       title: 'Pagination & Data Table',
@@ -5441,6 +6118,8 @@ export function App() {
         return <ListGroupView />;
       case 'media-object':
         return <MediaObjectView />;
+      case 'modal':
+        return <ModalView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
