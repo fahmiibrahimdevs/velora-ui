@@ -4782,6 +4782,340 @@ function MataPelajaranView() {
   );
 }
 
+// Dedicated List Group Showcase matching ShizueFI & Stisla with Master Gradients
+function ListGroupView() {
+  // State for interactive Active card
+  const [activeItem, setActiveItem] = useState<number>(1);
+
+  // State for interactive Link card
+  const [activeLink, setActiveLink] = useState<number>(0);
+
+  // State for Custom Content card
+  const [activeCustomItem, setActiveCustomItem] = useState<number>(0);
+
+  // State for JavaScript Behavior tabs
+  const [activeTab, setActiveTab] = useState<'home' | 'profile' | 'messages' | 'settings'>('home');
+
+  const basicItems = [
+    'Cras justo odio',
+    'Dapibus ac facilisis in',
+    'Morbi leo risus',
+    'Porta ac consectetur ac',
+    'Vestibulum at eros',
+  ];
+
+  const contextualItems = [
+    { text: 'Dapibus ac facilisis in', class: 'bg-white text-slate-700 font-medium' },
+    { text: 'A simple primary list group item', class: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-medium' },
+    { text: 'A simple secondary list group item', class: 'bg-gradient-to-r from-[#cbd5e1] to-[#94a3b8] text-slate-800 font-medium' },
+    { text: 'A simple success list group item', class: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] text-white font-medium' },
+    { text: 'A simple danger list group item', class: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white font-medium' },
+    { text: 'A simple warning list group item', class: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white font-medium' },
+    { text: 'A simple info list group item', class: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white font-medium' },
+    { text: 'A simple light list group item', class: 'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] text-slate-700 font-medium' },
+    { text: 'A simple dark list group item', class: 'bg-gradient-to-r from-[#1e293b] to-[#020617] text-white font-medium' },
+  ];
+
+  const badgeItems = [
+    { text: 'Cras justo odio', count: 14 },
+    { text: 'Dapibus ac facilisis in', count: 2 },
+    { text: 'Morbi leo risus', count: 1 },
+  ];
+
+  const customItems = [
+    {
+      id: 0,
+      title: 'List group item heading',
+      time: '3 days ago',
+      desc: 'Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.',
+      sub: 'Donec id elit non mi porta.',
+    },
+    {
+      id: 1,
+      title: 'List group item heading',
+      time: '3 days ago',
+      desc: 'Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.',
+      sub: 'Donec id elit non mi porta.',
+    },
+    {
+      id: 2,
+      title: 'List group item heading',
+      time: '3 days ago',
+      desc: 'Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.',
+      sub: 'Donec id elit non mi porta.',
+    },
+  ];
+
+  const tabContents = {
+    home: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    profile: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+    messages: 'In quis non esse eiusmod sunt fugiat magna pariatur officia anim ex officia nostrud amet nisi pariatur eu est id ut exercitation ex ad reprehenderit dolore nostrud sit ut culpa consequat magna ad labore proident ad qui et tempor exercitation in aute veniam et velit dolore irure qui ex magna ex culpa enim anim ea mollit consequat ullamco exercitation in.',
+    settings: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">List Group</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          List groups are a flexible and powerful component for displaying a series of content. Modify and extend them to support just about any content within.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Basic */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Basic</h4>
+            </div>
+            <div className="p-6">
+              <ul className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm font-medium text-slate-700">
+                {basicItems.map((item, idx) => (
+                  <li key={idx} className="px-5 py-3.5 bg-white">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* 2. Disabled */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Disabled</h4>
+            </div>
+            <div className="p-6">
+              <ul className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm font-medium">
+                {basicItems.map((item, idx) => {
+                  const isDisabled = idx === 1;
+                  return (
+                    <li
+                      key={idx}
+                      className={`px-5 py-3.5 ${
+                        isDisabled
+                          ? 'bg-slate-50/80 text-slate-400 cursor-not-allowed select-none opacity-60'
+                          : 'bg-white text-slate-700'
+                      }`}
+                    >
+                      {item}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
+          {/* 3. Flush */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Flush</h4>
+            </div>
+            <div className="p-6">
+              <ul className="divide-y divide-slate-200/90 border-y border-slate-200/90 text-xs sm:text-sm font-medium text-slate-700">
+                {basicItems.map((item, idx) => (
+                  <li key={idx} className="px-4 py-3.5 bg-white">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* 4. Badges */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Badges</h4>
+            </div>
+            <div className="p-6">
+              <ul className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm font-medium text-slate-700">
+                {badgeItems.map((item, idx) => (
+                  <li key={idx} className="px-5 py-3.5 bg-white flex items-center justify-between">
+                    <span>{item.text}</span>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1351b8]/10 text-[#1351b8] border border-[#1351b8]/20 shadow-2xs">
+                      {item.count}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* 5. JavaScript Behavior */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">JavaScript Behavior</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-col sm:flex-row gap-6 items-start">
+                <div className="w-full sm:w-44 shrink-0 rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90">
+                  {(['home', 'profile', 'messages', 'settings'] as const).map((tab) => {
+                    const isActive = activeTab === tab;
+                    const label = tab.charAt(0).toUpperCase() + tab.slice(1);
+                    return (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setActiveTab(tab)}
+                        className={`w-full text-left px-4 py-3 text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-between ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                            : 'bg-white hover:bg-slate-50 text-slate-700'
+                        }`}
+                      >
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 animate-in fade-in duration-200">
+                  {tabContents[activeTab]}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Active */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Active</h4>
+            </div>
+            <div className="p-6">
+              <ul className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm font-medium">
+                {basicItems.map((item, idx) => {
+                  const isActive = activeItem === idx;
+                  return (
+                    <li
+                      key={idx}
+                      onClick={() => setActiveItem(idx)}
+                      className={`px-5 py-3.5 transition-all cursor-pointer select-none ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-semibold'
+                          : 'bg-white hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      {item}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
+          {/* 2. Link */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Link</h4>
+            </div>
+            <div className="p-6">
+              <div className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm font-medium">
+                {basicItems.map((item, idx) => {
+                  const isDisabled = idx === 4;
+                  const isActive = activeLink === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          setActiveLink(idx);
+                          showToast(`Link "${item}" dipilih!`, 'info');
+                        }
+                      }}
+                      className={`w-full text-left px-5 py-3.5 transition-all select-none ${
+                        isDisabled
+                          ? 'bg-slate-50/80 text-slate-400 cursor-not-allowed opacity-60'
+                          : isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-semibold cursor-pointer'
+                          : 'bg-white hover:bg-slate-50 text-slate-700 cursor-pointer'
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Contextual Classes */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Contextual Classes</h4>
+            </div>
+            <div className="p-6">
+              <ul className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm">
+                {contextualItems.map((item, idx) => (
+                  <li key={idx} className={`px-5 py-3.5 ${item.class}`}>
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* 4. Custom Content */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Custom Content</h4>
+            </div>
+            <div className="p-6">
+              <div className="rounded-xl border border-slate-200/90 overflow-hidden divide-y divide-slate-200/90 text-xs sm:text-sm">
+                {customItems.map((item, idx) => {
+                  const isActive = activeCustomItem === idx;
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setActiveCustomItem(idx);
+                        showToast(`Item "${item.title}" dipilih!`, 'info');
+                      }}
+                      className={`p-5 transition-all cursor-pointer select-none ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                          : 'bg-white hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <h5 className={`text-sm sm:text-base font-bold ${isActive ? 'text-white' : 'text-slate-800'}`}>
+                          {item.title}
+                        </h5>
+                        <span className={`text-[11px] sm:text-xs font-normal ${isActive ? 'text-white/80' : 'text-slate-400'}`}>
+                          {item.time}
+                        </span>
+                      </div>
+                      <p className={`text-xs sm:text-sm mb-2 leading-relaxed ${isActive ? 'text-white/95' : 'text-slate-600'}`}>
+                        {item.desc}
+                      </p>
+                      <p className={`text-[11px] sm:text-xs font-normal ${isActive ? 'text-white/75' : 'text-slate-400'}`}>
+                        {item.sub}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -4907,6 +5241,10 @@ export function App() {
       title: 'Form',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Form'],
     },
+    'list-group': {
+      title: 'List Group',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'List Group'],
+    },
     modal: {
       title: 'Modal & Dialog',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Modal'],
@@ -4964,6 +5302,8 @@ export function App() {
         return <DropdownView />;
       case 'form':
         return <FormView />;
+      case 'list-group':
+        return <ListGroupView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
