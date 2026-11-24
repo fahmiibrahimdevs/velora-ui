@@ -48,6 +48,9 @@ import {
   ExternalLink,
   Maximize2,
   Settings,
+  Download,
+  Filter,
+  ArrowUpRight,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -6905,6 +6908,739 @@ function ProgressView() {
   );
 }
 
+// Dedicated Bootstrap Table Showcase with 5 Diverse Table Variants
+function TableView() {
+  const [selectedProjects, setSelectedProjects] = useState<number[]>([1, 3]);
+  const [projectSearch, setProjectSearch] = useState('');
+
+  const projectsData = [
+    {
+      id: 1,
+      name: 'Modernisasi Portal Velora UI v2',
+      category: 'Design System',
+      members: ['Fahmi', 'Siti', 'Budi'],
+      deadline: '10 Des 2026',
+      progress: 85,
+      priority: 'High',
+    },
+    {
+      id: 2,
+      name: 'Integrasi Single Sign-On (SSO)',
+      category: 'Security & Auth',
+      members: ['Hasan', 'Ahmad'],
+      deadline: '18 Des 2026',
+      progress: 60,
+      priority: 'Medium',
+    },
+    {
+      id: 3,
+      name: 'Optimasi Latensi Database Sharding',
+      category: 'Infrastructure',
+      members: ['Rahmat', 'Fahmi', 'Dewi'],
+      deadline: '24 Des 2026',
+      progress: 35,
+      priority: 'High',
+    },
+    {
+      id: 4,
+      name: 'Refactoring Payroll & Kasbon Module',
+      category: 'Finance Service',
+      members: ['Irwansyah', 'Siti'],
+      deadline: '30 Des 2026',
+      progress: 100,
+      priority: 'Low',
+    },
+  ];
+
+  const filteredProjects = projectsData.filter(
+    (p) =>
+      p.name.toLowerCase().includes(projectSearch.toLowerCase()) ||
+      p.category.toLowerCase().includes(projectSearch.toLowerCase())
+  );
+
+  const toggleSelectAll = () => {
+    if (selectedProjects.length === filteredProjects.length) {
+      setSelectedProjects([]);
+    } else {
+      setSelectedProjects(filteredProjects.map((p) => p.id));
+    }
+  };
+
+  const toggleSelectProject = (id: number) => {
+    setSelectedProjects((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const isAllSelected =
+    filteredProjects.length > 0 && selectedProjects.length === filteredProjects.length;
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Table</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Koleksi variasi styling tabel Bootstrap modern: Simple Table, Striped & Hoverable, Contextual Alert Rows, Compact Financial Ledger, dan Interactive Table dengan seleksi baris massal.
+        </p>
+      </div>
+
+      {/* Row 1: Simple Table & Striped Table */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* 1. Simple Table */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Simple Table</h4>
+            <span className="text-xs font-medium text-slate-500">Default Bordered</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  <th className="py-3 px-4 text-center w-12">#</th>
+                  <th className="py-3 px-4">Nama Tugas</th>
+                  <th className="py-3 px-4">Progres</th>
+                  <th className="py-3 px-4">Batas Waktu</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 text-center font-medium text-slate-500">1</td>
+                  <td className="py-3 px-4 font-semibold text-slate-800">Redesign Landing Page</td>
+                  <td className="py-3 px-4">
+                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#22c55e] to-[#15803d] h-full rounded-full w-full" />
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">12 Jun 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                      Selesai
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => showToast('Detail tugas Redesign Landing Page', 'info')}
+                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 text-center font-medium text-slate-500">2</td>
+                  <td className="py-3 px-4 font-semibold text-slate-800">Fix Payment Gateway API</td>
+                  <td className="py-3 px-4">
+                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] h-full rounded-full w-[65%]" />
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">16 Jun 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60">
+                      Proses
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => showToast('Detail tugas Fix Payment Gateway API', 'info')}
+                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 text-center font-medium text-slate-500">3</td>
+                  <td className="py-3 px-4 font-semibold text-slate-800">Mobile Responsive Audit</td>
+                  <td className="py-3 px-4">
+                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] h-full rounded-full w-[35%]" />
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">21 Jun 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
+                      Tertunda
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => showToast('Detail tugas Mobile Responsive Audit', 'info')}
+                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/60 transition-colors">
+                  <td className="py-3 px-4 text-center font-medium text-slate-500">4</td>
+                  <td className="py-3 px-4 font-semibold text-slate-800">Database Schema Migration</td>
+                  <td className="py-3 px-4">
+                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#ef4444] to-[#b91c1c] h-full rounded-full w-[15%]" />
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">25 Jun 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60">
+                      Pending
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => showToast('Detail tugas Database Schema Migration', 'info')}
+                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {/* Footer with Pagination */}
+          <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
+            <span>Menampilkan 1 - 4 dari 16 data</span>
+            <div className="inline-flex items-center gap-1">
+              <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-semibold shadow-2xs">
+                1
+              </button>
+              <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                2
+              </button>
+              <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Striped & Hover Table */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Striped & Hoverable</h4>
+            <span className="text-xs font-medium text-slate-500">Zebra Striping</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  <th className="py-3 px-4">Karyawan</th>
+                  <th className="py-3 px-4">Departemen</th>
+                  <th className="py-3 px-4">Posisi</th>
+                  <th className="py-3 px-4">Masa Kerja</th>
+                  <th className="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="text-xs text-slate-700 divide-y divide-slate-100">
+                <tr className="bg-white hover:bg-blue-50/40 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        IR
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Irwansyah Putra</div>
+                        <div className="text-[11px] text-slate-500">irwansyah@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">Product & UI/UX</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">Lead Designer</td>
+                  <td className="py-3 px-4 text-slate-600">3.5 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Aktif
+                    </span>
+                  </td>
+                </tr>
+                <tr className="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        HB
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Hasan Basri</div>
+                        <div className="text-[11px] text-slate-500">hasan@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">Engineering</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">Senior Frontend</td>
+                  <td className="py-3 px-4 text-slate-600">2.1 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Aktif
+                    </span>
+                  </td>
+                </tr>
+                <tr className="bg-white hover:bg-blue-50/40 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        RH
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Rahmat Hidayat</div>
+                        <div className="text-[11px] text-slate-500">rahmat@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">Marketing</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">Growth Specialist</td>
+                  <td className="py-3 px-4 text-slate-600">1.0 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      Cuti
+                    </span>
+                  </td>
+                </tr>
+                <tr className="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-600 to-purple-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        SN
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Siti Nurhaliza</div>
+                        <div className="text-[11px] text-slate-500">siti@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">Quality Assurance</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">QA Automation Lead</td>
+                  <td className="py-3 px-4 text-slate-600">4.2 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Aktif
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {/* Footer */}
+          <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
+            <span>Menampilkan 4 dari 28 anggota tim</span>
+            <button
+              onClick={() => showToast('Membuka seluruh daftar anggota tim...', 'info')}
+              className="text-[#1351b8] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+            >
+              Lihat Semua <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: Contextual Alert Rows & Compact Bordered Table */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* 3. Contextual Alert Rows */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Contextual Alert Rows</h4>
+            <span className="text-xs font-medium text-slate-500">Semantic Row States</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  <th className="py-3 px-4">Node ID</th>
+                  <th className="py-3 px-4">Region</th>
+                  <th className="py-3 px-4">Uptime</th>
+                  <th className="py-3 px-4">Latensi</th>
+                  <th className="py-3 px-4 text-center">Kondisi</th>
+                </tr>
+              </thead>
+              <tbody className="text-xs divide-y divide-slate-100">
+                {/* Success Row */}
+                <tr className="bg-emerald-50/60 border-l-4 border-l-emerald-500 hover:bg-emerald-50/90 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold text-emerald-900">srv-prod-01</td>
+                  <td className="py-3 px-4 font-medium text-emerald-800">US East (Virginia)</td>
+                  <td className="py-3 px-4 font-bold text-emerald-700">99.99%</td>
+                  <td className="py-3 px-4 font-medium text-emerald-700">18 ms</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-600 text-white shadow-2xs">
+                      Optimal
+                    </span>
+                  </td>
+                </tr>
+                {/* Info Row */}
+                <tr className="bg-sky-50/60 border-l-4 border-l-sky-500 hover:bg-sky-50/90 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold text-sky-900">srv-prod-02</td>
+                  <td className="py-3 px-4 font-medium text-sky-800">EU Central (Frankfurt)</td>
+                  <td className="py-3 px-4 font-bold text-sky-700">99.85%</td>
+                  <td className="py-3 px-4 font-medium text-sky-700">34 ms</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-600 text-white shadow-2xs">
+                      Maintenance
+                    </span>
+                  </td>
+                </tr>
+                {/* Warning Row */}
+                <tr className="bg-amber-50/60 border-l-4 border-l-amber-500 hover:bg-amber-50/90 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold text-amber-900">srv-edge-03</td>
+                  <td className="py-3 px-4 font-medium text-amber-800">AP Southeast (Jakarta)</td>
+                  <td className="py-3 px-4 font-bold text-amber-700">97.40%</td>
+                  <td className="py-3 px-4 font-medium text-amber-700">148 ms</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-600 text-white shadow-2xs">
+                      High Load
+                    </span>
+                  </td>
+                </tr>
+                {/* Danger Row */}
+                <tr className="bg-rose-50/60 border-l-4 border-l-rose-500 hover:bg-rose-50/90 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold text-rose-900">srv-edge-04</td>
+                  <td className="py-3 px-4 font-medium text-rose-800">SA East (São Paulo)</td>
+                  <td className="py-3 px-4 font-bold text-rose-700">86.20%</td>
+                  <td className="py-3 px-4 font-medium text-rose-700">380 ms</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-600 text-white shadow-2xs">
+                      Degraded
+                    </span>
+                  </td>
+                </tr>
+                {/* Default/Normal Row */}
+                <tr className="bg-white hover:bg-slate-50 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold text-slate-800">srv-backup-05</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">AP East (Hong Kong)</td>
+                  <td className="py-3 px-4 font-bold text-slate-700">100.0%</td>
+                  <td className="py-3 px-4 font-medium text-slate-600">2 ms</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      Standby
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="px-6 py-3 border-t border-slate-100 bg-white flex flex-wrap items-center justify-between text-xs text-slate-500">
+            <span>5 Server Nodes dipantau realtime</span>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Sistem Operasional Normal</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Compact & Bordered Financial Table */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Compact & Bordered</h4>
+            <span className="text-xs font-medium text-slate-500">Dense Accounting Format</span>
+          </div>
+          <div className="p-5 overflow-x-auto">
+            <table className="w-full text-left border-collapse border border-slate-200 text-xs">
+              <thead>
+                <tr className="bg-slate-100/80 text-slate-700 font-bold">
+                  <th className="border border-slate-200 py-2 px-3">No. Invoice</th>
+                  <th className="border border-slate-200 py-2 px-3">Pelanggan</th>
+                  <th className="border border-slate-200 py-2 px-3">Tanggal</th>
+                  <th className="border border-slate-200 py-2 px-3 text-right">Nominal</th>
+                  <th className="border border-slate-200 py-2 px-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 text-slate-700">
+                <tr className="hover:bg-slate-50/80 transition-colors">
+                  <td className="border border-slate-200 py-1.5 px-3 font-mono font-medium text-blue-700">INV-2026-081</td>
+                  <td className="border border-slate-200 py-1.5 px-3 font-medium">PT Teknologi Bangsa</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-slate-500">24 Nov 2026</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-right font-medium text-slate-800">Rp 18.500.000</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-center">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Lunas</span>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/80 transition-colors">
+                  <td className="border border-slate-200 py-1.5 px-3 font-mono font-medium text-blue-700">INV-2026-082</td>
+                  <td className="border border-slate-200 py-1.5 px-3 font-medium">CV Maju Bersama</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-slate-500">23 Nov 2026</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-right font-medium text-slate-800">Rp 7.250.000</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-center">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Lunas</span>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/80 transition-colors">
+                  <td className="border border-slate-200 py-1.5 px-3 font-mono font-medium text-blue-700">INV-2026-083</td>
+                  <td className="border border-slate-200 py-1.5 px-3 font-medium">Studio Desain Kreatif</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-slate-500">21 Nov 2026</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-right font-medium text-slate-800">Rp 12.000.000</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-center">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Pending</span>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/80 transition-colors">
+                  <td className="border border-slate-200 py-1.5 px-3 font-mono font-medium text-blue-700">INV-2026-084</td>
+                  <td className="border border-slate-200 py-1.5 px-3 font-medium">PT Sumber Berkah</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-slate-500">19 Nov 2026</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-right font-medium text-slate-800">Rp 34.800.000</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-center">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Jatuh Tempo</span>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-50/80 transition-colors">
+                  <td className="border border-slate-200 py-1.5 px-3 font-mono font-medium text-blue-700">INV-2026-085</td>
+                  <td className="border border-slate-200 py-1.5 px-3 font-medium">Global Logistik Tbk</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-slate-500">17 Nov 2026</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-right font-medium text-slate-800">Rp 9.400.000</td>
+                  <td className="border border-slate-200 py-1.5 px-3 text-center">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Lunas</span>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr className="bg-slate-50 font-bold text-slate-800">
+                  <td colSpan={3} className="border border-slate-200 py-2 px-3 text-right">Total Transaksi:</td>
+                  <td className="border border-slate-200 py-2 px-3 text-right text-blue-700 font-bold">Rp 81.950.000</td>
+                  <td className="border border-slate-200 py-2 px-3 text-center text-slate-500">5 Transaksi</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div className="px-6 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Standar audit keuangan PSAK</span>
+            <button
+              onClick={() => showToast('Mengekspor laporan keuangan...', 'success')}
+              className="text-[#1351b8] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" /> Unduh Ledger CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Advanced Interactive Table with Selection & Bulk Actions */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+        <div className="px-6 py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8]">Interactive Table with Row Selection</h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Pilih satu atau lebih baris dengan checkbox untuk melakukan tindakan massal.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={projectSearch}
+                onChange={(e) => setProjectSearch(e.target.value)}
+                placeholder="Cari proyek..."
+                className="pl-8.5 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 w-48 transition-all"
+              />
+            </div>
+            <button
+              onClick={() => showToast('Menampilkan filter lanjutan...', 'info')}
+              className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <Filter className="w-3.5 h-3.5 text-slate-500" /> Filter
+            </button>
+            <button
+              onClick={() => showToast('Mengekspor proyek terpilih...', 'success')}
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" /> Ekspor
+            </button>
+          </div>
+        </div>
+
+        {/* Selected Banner */}
+        {selectedProjects.length > 0 && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 px-6 py-2.5 flex items-center justify-between text-xs text-blue-900 transition-all">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span className="font-semibold">{selectedProjects.length} proyek terpilih</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => showToast(`${selectedProjects.length} proyek ditandai selesai!`, 'success')}
+                className="px-2.5 py-1 bg-white text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-50 font-semibold text-[11px] transition-colors cursor-pointer"
+              >
+                Tandai Selesai
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedProjects([]);
+                  showToast('Pilihan dibatalkan', 'info');
+                }}
+                className="px-2.5 py-1 text-slate-600 hover:text-slate-900 font-medium text-[11px] cursor-pointer"
+              >
+                Batal Pilihan
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                <th className="py-3 px-4 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    onChange={toggleSelectAll}
+                    className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
+                  />
+                </th>
+                <th className="py-3 px-4">Nama Proyek</th>
+                <th className="py-3 px-4">Tim Pengembang</th>
+                <th className="py-3 px-4">Batas Waktu</th>
+                <th className="py-3 px-4">Progres</th>
+                <th className="py-3 px-4 text-center">Prioritas</th>
+                <th className="py-3 px-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+              {filteredProjects.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                    Tidak ada proyek yang sesuai dengan pencarian.
+                  </td>
+                </tr>
+              ) : (
+                filteredProjects.map((project) => {
+                  const isChecked = selectedProjects.includes(project.id);
+                  return (
+                    <tr
+                      key={project.id}
+                      className={`transition-colors cursor-pointer ${
+                        isChecked ? 'bg-blue-50/50 hover:bg-blue-50/70' : 'hover:bg-slate-50/60'
+                      }`}
+                      onClick={() => toggleSelectProject(project.id)}
+                    >
+                      <td
+                        className="py-3.5 px-4 text-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleSelectProject(project.id)}
+                          className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
+                        />
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-semibold text-slate-800">{project.name}</div>
+                        <div className="text-[11px] text-slate-500">{project.category}</div>
+                      </td>
+                      <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center -space-x-2">
+                          {project.members.map((member, mIdx) => (
+                            <div
+                              key={mIdx}
+                              title={member}
+                              className="w-6.5 h-6.5 rounded-full border-2 border-white bg-gradient-to-tr from-[#175cd3] to-[#0f3ba0] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs"
+                            >
+                              {member.charAt(0)}
+                            </div>
+                          ))}
+                          <span className="text-[11px] text-slate-500 pl-3 font-medium">
+                            {project.members.length} Anggota
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-600">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{project.deadline}</span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                project.progress === 100
+                                  ? 'bg-gradient-to-r from-[#22c55e] to-[#15803d]'
+                                  : project.progress > 50
+                                  ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]'
+                                  : 'bg-gradient-to-r from-[#f59e0b] to-[#d97706]'
+                              }`}
+                              style={{ width: `${project.progress}%` }}
+                            />
+                          </div>
+                          <span className="text-[11px] font-bold text-slate-600 w-8">
+                            {project.progress}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            project.priority === 'High'
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                              : project.priority === 'Medium'
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                              : 'bg-blue-50 text-blue-700 border border-blue-200/60'
+                          }`}
+                        >
+                          {project.priority}
+                        </span>
+                      </td>
+                      <td
+                        className="py-3.5 px-4 text-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="inline-flex items-center gap-1.5">
+                          <button
+                            onClick={() => showToast(`Lihat proyek: ${project.name}`, 'info')}
+                            title="Lihat Detail"
+                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => showToast(`Edit proyek: ${project.name}`, 'info')}
+                            title="Edit Proyek"
+                            className="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white text-xs text-slate-500">
+          <span>Menampilkan {filteredProjects.length} dari {projectsData.length} proyek aktif</span>
+          <div className="flex items-center gap-1">
+            <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-semibold shadow-2xs">
+              1
+            </button>
+            <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -7063,8 +7799,8 @@ export function App() {
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Progress'],
     },
     table: {
-      title: 'Data Table Showcase',
-      breadcrumbs: ['Velora UI', 'Bootstrap', 'Table'],
+      title: 'Table',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Table'],
     },
     datatables: {
       title: 'DataTables Module',
@@ -7100,6 +7836,7 @@ export function App() {
       case 'progress':
         return <ProgressView />;
       case 'table':
+        return <TableView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
