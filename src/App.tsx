@@ -21,83 +21,277 @@ import {
   Eye,
   Radio,
   Award,
+  Lightbulb,
+  RotateCcw,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
-// Dedicated Alerts Showcase matching user's reference screenshot 2
+type AlertType =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'light'
+  | 'dark';
+
+interface AlertItemDef {
+  key: AlertType;
+  title: string;
+  name: string;
+  gradient: string;
+  flat: string;
+  isLight?: boolean;
+}
+
+const alertDefinitions: AlertItemDef[] = [
+  {
+    key: 'primary',
+    title: 'Primary',
+    name: 'primary',
+    gradient: 'bg-gradient-to-r from-[#175cd3] via-[#1450be] to-[#0f3ba0] text-white shadow-xs',
+    flat: 'bg-[#1958ca] text-white',
+  },
+  {
+    key: 'secondary',
+    title: 'Secondary',
+    name: 'secondary',
+    gradient: 'bg-gradient-to-r from-[#cbd5e1] via-[#b8c2cc] to-[#94a3b8] text-white shadow-xs',
+    flat: 'bg-[#cdd3d8] text-white',
+  },
+  {
+    key: 'success',
+    title: 'Success',
+    name: 'success',
+    gradient: 'bg-gradient-to-r from-[#22c55e] via-[#16a34a] to-[#15803d] text-white shadow-xs',
+    flat: 'bg-[#47c363] text-white',
+  },
+  {
+    key: 'danger',
+    title: 'Danger',
+    name: 'danger',
+    gradient: 'bg-gradient-to-r from-[#ef4444] via-[#dc2626] to-[#b91c1c] text-white shadow-xs',
+    flat: 'bg-[#fc544b] text-white',
+  },
+  {
+    key: 'warning',
+    title: 'Warning',
+    name: 'warning',
+    gradient: 'bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#d97706] text-white shadow-xs',
+    flat: 'bg-[#ffa426] text-white',
+  },
+  {
+    key: 'info',
+    title: 'Info',
+    name: 'info',
+    gradient: 'bg-gradient-to-r from-[#0ea5e9] via-[#0284c7] to-[#0369a1] text-white shadow-xs',
+    flat: 'bg-[#3abaf4] text-white',
+  },
+  {
+    key: 'light',
+    title: 'Light',
+    name: 'light',
+    gradient: 'bg-gradient-to-r from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-slate-800 border border-slate-200/80 shadow-xs',
+    flat: 'bg-[#e3eaef] text-slate-800 border border-slate-200/50',
+    isLight: true,
+  },
+  {
+    key: 'dark',
+    title: 'Dark',
+    name: 'dark',
+    gradient: 'bg-gradient-to-r from-[#1e293b] via-[#0f172a] to-[#020617] text-white shadow-xs',
+    flat: 'bg-[#191d21] text-white',
+  },
+];
+
+// Dedicated Alerts Showcase matching ShizueFI & Stisla specification
 function AlertView() {
+  const [isGradient, setIsGradient] = useState(true);
+  const [dismissedKeys, setDismissedKeys] = useState<string[]>([]);
+
+  const handleDismiss = (key: string) => {
+    setDismissedKeys((prev) => [...prev, key]);
+    showToast(`Alert ${key} berhasil ditutup`, 'info');
+  };
+
+  const handleResetDismissed = () => {
+    setDismissedKeys([]);
+    showToast('Semua alert dismissable dikembalikan', 'success');
+  };
+
+  const getAlertClass = (def: AlertItemDef) => (isGradient ? def.gradient : def.flat);
+
   return (
     <div className="space-y-6">
-      {/* Section Header with Blue Pill Accent */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
-          <h2 className="text-base sm:text-lg font-bold text-slate-800">Alerts</h2>
+      {/* Section Header with Blue Pill Accent & Style Mode Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Alerts</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.
+          </p>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500">
-          Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.
-        </p>
+
+        {/* Gradient vs Solid Classic Toggle */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 flex-shrink-0 self-start sm:self-center">
+          <button
+            onClick={() => setIsGradient(true)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              isGradient
+                ? 'bg-white text-[#1351b8] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            ✨ Modern Gradient
+          </button>
+          <button
+            onClick={() => setIsGradient(false)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              !isGradient
+                ? 'bg-white text-[#1351b8] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            🎨 Solid Classic
+          </button>
+        </div>
       </div>
 
-      {/* 2-Column Responsive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Card 1: Default Alerts */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-3">
-          <h3 className="text-sm font-bold text-slate-800 mb-4">Default</h3>
+      {/* 2-Column Responsive Grid matching ShizueFI Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left Column: Default & Icon */}
+        <div className="space-y-6">
+          {/* Card 1: Default Alerts */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Default</h3>
+            </div>
+            <div className="p-6 space-y-3.5">
+              {alertDefinitions.map((item) => (
+                <div
+                  key={item.key}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm font-medium transition-all duration-200 ${getAlertClass(
+                    item
+                  )}`}
+                >
+                  This is a {item.name} alert.
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <div className="p-4 rounded-lg bg-blue-600 text-white text-xs sm:text-sm font-medium">
-            This is a primary alert.
-          </div>
-          <div className="p-4 rounded-lg bg-slate-300 text-slate-700 text-xs sm:text-sm font-medium">
-            This is a secondary alert.
-          </div>
-          <div className="p-4 rounded-lg bg-emerald-500 text-white text-xs sm:text-sm font-medium">
-            This is a success alert.
-          </div>
-          <div className="p-4 rounded-lg bg-rose-500 text-white text-xs sm:text-sm font-medium">
-            This is a danger alert.
-          </div>
-          <div className="p-4 rounded-lg bg-amber-500 text-white text-xs sm:text-sm font-medium">
-            This is a warning alert.
-          </div>
-          <div className="p-4 rounded-lg bg-sky-400 text-white text-xs sm:text-sm font-medium">
-            This is a info alert.
-          </div>
-          <div className="p-4 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 text-xs sm:text-sm font-medium">
-            This is a light alert.
-          </div>
-          <div className="p-4 rounded-lg bg-slate-800 text-white text-xs sm:text-sm font-medium">
-            This is a dark alert.
+          {/* Card 2: Icon Alerts */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Icon</h3>
+            </div>
+            <div className="p-6 space-y-3.5">
+              {alertDefinitions.map((item) => (
+                <div
+                  key={item.key}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center gap-3.5 transition-all duration-200 ${getAlertClass(
+                    item
+                  )}`}
+                >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/15 backdrop-blur-xs">
+                    <Lightbulb className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-sm tracking-tight mb-0.5">{item.title}</div>
+                    <div className="text-xs sm:text-sm leading-relaxed opacity-95">
+                      This is a {item.name} alert.
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Card 2: Title Alerts */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-3">
-          <h3 className="text-sm font-bold text-slate-800 mb-4">Title</h3>
+        {/* Right Column: Title & Dismissable */}
+        <div className="space-y-6">
+          {/* Card 3: Title Alerts */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Title</h3>
+            </div>
+            <div className="p-6 space-y-3.5">
+              {alertDefinitions.map((item) => (
+                <div
+                  key={item.key}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm transition-all duration-200 ${getAlertClass(
+                    item
+                  )}`}
+                >
+                  <div className="font-bold text-sm tracking-tight mb-0.5">{item.title}</div>
+                  <div className="text-xs sm:text-sm leading-relaxed opacity-95">
+                    This is a {item.name} alert.
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <div className="p-4 rounded-lg bg-blue-600 text-white text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm">Primary</h4>
-            <p className="text-white/90">This is a primary alert.</p>
-          </div>
-          <div className="p-4 rounded-lg bg-slate-300 text-slate-700 text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm text-slate-800">Secondary</h4>
-            <p className="text-slate-600">This is a secondary alert.</p>
-          </div>
-          <div className="p-4 rounded-lg bg-emerald-500 text-white text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm">Success</h4>
-            <p className="text-white/90">This is a success alert.</p>
-          </div>
-          <div className="p-4 rounded-lg bg-rose-500 text-white text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm">Danger</h4>
-            <p className="text-white/90">This is a danger alert.</p>
-          </div>
-          <div className="p-4 rounded-lg bg-amber-500 text-white text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm">Warning</h4>
-            <p className="text-white/90">This is a warning alert.</p>
-          </div>
-          <div className="p-4 rounded-lg bg-sky-400 text-white text-xs sm:text-sm space-y-1">
-            <h4 className="font-bold text-sm">Info</h4>
-            <p className="text-white/90">This is a info alert.</p>
+          {/* Card 4: Dismissable Alerts */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Dismissable</h3>
+              {dismissedKeys.length > 0 && (
+                <button
+                  onClick={handleResetDismissed}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1351b8] hover:text-[#0c2869] transition-colors"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset ({dismissedKeys.length})
+                </button>
+              )}
+            </div>
+            <div className="p-6 space-y-3.5">
+              {alertDefinitions
+                .filter((item) => !dismissedKeys.includes(item.key))
+                .map((item) => (
+                  <div
+                    key={item.key}
+                    className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center justify-between gap-3 transition-all duration-200 ${getAlertClass(
+                      item
+                    )}`}
+                  >
+                    <div className="text-xs sm:text-sm font-medium">
+                      This is a {item.name} alert.
+                    </div>
+                    <button
+                      onClick={() => handleDismiss(item.key)}
+                      className={`w-7 h-7 flex items-center justify-center rounded-md text-lg leading-none font-bold transition-colors ${
+                        item.isLight
+                          ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-300/40'
+                          : 'text-white/80 hover:text-white hover:bg-black/15'
+                      }`}
+                      aria-label={`Tutup alert ${item.name}`}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+
+              {dismissedKeys.length === alertDefinitions.length && (
+                <div className="text-center py-8 space-y-2">
+                  <p className="text-sm text-slate-500 font-medium">
+                    Semua alert dismissable telah ditutup.
+                  </p>
+                  <button
+                    onClick={handleResetDismissed}
+                    className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#1351b8] text-white hover:bg-[#0c2869] transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Tampilkan Kembali Semua Alert
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
