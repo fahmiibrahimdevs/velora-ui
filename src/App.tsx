@@ -149,7 +149,7 @@ function AlertView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Alerts</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -353,7 +353,7 @@ function BadgeView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Badges</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -598,7 +598,7 @@ function BreadcrumbView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Breadcrumb</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -847,7 +847,7 @@ function ButtonsView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Buttons</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -1217,23 +1217,23 @@ function CardsView() {
 
   // State for Section 5: Sortable Cards
   const initialSortableCards = [
-    { id: 'primary', label: '.card-primary', title: 'Card Header', border: 'border-t-[#1351b8]', titleColor: 'text-[#1351b8]' },
-    { id: 'secondary', label: '.card-secondary', title: 'Card Header', border: 'border-t-slate-400', titleColor: 'text-slate-600' },
-    { id: 'danger', label: '.card-danger', title: 'Card Header', border: 'border-t-rose-500', titleColor: 'text-rose-600' },
-    { id: 'warning', label: '.card-warning', title: 'Card Header', border: 'border-t-amber-500', titleColor: 'text-amber-600' },
+    { id: 'primary', label: '.card-primary', title: 'Card Header', gradient: 'from-[#175cd3] to-[#0f3ba0]', titleColor: 'text-[#1351b8]' },
+    { id: 'secondary', label: '.card-secondary', title: 'Card Header', gradient: 'from-[#64748b] to-[#475569]', titleColor: 'text-slate-600' },
+    { id: 'danger', label: '.card-danger', title: 'Card Header', gradient: 'from-[#ef4444] to-[#b91c1c]', titleColor: 'text-rose-600' },
+    { id: 'warning', label: '.card-warning', title: 'Card Header', gradient: 'from-[#f59e0b] to-[#d97706]', titleColor: 'text-amber-600' },
   ];
   const [sortableCards, setSortableCards] = useState(initialSortableCards);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const cardVariants = [
-    { name: '.card-primary', border: 'border-t-[#1351b8]', titleColor: 'text-[#1351b8]' },
-    { name: '.card-secondary', border: 'border-t-slate-400', titleColor: 'text-slate-600' },
-    { name: '.card-danger', border: 'border-t-rose-500', titleColor: 'text-rose-600' },
-    { name: '.card-warning', border: 'border-t-amber-500', titleColor: 'text-amber-600' },
-    { name: '.card-info', border: 'border-t-sky-500', titleColor: 'text-sky-600' },
-    { name: '.card-success', border: 'border-t-emerald-500', titleColor: 'text-emerald-600' },
-    { name: '.card-light', border: 'border-t-slate-200', titleColor: 'text-slate-700' },
-    { name: '.card-dark', border: 'border-t-slate-800', titleColor: 'text-slate-900' },
+    { name: '.card-primary', gradient: 'from-[#175cd3] to-[#0f3ba0]', titleColor: 'text-[#1351b8]' },
+    { name: '.card-secondary', gradient: 'from-[#64748b] to-[#475569]', titleColor: 'text-slate-600' },
+    { name: '.card-danger', gradient: 'from-[#ef4444] to-[#b91c1c]', titleColor: 'text-rose-600' },
+    { name: '.card-warning', gradient: 'from-[#f59e0b] to-[#d97706]', titleColor: 'text-amber-600' },
+    { name: '.card-info', gradient: 'from-[#0ea5e9] to-[#0284c7]', titleColor: 'text-sky-600' },
+    { name: '.card-success', gradient: 'from-[#22c55e] to-[#15803d]', titleColor: 'text-emerald-600' },
+    { name: '.card-light', gradient: 'from-slate-200 to-slate-300', titleColor: 'text-slate-700' },
+    { name: '.card-dark', gradient: 'from-[#1e293b] to-[#020617]', titleColor: 'text-slate-900' },
   ];
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
@@ -1276,7 +1276,7 @@ function CardsView() {
         {/* Section Header with Blue Pill Accent */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Cards</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -1390,7 +1390,7 @@ function CardsView() {
         {/* Section Header with Blue Pill Accent */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Card Variants</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -1403,15 +1403,19 @@ function CardsView() {
           {cardVariants.map((variant, idx) => (
             <div
               key={idx}
-              className={`bg-white rounded-2xl border border-slate-100 shadow-xs border-t-4 ${variant.border} overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200`}
+              className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200 flex flex-col justify-between"
             >
-              <div className="px-6 py-4.5 border-b border-slate-100/80">
-                <h4 className={`text-sm sm:text-base font-bold ${variant.titleColor}`}>Card Header</h4>
-              </div>
-              <div className="p-6">
-                <p className="text-xs sm:text-sm text-slate-600 font-medium">
-                  Card <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal">{variant.name}</code>
-                </p>
+              <div>
+                {/* Thin gradient accent line at top of card */}
+                <div className={`h-1 w-full bg-gradient-to-r ${variant.gradient}`} />
+                <div className="px-6 py-4.5 border-b border-slate-100/80">
+                  <h4 className={`text-sm sm:text-base font-bold ${variant.titleColor}`}>Card Header</h4>
+                </div>
+                <div className="p-6">
+                  <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                    Card <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal">{variant.name}</code>
+                  </p>
+                </div>
               </div>
             </div>
           ))}
@@ -1425,7 +1429,7 @@ function CardsView() {
         {/* Section Header with Blue Pill Accent */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Card Button &amp; Input</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -1636,7 +1640,7 @@ function CardsView() {
         {/* Section Header with Blue Pill Accent */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Functionality Card</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -1885,7 +1889,7 @@ function CardsView() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+              <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
               <h2 className="text-base sm:text-lg font-bold text-slate-800">Sortable Card</h2>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
@@ -1916,10 +1920,12 @@ function CardsView() {
               onDragStart={(e) => handleDragStart(e, idx)}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, idx)}
-              className={`bg-white rounded-2xl border border-slate-100 shadow-xs border-t-4 ${card.border} overflow-hidden cursor-grab active:cursor-grabbing hover:-translate-y-1 hover:shadow-md transition-all duration-200 select-none ${
+              className={`bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden cursor-grab active:cursor-grabbing hover:-translate-y-1 hover:shadow-md transition-all duration-200 select-none ${
                 draggedIndex === idx ? 'opacity-40 scale-95 border-dashed border-[#1351b8]' : ''
               }`}
             >
+              {/* Thin gradient accent line at top of card */}
+              <div className={`h-1 w-full bg-gradient-to-r ${card.gradient}`} />
               <div className="px-5 py-4 border-b border-slate-100/80 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center">
@@ -2089,7 +2095,7 @@ function CarouselView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Carousel</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -2370,7 +2376,7 @@ function CollapseView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Collapse</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -2547,7 +2553,7 @@ function DropdownView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Dropdown</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -3208,7 +3214,7 @@ function FormView() {
   // Section title pill component inside card bodies (matching ShizueFI)
   const FormSectionTitle = ({ title }: { title: string }) => (
     <div className="flex items-center gap-2 mb-3 mt-5 first:mt-0">
-      <span className="w-6 h-1.5 bg-[#1351b8] rounded-full inline-block" />
+      <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
       <h5 className="text-xs font-bold uppercase tracking-wider text-slate-700">{title}</h5>
     </div>
   );
@@ -3218,7 +3224,7 @@ function FormView() {
       {/* Section Header with Blue Pill Accent */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
           <h2 className="text-base sm:text-lg font-bold text-slate-800">Forms</h2>
         </div>
         <p className="text-xs sm:text-sm text-slate-500">
@@ -3427,10 +3433,10 @@ function FormView() {
                 </div>
 
                 {/* Range */}
-                <div className="space-y-1.5">
+                <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-medium text-slate-700">Range</label>
-                    <span className="text-[11px] font-bold text-[#1351b8] bg-blue-50 px-2 py-0.5 rounded-md">
+                    <label className="text-xs font-semibold text-slate-700">Range</label>
+                    <span className="text-[11px] font-bold text-[#1351b8] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
                       {rangeValue}
                     </span>
                   </div>
@@ -3766,10 +3772,10 @@ function FormView() {
               <div>
                 <FormSectionTitle title="Text" />
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-2">
                       <span>Text</span>
-                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-[#1351b8] font-mono border border-blue-100 font-semibold">
                         .form-control-sm
                       </code>
                     </label>
@@ -3778,17 +3784,17 @@ function FormView() {
                       className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 block">Text (Normal)</label>
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 block">Text (Normal)</label>
                     <input
                       type="text"
                       className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-2">
                       <span>Text</span>
-                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-[#1351b8] font-mono border border-blue-100 font-semibold">
                         .form-control-lg
                       </code>
                     </label>
@@ -3803,10 +3809,10 @@ function FormView() {
               <div>
                 <FormSectionTitle title="Select" />
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-2">
                       <span>Select</span>
-                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-[#1351b8] font-mono border border-blue-100 font-semibold">
                         .form-control-sm
                       </code>
                     </label>
@@ -3815,17 +3821,17 @@ function FormView() {
                       <option>Option 2</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 block">Select (Normal)</label>
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 block">Select (Normal)</label>
                     <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer">
                       <option>Option 1</option>
                       <option>Option 2</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
+                  <div className="space-y-2.5">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-2">
                       <span>Select</span>
-                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/60">
+                      <code className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-[#1351b8] font-mono border border-blue-100 font-semibold">
                         .form-control-lg
                       </code>
                     </label>
@@ -3899,17 +3905,17 @@ function FormView() {
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <label className="text-xs font-medium text-slate-700 block">Inline Checkbox</label>
-                <div className="flex items-center gap-4">
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                <label className="text-xs font-semibold text-slate-700 block">Inline Checkbox</label>
+                <div className="flex items-center gap-7">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
                     <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
                     <span>1</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
                     <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
                     <span>2</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-400 cursor-not-allowed">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-400 cursor-not-allowed select-none">
                     <input type="checkbox" disabled className="w-4 h-4 rounded-sm border-slate-300" />
                     <span>3 (disabled)</span>
                   </label>
@@ -3917,17 +3923,17 @@ function FormView() {
               </div>
 
               <div className="space-y-2 pt-2">
-                <label className="text-xs font-medium text-slate-700 block">Inline Radio</label>
-                <div className="flex items-center gap-4">
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                <label className="text-xs font-semibold text-slate-700 block">Inline Radio</label>
+                <div className="flex items-center gap-7">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
                     <input type="radio" name="inlineRadio" className="w-4 h-4 text-[#1351b8] border-slate-300" />
                     <span>1</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
                     <input type="radio" name="inlineRadio" className="w-4 h-4 text-[#1351b8] border-slate-300" />
                     <span>2</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-400 cursor-not-allowed">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-400 cursor-not-allowed select-none">
                     <input type="radio" disabled name="inlineRadio" className="w-4 h-4 border-slate-300" />
                     <span>3 (disabled)</span>
                   </label>
@@ -4300,7 +4306,7 @@ function KelasView() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Data Kelas &amp; Rombel</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -4573,7 +4579,7 @@ function MataPelajaranView() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Mata Pelajaran &amp; Kurikulum</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
