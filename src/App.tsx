@@ -7,7 +7,6 @@ import { RecentExamsTable } from './components/dashboard/RecentExamsTable';
 import { useDashboardData } from './hooks/useDashboardData';
 import { showToast, showSuccess } from './lib/swal';
 import {
-  FileCode2,
   FileSpreadsheet,
   CheckCircle2,
   Sparkles,
@@ -4219,28 +4218,6 @@ function DashboardView() {
   );
 }
 
-function BlankPageView() {
-  return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 shadow-xs min-h-[420px] flex flex-col justify-center items-center text-center">
-      <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#1351b8] flex items-center justify-center mb-4 shadow-inner">
-        <FileCode2 className="w-8 h-8" strokeWidth={2} />
-      </div>
-      <h3 className="text-lg font-bold text-slate-800">Halaman Kosong Siap Pakai</h3>
-      <p className="text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-        Template blank page ini siap Anda gunakan sebagai kanvas untuk membuat form input baru, tabel data, ataupun halaman statistik CBT kustom.
-      </p>
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => showToast('Memulai komponen baru di Blank Page...', 'success')}
-          className="px-5 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
-        >
-          Mulai Tambah Komponen
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // Dedicated Kelas & Rombel View
 function KelasView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -6291,6 +6268,283 @@ function NavbarView() {
   );
 }
 
+// Dedicated Pagination Showcase matching ShizueFI & Stisla with Master Gradients & Interactivity
+function PaginationView() {
+  const [activeBasicPage, setActiveBasicPage] = useState<number>(1);
+  const [activeDisabledPage, setActiveDisabledPage] = useState<number>(2);
+  const [activeIconPage, setActiveIconPage] = useState<number>(1);
+  const [activeSmallPage, setActiveSmallPage] = useState<number>(1);
+  const [activeLargePage, setActiveLargePage] = useState<number>(2);
+
+  const pages = [1, 2, 3];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Pagination</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for showing pagination to indicate a series of related content exists across multiple pages.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Card: Pagination */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Pagination</h4>
+            </div>
+            <div className="p-6">
+              <nav aria-label="Basic Pagination" className="flex items-center gap-1 select-none">
+                <button
+                  type="button"
+                  disabled={activeBasicPage <= 1}
+                  onClick={() => {
+                    if (activeBasicPage > 1) {
+                      setActiveBasicPage((p) => p - 1);
+                      showToast(`Halaman ${activeBasicPage - 1}`, 'info');
+                    }
+                  }}
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                    activeBasicPage <= 1
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : 'text-[#1351b8] hover:bg-slate-100 cursor-pointer'
+                  }`}
+                >
+                  Previous
+                </button>
+                {pages.map((p) => {
+                  const isActive = activeBasicPage === p;
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => {
+                        setActiveBasicPage(p);
+                        showToast(`Halaman ${p}`, 'info');
+                      }}
+                      className={`min-w-[36px] h-9 px-3 flex items-center justify-center text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-bold'
+                          : 'text-[#1351b8] hover:bg-slate-100'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  disabled={activeBasicPage >= pages.length}
+                  onClick={() => {
+                    if (activeBasicPage < pages.length) {
+                      setActiveBasicPage((p) => p + 1);
+                      showToast(`Halaman ${activeBasicPage + 1}`, 'info');
+                    }
+                  }}
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                    activeBasicPage >= pages.length
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : 'text-[#1351b8] hover:bg-slate-100 cursor-pointer'
+                  }`}
+                >
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* 2. Card: Disabled & Active State */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Disabled &amp; Active State</h4>
+            </div>
+            <div className="p-6">
+              <nav aria-label="Disabled and Active Pagination" className="flex items-center gap-1 select-none">
+                <span className="px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-300 cursor-not-allowed">
+                  Previous
+                </span>
+                {pages.map((p) => {
+                  const isActive = activeDisabledPage === p;
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => {
+                        setActiveDisabledPage(p);
+                        showToast(`Halaman aktif: ${p}`, 'info');
+                      }}
+                      className={`min-w-[36px] h-9 px-3 flex items-center justify-center text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-bold'
+                          : 'text-[#1351b8] hover:bg-slate-100'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (activeDisabledPage < pages.length) {
+                      setActiveDisabledPage((p) => p + 1);
+                      showToast(`Halaman ${activeDisabledPage + 1}`, 'info');
+                    }
+                  }}
+                  className="px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#1351b8] hover:bg-slate-100 rounded-lg transition-all cursor-pointer"
+                >
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Card: Icon */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Icon</h4>
+            </div>
+            <div className="p-6">
+              <nav aria-label="Icon Pagination" className="flex items-center gap-1 select-none">
+                <button
+                  type="button"
+                  disabled={activeIconPage <= 1}
+                  onClick={() => {
+                    if (activeIconPage > 1) {
+                      setActiveIconPage((p) => p - 1);
+                      showToast(`Halaman ${activeIconPage - 1}`, 'info');
+                    }
+                  }}
+                  className={`min-w-[36px] h-9 px-3 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${
+                    activeIconPage <= 1
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : 'text-[#1351b8] hover:bg-slate-100 cursor-pointer'
+                  }`}
+                  aria-label="Previous"
+                >
+                  &laquo;
+                </button>
+                {pages.map((p) => {
+                  const isActive = activeIconPage === p;
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => {
+                        setActiveIconPage(p);
+                        showToast(`Halaman ${p}`, 'info');
+                      }}
+                      className={`min-w-[36px] h-9 px-3 flex items-center justify-center text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-bold'
+                          : 'text-[#1351b8] hover:bg-slate-100'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  disabled={activeIconPage >= pages.length}
+                  onClick={() => {
+                    if (activeIconPage < pages.length) {
+                      setActiveIconPage((p) => p + 1);
+                      showToast(`Halaman ${activeIconPage + 1}`, 'info');
+                    }
+                  }}
+                  className={`min-w-[36px] h-9 px-3 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${
+                    activeIconPage >= pages.length
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : 'text-[#1351b8] hover:bg-slate-100 cursor-pointer'
+                  }`}
+                  aria-label="Next"
+                >
+                  &raquo;
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* 4. Card: Sizing */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Sizing</h4>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* Small Pagination */}
+              <div>
+                <nav aria-label="Small Pagination" className="flex items-center gap-1 select-none">
+                  {pages.map((p) => {
+                    const isActive = activeSmallPage === p;
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => {
+                          setActiveSmallPage(p);
+                          showToast(`Small pagination: ${p}`, 'info');
+                        }}
+                        className={`min-w-[28px] h-7 px-2.5 flex items-center justify-center text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs font-bold'
+                            : 'text-[#1351b8] hover:bg-slate-100'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Large Pagination */}
+              <div>
+                <nav aria-label="Large Pagination" className="flex items-center gap-1.5 select-none">
+                  {pages.map((p) => {
+                    const isActive = activeLargePage === p;
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => {
+                          setActiveLargePage(p);
+                          showToast(`Large pagination: ${p}`, 'info');
+                        }}
+                        className={`min-w-[44px] h-11 px-4 flex items-center justify-center text-sm sm:text-base font-bold rounded-xl transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                            : 'text-[#1351b8] hover:bg-slate-100'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -6437,8 +6691,8 @@ export function App() {
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Navbar'],
     },
     pagination: {
-      title: 'Pagination & Data Table',
-      breadcrumbs: ['Velora UI', 'Bootstrap', 'Pagination'],
+      title: 'Pagination',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Pagination'],
     },
     table: {
       title: 'Data Table Showcase',
@@ -6472,6 +6726,7 @@ export function App() {
       case 'dashboard':
         return <DashboardView />;
       case 'pagination':
+        return <PaginationView />;
       case 'table':
       case 'datatables':
       case 'components-table':
@@ -6508,7 +6763,7 @@ export function App() {
       case 'buttons':
         return <ButtonsView />;
       case 'blank-page':
-        return <BlankPageView />;
+        return <KelasView />;
       case 'credits':
         return (
           <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm max-w-3xl space-y-4">
