@@ -48,6 +48,7 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Maximize2,
+  Settings,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -5924,6 +5925,249 @@ function ModalView() {
   );
 }
 
+// Dedicated Nav Showcase matching ShizueFI & Stisla with Master Gradients & Full Interactivity
+function NavView() {
+  // State for interactive Base Nav
+  const [activeBaseNav, setActiveBaseNav] = useState<number>(0);
+
+  // State for interactive Vertical Nav
+  const [activeVerticalNav, setActiveVerticalNav] = useState<number>(0);
+
+  // State for interactive Tabs
+  const [activeTabNav, setActiveTabNav] = useState<number>(0);
+
+  // State for interactive Simple Pills
+  const [activeSimplePill, setActiveSimplePill] = useState<number>(0);
+
+  // State for interactive Icon Pills
+  const [activeIconPill, setActiveIconPill] = useState<number>(0);
+
+  const navLinks = ['Active', 'Link', 'Link', 'Disabled'];
+
+  const iconPills = [
+    { name: 'Home', icon: Home },
+    { name: 'Profile', icon: User },
+    { name: 'Setting', icon: Settings },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Navs</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for how to use Bootstrap’s included navigation components.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Base Nav */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Base Nav</h4>
+            </div>
+            <div className="p-6">
+              <nav className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm">
+                {navLinks.map((link, idx) => {
+                  const isDisabled = idx === 3;
+                  const isActive = activeBaseNav === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          setActiveBaseNav(idx);
+                          showToast(`Nav item "${link}" aktif!`, 'info');
+                        }
+                      }}
+                      className={`font-semibold transition-all select-none ${
+                        isDisabled
+                          ? 'text-slate-300 cursor-not-allowed'
+                          : isActive
+                          ? 'text-[#1351b8] cursor-pointer'
+                          : 'text-[#1351b8] hover:text-[#0c2869] hover:underline cursor-pointer'
+                      }`}
+                    >
+                      {link}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
+
+          {/* 2. Vertical Nav */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Vertical</h4>
+            </div>
+            <div className="p-6">
+              <nav className="flex flex-col space-y-3 text-xs sm:text-sm">
+                {navLinks.map((link, idx) => {
+                  const isDisabled = idx === 3;
+                  const isActive = activeVerticalNav === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          setActiveVerticalNav(idx);
+                          showToast(`Vertical nav "${link}" aktif!`, 'info');
+                        }
+                      }}
+                      className={`text-left font-semibold transition-all select-none self-start ${
+                        isDisabled
+                          ? 'text-slate-300 cursor-not-allowed'
+                          : isActive
+                          ? 'text-[#1351b8] cursor-pointer'
+                          : 'text-[#1351b8] hover:text-[#0c2869] hover:underline cursor-pointer'
+                      }`}
+                    >
+                      {link}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Tabs */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Tabs</h4>
+            </div>
+            <div className="p-6">
+              <div className="border-b border-slate-200">
+                <nav className="flex flex-wrap items-center -mb-px gap-1 text-xs sm:text-sm">
+                  {navLinks.map((link, idx) => {
+                    const isDisabled = idx === 3;
+                    const isActive = activeTabNav === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (!isDisabled) {
+                            setActiveTabNav(idx);
+                            showToast(`Tab "${link}" aktif!`, 'info');
+                          }
+                        }}
+                        className={`px-4 py-2.5 font-semibold transition-all select-none rounded-t-lg border-b-2 ${
+                          isDisabled
+                            ? 'text-slate-300 border-transparent cursor-not-allowed'
+                            : isActive
+                            ? 'text-slate-800 bg-white border-slate-200 border-t border-x border-b-white font-bold cursor-pointer'
+                            : 'text-[#1351b8] border-transparent hover:text-slate-700 hover:border-slate-300 cursor-pointer'
+                        }`}
+                      >
+                        {link}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Pills */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Pills</h4>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* Sub-section 1: Simple */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                  <h5 className="text-xs sm:text-sm font-bold text-slate-800">Simple</h5>
+                </div>
+                <nav className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                  {navLinks.map((link, idx) => {
+                    const isDisabled = idx === 3;
+                    const isActive = activeSimplePill === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (!isDisabled) {
+                            setActiveSimplePill(idx);
+                            showToast(`Pill "${link}" aktif!`, 'info');
+                          }
+                        }}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all select-none ${
+                          isDisabled
+                            ? 'text-slate-300 cursor-not-allowed'
+                            : isActive
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs cursor-pointer'
+                            : 'text-[#1351b8] hover:bg-slate-100 cursor-pointer'
+                        }`}
+                      >
+                        {link}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Sub-section 2: Icon */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                  <h5 className="text-xs sm:text-sm font-bold text-slate-800">Icon</h5>
+                </div>
+                <nav className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                  {iconPills.map((pill, idx) => {
+                    const Icon = pill.icon;
+                    const isActive = activeIconPill === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setActiveIconPill(idx);
+                          showToast(`Icon Pill "${pill.name}" aktif!`, 'info');
+                        }}
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all select-none cursor-pointer ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                            : 'text-[#1351b8] hover:bg-slate-100'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span>{pill.name}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -6061,6 +6305,10 @@ export function App() {
       title: 'Modal',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Modal'],
     },
+    nav: {
+      title: 'Nav',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Nav'],
+    },
     pagination: {
       title: 'Pagination & Data Table',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Pagination'],
@@ -6120,6 +6368,8 @@ export function App() {
         return <MediaObjectView />;
       case 'modal':
         return <ModalView />;
+      case 'nav':
+        return <NavView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
