@@ -9,7 +9,6 @@ import { showToast, showSuccess } from './lib/swal';
 import {
   FileCode2,
   FileSpreadsheet,
-  CalendarCheck,
   CheckCircle2,
   Sparkles,
   Users,
@@ -22,7 +21,6 @@ import {
   Eye,
   Radio,
   Award,
-  BookMarked,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -884,125 +882,69 @@ function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: Rea
 }
 
 export function App() {
-  // Set default to 'kelas' to showcase the new requested feature!
-  const [activeMenu, setActiveMenu] = useState('kelas');
+  // Default to General Dashboard
+  const [activeMenu, setActiveMenu] = useState('general-dashboard');
 
   const pageMeta: Record<string, { title: string; breadcrumbs: string[] }> = {
-    kelas: {
-      title: 'Data Kelas & Rombel',
-      breadcrumbs: ['Dashboard', 'Data Akademik', 'Data Kelas & Rombel'],
+    'general-dashboard': {
+      title: 'General Dashboard',
+      breadcrumbs: ['Velora UI', 'Dashboard', 'General Dashboard'],
     },
-    'mata-pelajaran': {
-      title: 'Mata Pelajaran',
-      breadcrumbs: ['Dashboard', 'Data Akademik', 'Mata Pelajaran'],
-    },
-    'tahun-akademik': {
-      title: 'Tahun Ajaran & Sesi',
-      breadcrumbs: ['Dashboard', 'Data Akademik', 'Tahun Ajaran'],
-    },
-    guru: {
-      title: 'Data Guru & Pengajar',
-      breadcrumbs: ['Dashboard', 'Pengguna', 'Guru & Pengajar'],
-    },
-    peserta: {
-      title: 'Data Siswa & Peserta',
-      breadcrumbs: ['Dashboard', 'Pengguna', 'Siswa & Peserta'],
-    },
-    'daftar-soal': {
-      title: 'Bank Soal CBT',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Daftar Soal'],
-    },
-    'kategori-soal': {
-      title: 'Kategori Mata Ujian',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Kategori Soal'],
-    },
-    'import-excel': {
-      title: 'Import Soal (Excel)',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Import Excel'],
-    },
-    'sesi-aktif': {
-      title: 'Jadwal Ujian Aktif',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Jadwal Ujian'],
-    },
-    'riwayat-ujian': {
-      title: 'Riwayat Ujian Selesai',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Riwayat Ujian'],
-    },
-    'token-generator': {
-      title: 'Generator Token CBT',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Generator Token'],
-    },
-    'monitoring-ujian': {
-      title: 'Live Monitor Ujian Realtime',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Live Monitor'],
-    },
-    'nilai-ujian': {
-      title: 'Hasil & Rekap Nilai Ujian',
-      breadcrumbs: ['Dashboard', 'CBT Engine', 'Hasil Nilai'],
-    },
-    'materi-pelajaran': {
-      title: 'Materi & Modul Ajar',
-      breadcrumbs: ['Dashboard', 'LMS', 'Materi Modul'],
-    },
-    'tugas-siswa': {
-      title: 'Tugas & Penugasan Siswa',
-      breadcrumbs: ['Dashboard', 'LMS', 'Tugas Siswa'],
-    },
-    card: {
-      title: 'Card Showcase',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Card'],
+    'ecommerce-dashboard': {
+      title: 'Ecommerce Dashboard',
+      breadcrumbs: ['Velora UI', 'Dashboard', 'Ecommerce Dashboard'],
     },
     dashboard: {
-      title: 'Dashboard',
+      title: 'General Dashboard',
       breadcrumbs: ['Velora UI', 'Dashboard'],
-    },
-    'analytics-cbt': {
-      title: 'Analitik CBT',
-      breadcrumbs: ['Dashboard', 'Analitik CBT'],
     },
     'blank-page': {
       title: 'Blank Page',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Blank Page'],
+      breadcrumbs: ['Velora UI', 'Starter', 'Blank Page'],
     },
     alert: {
       title: 'Alert Showcase',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Alert'],
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Alert'],
     },
     badge: {
-      title: 'Badge',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Badge'],
+      title: 'Badge Showcase',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Badge'],
     },
     breadcrumb: {
-      title: 'Breadcrumb',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Breadcrumb'],
+      title: 'Breadcrumb Showcase',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Breadcrumb'],
     },
     buttons: {
-      title: 'Buttons',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Buttons'],
+      title: 'Buttons Showcase',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Buttons'],
+    },
+    card: {
+      title: 'Card Showcase',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Card'],
     },
     form: {
       title: 'Form Elements',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Form'],
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Form'],
     },
     modal: {
       title: 'Modal & Dialog',
-      breadcrumbs: ['Dashboard', 'Komponen UI', 'Modal'],
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Modal'],
     },
-    'profil-sekolah': {
-      title: 'Profil Instansi',
-      breadcrumbs: ['Dashboard', 'Pengaturan', 'Profil Instansi'],
+    pagination: {
+      title: 'Pagination & Data Table',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Pagination'],
     },
-    'hak-akses': {
-      title: 'Hak Akses & Role',
-      breadcrumbs: ['Dashboard', 'Pengaturan', 'Hak Akses'],
+    table: {
+      title: 'Data Table Showcase',
+      breadcrumbs: ['Velora UI', 'Bootstrap', 'Table'],
     },
-    'database-backup': {
-      title: 'Backup & Restore',
-      breadcrumbs: ['Dashboard', 'Pengaturan', 'Backup Data'],
+    datatables: {
+      title: 'DataTables Module',
+      breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
     },
-    panduan: {
-      title: 'Panduan & Bantuan',
-      breadcrumbs: ['Dashboard', 'Panduan'],
+    credits: {
+      title: 'Credits & Attribution',
+      breadcrumbs: ['Velora UI', 'Credits'],
     },
   };
 
@@ -1014,86 +956,44 @@ export function App() {
 
   const currentMeta = pageMeta[activeMenu] || {
     title: formatSlug(activeMenu),
-    breadcrumbs: ['Dashboard', 'Fitur', formatSlug(activeMenu)],
+    breadcrumbs: ['Velora UI', 'Pages', formatSlug(activeMenu)],
   };
 
   const renderContent = () => {
     switch (activeMenu) {
-      case 'kelas':
+      case 'general-dashboard':
+      case 'ecommerce-dashboard':
+      case 'dashboard':
+        return <DashboardView />;
+      case 'pagination':
+      case 'table':
+      case 'datatables':
+      case 'components-table':
         return <KelasView />;
-      case 'mata-pelajaran':
+      case 'advanced-form':
+      case 'forms':
         return <MataPelajaranView />;
       case 'card':
         return <CardsView />;
       case 'alert':
         return <AlertView />;
-      case 'dashboard':
-        return <DashboardView />;
       case 'blank-page':
         return <BlankPageView />;
-      case 'monitoring-ujian':
+      case 'credits':
         return (
-          <PlaceholderView
-            title="Live Monitor Ujian Realtime"
-            icon={Radio}
-            desc="Pantau siswa yang sedang mengerjakan ujian secara langsung, cek koneksi kuis, dan reset login peserta."
-          />
-        );
-      case 'nilai-ujian':
-        return (
-          <PlaceholderView
-            title="Hasil & Rekap Nilai Ujian"
-            icon={Award}
-            desc="Rekapitulasi nilai hasil CBT otomatis, analisis butir soal, dan ekspor lembar penilaian (Excel/PDF)."
-          />
-        );
-      case 'guru':
-        return (
-          <PlaceholderView
-            title="Data Guru & Pengajar"
-            icon={Users}
-            desc="Manajemen data pendidik, penugasan mata pelajaran, dan hak akses proktor ujian."
-          />
-        );
-      case 'peserta':
-        return (
-          <PlaceholderView
-            title="Data Siswa & Peserta Ujian"
-            icon={GraduationCap}
-            desc="Data identitas siswa, nomor peserta ujian, sesi ruangan, dan kartu ujian."
-          />
-        );
-      case 'daftar-soal':
-        return (
-          <PlaceholderView
-            title="Bank Soal CBT"
-            icon={FileSpreadsheet}
-            desc="Kelola butir soal pilihan ganda, benar/salah, esai, dan paket soal ujian dengan mudah."
-          />
-        );
-      case 'sesi-aktif':
-        return (
-          <PlaceholderView
-            title="Jadwal Ujian Aktif"
-            icon={CalendarCheck}
-            desc="Atur tanggal pelaksanaan, token akses, durasi hitung mundur, dan pengacakan nomor soal."
-          />
-        );
-      case 'materi-pelajaran':
-        return (
-          <PlaceholderView
-            title="Materi & Modul Ajar"
-            icon={BookMarked}
-            desc="Unggah dokumen materi, silabus, dan video pembelajaran untuk diakses oleh siswa."
-          />
-        );
-      case 'tugas-siswa':
-        return (
-          <PlaceholderView
-            title="Tugas & Penugasan Siswa"
-            icon={BookOpen}
-            desc="Kelola tugas harian, pengumpulan tugas siswa, dan penilaian tugas terintegrasi nilai akhir."
-          />
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm max-w-3xl space-y-4">
+            <h3 className="text-xl font-bold text-slate-800">Credits & Attribution</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Velora UI is built with love, inspired by the legendary Stisla admin dashboard theme and modernized using React 19, Tailwind CSS v4, Vite, and Lucide React.
+            </p>
+            <div className="pt-4 border-t border-slate-100 flex flex-wrap gap-4 text-xs font-medium text-slate-500">
+              <span>Author: <b>Fahmi Ibrahim</b></span>
+              <span>•</span>
+              <span>License: <b>MIT License</b></span>
+              <span>•</span>
+              <a href="https://github.com/fahmiibrahimdevs/velora-ui" target="_blank" rel="noreferrer" className="text-[#1351b8] hover:underline font-semibold">GitHub Repository</a>
+            </div>
+          </div>
         );
       default:
         return (

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
   Flame,
-  GraduationCap,
-  BookMarked,
-  Users,
-  FileSpreadsheet,
-  CalendarDays,
-  Radio,
-  Award,
-  Settings,
-  HelpCircle,
-  Box,
+  Columns3,
+  Square,
+  Boxes,
+  Shapes,
+  FileText,
+  MapPin,
+  Plug,
+  User,
+  AlertCircle,
+  Bike,
+  MoreHorizontal,
+  PenTool,
   ChevronRight,
   ChevronDown,
   X,
@@ -36,122 +38,177 @@ const navSections: NavSection[] = [
         label: 'Dashboard',
         icon: Flame,
         children: [
-          { id: 'dashboard', label: 'General Dashboard' },
-          { id: 'analytics-cbt', label: 'Analitik CBT' },
+          { id: 'general-dashboard', label: 'General Dashboard' },
+          { id: 'ecommerce-dashboard', label: 'Ecommerce Dashboard' },
         ],
       },
     ],
   },
   {
-    title: 'DATA AKADEMIK',
+    title: 'STARTER',
     items: [
       {
-        id: 'akademik-group',
-        label: 'Master Akademik',
-        icon: GraduationCap,
+        id: 'layout-group',
+        label: 'Layout',
+        icon: Columns3,
         children: [
-          { id: 'kelas', label: 'Data Kelas & Rombel' },
-          { id: 'mata-pelajaran', label: 'Mata Pelajaran' },
-          { id: 'tahun-akademik', label: 'Tahun Ajaran & Sesi' },
+          { id: 'layout-default', label: 'Default Layout' },
+          { id: 'layout-transparent', label: 'Transparent Sidebar' },
+          { id: 'layout-top-navigation', label: 'Top Navigation' },
         ],
       },
       {
-        id: 'pengguna-group',
-        label: 'Guru & Siswa',
-        icon: Users,
+        id: 'blank-page',
+        label: 'Blank Page',
+        icon: Square,
+      },
+      {
+        id: 'bootstrap-group',
+        label: 'Bootstrap',
+        icon: Boxes,
         children: [
-          { id: 'guru', label: 'Data Guru & Pengajar' },
-          { id: 'peserta', label: 'Data Siswa & Peserta' },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'CBT ENGINE & UJIAN',
-    items: [
-      {
-        id: 'bank-soal-group',
-        label: 'Bank Soal CBT',
-        icon: FileSpreadsheet,
-        children: [
-          { id: 'daftar-soal', label: 'Daftar Butir Soal' },
-          { id: 'kategori-soal', label: 'Kategori Mata Ujian' },
-          { id: 'import-excel', label: 'Import Soal (Excel)' },
-        ],
-      },
-      {
-        id: 'jadwal-ujian-group',
-        label: 'Jadwal & Sesi',
-        icon: CalendarDays,
-        children: [
-          { id: 'sesi-aktif', label: 'Jadwal Ujian Aktif' },
-          { id: 'riwayat-ujian', label: 'Riwayat Ujian Selesai' },
-          { id: 'token-generator', label: 'Generator Token CBT' },
-        ],
-      },
-      {
-        id: 'monitoring-ujian',
-        label: 'Live Monitor Ujian',
-        icon: Radio,
-      },
-      {
-        id: 'nilai-ujian',
-        label: 'Hasil & Rekap Nilai',
-        icon: Award,
-      },
-    ],
-  },
-  {
-    title: 'LMS & PEMBELAJARAN',
-    items: [
-      {
-        id: 'lms-group',
-        label: 'Materi & Tugas',
-        icon: BookMarked,
-        children: [
-          { id: 'materi-pelajaran', label: 'Materi & Modul Ajar' },
-          { id: 'tugas-siswa', label: 'Tugas & Penugasan' },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'PENGATURAN',
-    items: [
-      {
-        id: 'pengaturan-group',
-        label: 'Pengaturan Sistem',
-        icon: Settings,
-        children: [
-          { id: 'profil-sekolah', label: 'Profil Instansi' },
-          { id: 'hak-akses', label: 'Hak Akses & Role' },
-          { id: 'database-backup', label: 'Backup & Restore' },
-        ],
-      },
-      {
-        id: 'panduan',
-        label: 'Panduan & Bantuan',
-        icon: HelpCircle,
-      },
-    ],
-  },
-  {
-    title: 'KOMPONEN UI',
-    items: [
-      {
-        id: 'cbt-components',
-        label: 'Komponen Template',
-        icon: Box,
-        children: [
-          { id: 'card', label: 'Card' },
           { id: 'alert', label: 'Alert' },
           { id: 'badge', label: 'Badge' },
           { id: 'breadcrumb', label: 'Breadcrumb' },
           { id: 'buttons', label: 'Buttons' },
+          { id: 'card', label: 'Card' },
+          { id: 'carousel', label: 'Carousel' },
+          { id: 'collapse', label: 'Collapse' },
+          { id: 'dropdown', label: 'Dropdown' },
           { id: 'form', label: 'Form' },
+          { id: 'list-group', label: 'List Group' },
+          { id: 'media-object', label: 'Media Object' },
           { id: 'modal', label: 'Modal' },
-          { id: 'blank-page', label: 'Blank Page' },
+          { id: 'nav', label: 'Nav' },
+          { id: 'navbar', label: 'Navbar' },
+          { id: 'pagination', label: 'Pagination' },
+          { id: 'popover', label: 'Popover' },
+          { id: 'progress', label: 'Progress' },
+          { id: 'table', label: 'Table' },
+          { id: 'tooltip', label: 'Tooltip' },
+          { id: 'typography', label: 'Typography' },
         ],
+      },
+    ],
+  },
+  {
+    title: 'VELORA UI',
+    items: [
+      {
+        id: 'components-group',
+        label: 'Components',
+        icon: Shapes,
+        children: [
+          { id: 'article', label: 'Article' },
+          { id: 'chat-box', label: 'Chat Box' },
+          { id: 'gallery', label: 'Gallery' },
+          { id: 'multiple-upload', label: 'Multiple Upload' },
+          { id: 'statistic', label: 'Statistic' },
+          { id: 'tab', label: 'Tab' },
+          { id: 'components-table', label: 'Table' },
+          { id: 'user', label: 'User' },
+        ],
+      },
+      {
+        id: 'forms-group',
+        label: 'Forms',
+        icon: FileText,
+        children: [
+          { id: 'advanced-form', label: 'Advanced Form' },
+          { id: 'editor', label: 'Editor' },
+          { id: 'validation', label: 'Validation' },
+        ],
+      },
+      {
+        id: 'maps-group',
+        label: 'Google Maps',
+        icon: MapPin,
+        children: [
+          { id: 'advanced-route', label: 'Advanced Route' },
+          { id: 'draggable-marker', label: 'Draggable Marker' },
+          { id: 'geocoding', label: 'Geocoding' },
+          { id: 'geolocation', label: 'Geolocation' },
+          { id: 'marker', label: 'Marker' },
+          { id: 'multiple-marker', label: 'Multiple Marker' },
+          { id: 'route', label: 'Route' },
+          { id: 'simple', label: 'Simple' },
+        ],
+      },
+      {
+        id: 'modules-group',
+        label: 'Modules',
+        icon: Plug,
+        children: [
+          { id: 'calendar', label: 'Calendar' },
+          { id: 'chartjs', label: 'ChartJS' },
+          { id: 'datatables', label: 'DataTables' },
+          { id: 'flag', label: 'Flag' },
+          { id: 'font-awesome', label: 'Font Awesome' },
+          { id: 'ion-icons', label: 'Ion Icons' },
+          { id: 'owl-carousel', label: 'Owl Carousel' },
+          { id: 'sparkline', label: 'Sparkline' },
+          { id: 'sweet-alert', label: 'Sweet Alert' },
+          { id: 'toastr', label: 'Toastr' },
+          { id: 'vector-map', label: 'Vector Map' },
+          { id: 'weather-icon', label: 'Weather Icon' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'PAGES',
+    items: [
+      {
+        id: 'auth-group',
+        label: 'Auth',
+        icon: User,
+        children: [
+          { id: 'forgot-password', label: 'Forgot Password' },
+          { id: 'login', label: 'Login' },
+          { id: 'login-2', label: 'Login 2' },
+          { id: 'register', label: 'Register' },
+          { id: 'reset-password', label: 'Reset Password' },
+        ],
+      },
+      {
+        id: 'errors-group',
+        label: 'Errors',
+        icon: AlertCircle,
+        children: [
+          { id: 'error-503', label: '503' },
+          { id: 'error-403', label: '403' },
+          { id: 'error-404', label: '404' },
+          { id: 'error-500', label: '500' },
+        ],
+      },
+      {
+        id: 'features-group',
+        label: 'Features',
+        icon: Bike,
+        children: [
+          { id: 'activities', label: 'Activities' },
+          { id: 'post-create', label: 'Post Create' },
+          { id: 'posts', label: 'Posts' },
+          { id: 'profile', label: 'Profile' },
+          { id: 'settings', label: 'Settings' },
+          { id: 'setting-detail', label: 'Setting Detail' },
+          { id: 'tickets', label: 'Tickets' },
+        ],
+      },
+      {
+        id: 'utilities-group',
+        label: 'Utilities',
+        icon: MoreHorizontal,
+        children: [
+          { id: 'contact', label: 'Contact' },
+          { id: 'invoice', label: 'Invoice' },
+          { id: 'subscribe', label: 'Subscribe' },
+        ],
+      },
+      {
+        id: 'credits',
+        label: 'Credits',
+        icon: PenTool,
       },
     ],
   },
@@ -165,7 +222,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
 }) => {
   // Hanya 1 dropdown yang bisa terbuka pada saat bersamaan (Accordion mode)
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>('akademik-group');
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>('dashboard-group');
 
   // Mini-sidebar hover & click state untuk flyout dan tooltip (Stisla style)
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
