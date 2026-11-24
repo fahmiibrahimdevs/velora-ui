@@ -37,37 +37,40 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           isCollapsed ? 'lg:pl-20' : 'lg:pl-64'
         }`}
       >
-        {/* Topbar */}
-        <Topbar
-          onToggleMobile={() => setIsOpenMobile(true)}
-          isCollapsed={isCollapsed}
-          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-        />
+        {/* Sticky Header: Menggabungkan Navbar Biru & Sub-Header Putih agar ikut saat di-scroll */}
+        <div className="sticky top-0 z-20 flex flex-col">
+          {/* Topbar */}
+          <Topbar
+            onToggleMobile={() => setIsOpenMobile(true)}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+          />
 
-        {/* Sub-Header Bar: Menyatu langsung di bawah Navbar, Full-Width */}
-        <div className="bg-white border-b border-slate-200/80 px-6 sm:px-8 py-4 sm:py-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
-            {pageTitle}
-          </h1>
+          {/* Sub-Header Bar: Putih menyatu langsung di bawah Navbar Biru */}
+          <div className="bg-white border-b border-slate-200/80 px-6 sm:px-8 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+              {pageTitle}
+            </h1>
 
-          {/* Breadcrumb Links (Right-aligned) */}
-          <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-            {breadcrumbs.map((crumb, idx) => {
-              const isLast = idx === breadcrumbs.length - 1;
-              return (
-                <React.Fragment key={idx}>
-                  {idx > 0 && <span className="text-slate-400">/</span>}
-                  {isLast ? (
-                    <span className="text-slate-600 font-semibold">{crumb}</span>
-                  ) : (
-                    <span className="text-[#1351b8] hover:underline cursor-pointer">
-                      {crumb}
-                    </span>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </nav>
+            {/* Breadcrumb Links (Right-aligned) */}
+            <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+              {breadcrumbs.map((crumb, idx) => {
+                const isLast = idx === breadcrumbs.length - 1;
+                return (
+                  <React.Fragment key={idx}>
+                    {idx > 0 && <span className="text-slate-400">/</span>}
+                    {isLast ? (
+                      <span className="text-slate-600 font-semibold">{crumb}</span>
+                    ) : (
+                      <span className="text-[#1351b8] hover:underline cursor-pointer">
+                        {crumb}
+                      </span>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </nav>
+          </div>
         </div>
 
         {/* Page Content Body (Abu-abu terang di bawah bar putih) */}

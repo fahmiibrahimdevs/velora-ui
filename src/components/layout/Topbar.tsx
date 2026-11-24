@@ -48,7 +48,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-20 h-[72px] px-6 sm:px-8 flex items-center justify-between gap-4 transition-all bg-[#1351b8] text-white shadow-xs">
+    <header className="relative h-[72px] px-6 sm:px-8 flex items-center justify-between gap-4 transition-all bg-[#1351b8] text-white shadow-xs">
       {/* Left: Hamburger & Search Bar */}
       <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xl">
         {/* Toggle Button */}
