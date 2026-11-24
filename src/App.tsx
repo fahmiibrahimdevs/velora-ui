@@ -2315,6 +2315,204 @@ function CarouselView() {
   );
 }
 
+// Dedicated Collapse Showcase matching ShizueFI & Stisla with Interactive States
+function CollapseView() {
+  // Simple Collapse State (default true matching screenshot)
+  const [isSimpleOpen, setIsSimpleOpen] = useState(true);
+
+  // Multiple Targets States
+  const [isTarget1Open, setIsTarget1Open] = useState(false);
+  const [isTarget2Open, setIsTarget2Open] = useState(false);
+
+  // Accordion State (default 1 open matching screenshot)
+  const [activeAccordion, setActiveAccordion] = useState<number | null>(1);
+
+  const toggleBothTargets = () => {
+    if (isTarget1Open && isTarget2Open) {
+      setIsTarget1Open(false);
+      setIsTarget2Open(false);
+    } else {
+      setIsTarget1Open(true);
+      setIsTarget2Open(true);
+    }
+  };
+
+  const handleAccordionClick = (panelNum: number) => {
+    setActiveAccordion((prev) => (prev === panelNum ? null : panelNum));
+  };
+
+  const accordionPanels = [
+    {
+      id: 1,
+      title: 'Panel 1',
+      content:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    },
+    {
+      id: 2,
+      title: 'Panel 2',
+      content:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    },
+    {
+      id: 3,
+      title: 'Panel 3',
+      content:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Collapse</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Toggle the visibility of content across your project with a few classes and our JavaScript plugins.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Column 1: Simple & Multiple Targets */}
+        <div className="space-y-6">
+          {/* Card 1: Simple */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Simple</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsSimpleOpen(!isSimpleOpen)}
+                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Link with href
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsSimpleOpen(!isSimpleOpen)}
+                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Button with data-target
+                </button>
+              </div>
+
+              {/* Collapsible Panel */}
+              {isSimpleOpen && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Card 2: Multiple Targets */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Multiple Targets</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsTarget1Open(!isTarget1Open)}
+                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Toggle first element
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsTarget2Open(!isTarget2Open)}
+                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Toggle second element
+                </button>
+                <button
+                  type="button"
+                  onClick={toggleBothTargets}
+                  className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Toggle both elements
+                </button>
+              </div>
+
+              {/* Target Panels */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {isTarget1Open && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </p>
+                  </div>
+                )}
+                {isTarget2Open && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Column 2: Accordion */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Accordion</h4>
+            </div>
+            <div className="p-6 space-y-3">
+              {accordionPanels.map((panel) => {
+                const isActive = activeAccordion === panel.id;
+                return (
+                  <div key={panel.id} className="space-y-3">
+                    {/* Header bar */}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => handleAccordionClick(panel.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          handleAccordionClick(panel.id);
+                        }
+                      }}
+                      className={`w-full text-left px-5 py-3 rounded-lg font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer select-none flex items-center justify-between ${
+                        isActive
+                          ? 'bg-[#1351b8] text-white shadow-xs'
+                          : 'bg-[#f4f6f9] hover:bg-slate-200/80 text-slate-700'
+                      }`}
+                    >
+                      <span>{panel.title}</span>
+                    </div>
+
+                    {/* Accordion Body */}
+                    {isActive && (
+                      <div className="animate-in fade-in slide-in-from-top-1 duration-200 px-2 py-1">
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          {panel.content}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DashboardView() {
   const { data, isLoading } = useDashboardData();
 
@@ -3059,6 +3257,10 @@ export function App() {
       title: 'Carousel',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Carousel'],
     },
+    collapse: {
+      title: 'Collapse',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Collapse'],
+    },
     form: {
       title: 'Form Elements',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Form'],
@@ -3114,6 +3316,8 @@ export function App() {
         return <CardsView />;
       case 'carousel':
         return <CarouselView />;
+      case 'collapse':
+        return <CollapseView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
