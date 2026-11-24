@@ -6545,6 +6545,233 @@ function PaginationView() {
   );
 }
 
+// Dedicated Popover Showcase matching ShizueFI & Stisla with Master Gradients & Interactivity
+function PopoverView() {
+  const [openDirections, setOpenDirections] = useState<{
+    top: boolean;
+    right: boolean;
+    bottom: boolean;
+    left: boolean;
+  }>({
+    top: false,
+    right: false,
+    bottom: false,
+    left: false,
+  });
+
+  const [isDisabledPopoverOpen, setIsDisabledPopoverOpen] = useState(false);
+  const [isDismissibleOpen, setIsDismissibleOpen] = useState(false);
+  const [isLinkPopoverOpen, setIsLinkPopoverOpen] = useState(false);
+
+  const toggleDirection = (dir: 'top' | 'right' | 'bottom' | 'left') => {
+    setOpenDirections((prev) => ({ ...prev, [dir]: !prev[dir] }));
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Popovers</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for adding Bootstrap popovers, like those found in iOS, to any element on your site.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Card: Directions */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Directions</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-4 py-8">
+                {/* On Top */}
+                <div className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => toggleDirection('top')}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    On top
+                  </button>
+                  {openDirections.top && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* On Right */}
+                <div className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => toggleDirection('right')}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    On right
+                  </button>
+                  {openDirections.right && (
+                    <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                      <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* On Bottom */}
+                <div className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => toggleDirection('bottom')}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    On bottom
+                  </button>
+                  {openDirections.bottom && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-b-6 border-b-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* On Left */}
+                <div className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => toggleDirection('left')}
+                    className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    On left
+                  </button>
+                  {openDirections.left && (
+                    <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="leading-relaxed">Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+                      <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-l-6 border-l-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Card: Disabled Popover */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Disabled Popover</h4>
+            </div>
+            <div className="p-6 py-8">
+              <div
+                className="relative inline-block"
+                onMouseEnter={() => setIsDisabledPopoverOpen(true)}
+                onMouseLeave={() => setIsDisabledPopoverOpen(false)}
+              >
+                <button
+                  type="button"
+                  disabled
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white text-xs font-semibold rounded-lg opacity-60 cursor-not-allowed select-none pointer-events-none"
+                >
+                  Disabled button
+                </button>
+                {isDisabledPopoverOpen && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                    <p className="font-bold text-slate-800 mb-0.5">Disabled Popover</p>
+                    <p className="leading-relaxed text-slate-600">Tombol ini dalam status disabled namun tetap dapat memicu popover saat dihover.</p>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Card: Dismiss */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Dismiss</h4>
+            </div>
+            <div className="p-6 py-8">
+              <div className="relative inline-block">
+                <button
+                  type="button"
+                  onClick={() => setIsDismissibleOpen(!isDismissibleOpen)}
+                  className="px-4 py-2 bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white text-xs font-semibold rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  Dismissible popover
+                </button>
+                {isDismissibleOpen && (
+                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-60 p-3.5 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-100">
+                      <span className="font-bold text-slate-800">Dismissible popover</span>
+                      <button
+                        type="button"
+                        onClick={() => setIsDismissibleOpen(false)}
+                        className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <p className="leading-relaxed text-slate-600">
+                      And here's some amazing content. It's very engaging. Right?
+                    </p>
+                    <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Card: Link */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Link</h4>
+            </div>
+            <div className="p-6 py-8">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur{' '}
+                <span className="relative inline-block">
+                  <button
+                    type="button"
+                    onClick={() => setIsLinkPopoverOpen(!isLinkPopoverOpen)}
+                    onMouseEnter={() => setIsLinkPopoverOpen(true)}
+                    onMouseLeave={() => setIsLinkPopoverOpen(false)}
+                    className="text-[#1351b8] font-bold underline hover:text-[#0c2869] cursor-pointer"
+                  >
+                    adipisicing elit
+                  </button>
+                  {isLinkPopoverOpen && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 bg-white rounded-xl shadow-xl border border-slate-200 text-xs text-slate-700 z-30 animate-in fade-in zoom-in-95 duration-150">
+                      <p className="font-bold text-[#1351b8] mb-1">Adipisicing elit</p>
+                      <p className="leading-relaxed text-slate-600">
+                        Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                      </p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white" />
+                    </div>
+                  )}
+                </span>
+                , sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -6694,6 +6921,10 @@ export function App() {
       title: 'Pagination',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Pagination'],
     },
+    popover: {
+      title: 'Popover',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Popover'],
+    },
     table: {
       title: 'Data Table Showcase',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Table'],
@@ -6727,6 +6958,8 @@ export function App() {
         return <DashboardView />;
       case 'pagination':
         return <PaginationView />;
+      case 'popover':
+        return <PopoverView />;
       case 'table':
       case 'datatables':
       case 'components-table':
