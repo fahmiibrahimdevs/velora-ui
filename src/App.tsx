@@ -3151,6 +3151,988 @@ function DropdownView() {
   );
 }
 
+// Dedicated Form Showcase matching ShizueFI & Stisla with 13 Comprehensive Cards
+function FormView() {
+  const [rangeValue, setRangeValue] = useState(50);
+  const [colorValue, setColorValue] = useState('#000000');
+  const [html5Form, setHtml5Form] = useState({
+    text: '',
+    select: 'Option 1',
+    multipleSelect: ['Option 1'],
+    textarea: '',
+    checkbox1: false,
+    checkbox2: false,
+    date: '',
+    datetime: '',
+    email: '',
+    month: '',
+    password: '',
+    radio: 'Radio 2',
+    search: '',
+    tel: '',
+    time: '',
+    url: '',
+    week: '',
+  });
+
+  const handleResetHtml5 = () => {
+    setHtml5Form({
+      text: '',
+      select: 'Option 1',
+      multipleSelect: ['Option 1'],
+      textarea: '',
+      checkbox1: false,
+      checkbox2: false,
+      date: '',
+      datetime: '',
+      email: '',
+      month: '',
+      password: '',
+      radio: 'Radio 2',
+      search: '',
+      tel: '',
+      time: '',
+      url: '',
+      week: '',
+    });
+    setRangeValue(50);
+    setColorValue('#000000');
+    showToast('Form berhasil di-reset!', 'info');
+  };
+
+  const handleSubmitHtml5 = (e: React.FormEvent) => {
+    e.preventDefault();
+    showToast('Data formulir berhasil dikirim!', 'success');
+  };
+
+  // Section title pill component inside card bodies (matching ShizueFI)
+  const FormSectionTitle = ({ title }: { title: string }) => (
+    <div className="flex items-center gap-2 mb-3 mt-5 first:mt-0">
+      <span className="w-6 h-1.5 bg-[#1351b8] rounded-full inline-block" />
+      <h5 className="text-xs font-bold uppercase tracking-wider text-slate-700">{title}</h5>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Forms</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples and usage guidelines for form control styles, layout options, and custom components for creating a wide variety of forms.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. HTML5 Form Basic */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">HTML5 Form Basic</h4>
+            </div>
+            <form onSubmit={handleSubmitHtml5}>
+              <div className="p-6 space-y-4.5">
+                {/* Note Alert Info Callout */}
+                <div className="bg-[#e0f2fe] border border-[#bae6fd] text-[#0369a1] px-4 py-3 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                  <span className="font-bold">Note!</span>
+                  <span>Not all browsers support HTML5 type input.</span>
+                </div>
+
+                {/* Text */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Text</label>
+                  <input
+                    type="text"
+                    value={html5Form.text}
+                    onChange={(e) => setHtml5Form({ ...html5Form, text: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 placeholder:text-slate-400 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Select */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Select</label>
+                  <select
+                    value={html5Form.select}
+                    onChange={(e) => setHtml5Form({ ...html5Form, select: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer"
+                  >
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+
+                {/* Select Multiple */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Select Multiple</label>
+                  <select
+                    multiple
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all h-28"
+                  >
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                    <option>Option 4</option>
+                  </select>
+                </div>
+
+                {/* Textarea */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Textarea</label>
+                  <textarea
+                    rows={3}
+                    value={html5Form.textarea}
+                    onChange={(e) => setHtml5Form({ ...html5Form, textarea: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 placeholder:text-slate-400 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Checkbox */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-700 block">Checkbox</label>
+                  <div className="space-y-1.5">
+                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                      <input
+                        type="checkbox"
+                        checked={html5Form.checkbox1}
+                        onChange={(e) => setHtml5Form({ ...html5Form, checkbox1: e.target.checked })}
+                        className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20 cursor-pointer"
+                      />
+                      <span>Checkbox 1</span>
+                    </label>
+                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                      <input
+                        type="checkbox"
+                        checked={html5Form.checkbox2}
+                        onChange={(e) => setHtml5Form({ ...html5Form, checkbox2: e.target.checked })}
+                        className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20 cursor-pointer"
+                      />
+                      <span>Checkbox 2</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Color */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Color</label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={colorValue}
+                      onChange={(e) => setColorValue(e.target.value)}
+                      className="w-full h-10 p-1 rounded-lg border border-slate-200/90 bg-white cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Date</label>
+                  <input
+                    type="date"
+                    value={html5Form.date}
+                    onChange={(e) => setHtml5Form({ ...html5Form, date: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Datetime Local */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Datetime Local</label>
+                  <input
+                    type="datetime-local"
+                    value={html5Form.datetime}
+                    onChange={(e) => setHtml5Form({ ...html5Form, datetime: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Email</label>
+                  <input
+                    type="email"
+                    placeholder="email@example.com"
+                    value={html5Form.email}
+                    onChange={(e) => setHtml5Form({ ...html5Form, email: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* File */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">File</label>
+                  <input
+                    type="file"
+                    className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer border border-slate-200/90 rounded-lg p-1.5"
+                  />
+                </div>
+
+                {/* Month */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Month</label>
+                  <input
+                    type="month"
+                    value={html5Form.month}
+                    onChange={(e) => setHtml5Form({ ...html5Form, month: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={html5Form.password}
+                    onChange={(e) => setHtml5Form({ ...html5Form, password: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Radio */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-700 block">Radio</label>
+                  <div className="space-y-1.5">
+                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                      <input
+                        type="radio"
+                        name="html5Radio"
+                        checked={html5Form.radio === 'Radio 1'}
+                        onChange={() => setHtml5Form({ ...html5Form, radio: 'Radio 1' })}
+                        className="w-4 h-4 text-[#1351b8] border-slate-300 focus:ring-[#1351b8]/20 cursor-pointer"
+                      />
+                      <span>Radio 1</span>
+                    </label>
+                    <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 block">
+                      <input
+                        type="radio"
+                        name="html5Radio"
+                        checked={html5Form.radio === 'Radio 2'}
+                        onChange={() => setHtml5Form({ ...html5Form, radio: 'Radio 2' })}
+                        className="w-4 h-4 text-[#1351b8] border-slate-300 focus:ring-[#1351b8]/20 cursor-pointer"
+                      />
+                      <span>Radio 2</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Range */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-slate-700">Range</label>
+                    <span className="text-[11px] font-bold text-[#1351b8] bg-blue-50 px-2 py-0.5 rounded-md">
+                      {rangeValue}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={rangeValue}
+                    onChange={(e) => setRangeValue(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1351b8]"
+                  />
+                </div>
+
+                {/* Search */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Search</label>
+                  <input
+                    type="search"
+                    placeholder="Search..."
+                    value={html5Form.search}
+                    onChange={(e) => setHtml5Form({ ...html5Form, search: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Tel */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Tel</label>
+                  <input
+                    type="tel"
+                    placeholder="+62 812 3456 7890"
+                    value={html5Form.tel}
+                    onChange={(e) => setHtml5Form({ ...html5Form, tel: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Time */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Time</label>
+                  <input
+                    type="time"
+                    value={html5Form.time}
+                    onChange={(e) => setHtml5Form({ ...html5Form, time: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Url */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Url</label>
+                  <input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={html5Form.url}
+                    onChange={(e) => setHtml5Form({ ...html5Form, url: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+
+                {/* Week */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Week</label>
+                  <input
+                    type="week"
+                    value={html5Form.week}
+                    onChange={(e) => setHtml5Form({ ...html5Form, week: e.target.value })}
+                    className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Card Footer with Submit & Reset */}
+              <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetHtml5}
+                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* 2. Inline Forms */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Inline Forms</h4>
+            </div>
+            <div className="p-6">
+              <form className="flex flex-col sm:flex-row items-center gap-3">
+                <input
+                  type="text"
+                  placeholder="Jane Doe"
+                  className="w-full sm:w-1/2 px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                />
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className="w-full sm:w-1/2 px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                />
+              </form>
+            </div>
+          </div>
+
+          {/* 3. Help Text */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Help Text</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">Password</label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                />
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <label className="text-xs font-medium text-slate-700 shrink-0">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className="w-48 px-3.5 py-1.5 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all"
+                  />
+                  <span className="text-[11px] text-slate-500">
+                    Must be 8-20 characters long.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Custom Forms #2 */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Custom Forms #2</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              <div>
+                <FormSectionTitle title="Select" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Choose One</label>
+                  <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white focus:outline-hidden focus:border-[#1351b8] focus:ring-2 focus:ring-[#1351b8]/15 transition-all cursor-pointer">
+                    <option>Open this select menu</option>
+                    <option>One</option>
+                    <option>Two</option>
+                    <option>Three</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="File Browser" />
+                <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <input
+                    type="text"
+                    readOnly
+                    placeholder="Choose file"
+                    className="flex-1 px-3.5 py-2 text-xs bg-white text-slate-500 placeholder:text-slate-400 focus:outline-hidden"
+                  />
+                  <label className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border-l border-slate-200/90 cursor-pointer transition-colors flex items-center justify-center">
+                    Browse
+                    <input type="file" className="hidden" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. Input Group Text */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Input Group Text</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              {/* @ Username */}
+              <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                <span className="px-3.5 py-2 bg-slate-50 border-r border-slate-200/80 text-xs font-medium text-slate-500 flex items-center justify-center">
+                  @
+                </span>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className="flex-1 px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                />
+              </div>
+
+              {/* Your URL .com */}
+              <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                <input
+                  type="text"
+                  placeholder="Your URL"
+                  className="flex-1 px-3.5 py-2 text-xs text-right text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                />
+                <span className="px-3.5 py-2 bg-slate-50 border-l border-slate-200/80 text-xs font-medium text-slate-500 flex items-center justify-center">
+                  .com
+                </span>
+              </div>
+
+              {/* $ .00 */}
+              <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                <span className="px-3.5 py-2 bg-slate-50 border-r border-slate-200/80 text-xs font-medium text-slate-500 flex items-center justify-center">
+                  $
+                </span>
+                <input
+                  type="text"
+                  placeholder="0"
+                  className="flex-1 px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                />
+                <span className="px-3.5 py-2 bg-slate-50 border-l border-slate-200/80 text-xs font-medium text-slate-500 flex items-center justify-center">
+                  .00
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 6. Input Group #2 */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Input Group #2</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              {/* Multiple Addons */}
+              <div>
+                <FormSectionTitle title="Multiple Addons" />
+                <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <span className="px-3.5 py-2 bg-slate-50 border-r border-slate-200/80 text-xs font-medium text-slate-500 flex items-center justify-center shrink-0">
+                    First and last name
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="First name"
+                    className="flex-1 px-3 py-2 text-xs border-r border-slate-200/80 text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Last name"
+                    className="flex-1 px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              {/* Button */}
+              <div>
+                <FormSectionTitle title="Button" />
+                <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <input
+                    type="text"
+                    placeholder="Search or input..."
+                    className="flex-1 px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => showToast('Tombol Action Input Group diklik', 'info')}
+                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                  >
+                    Button
+                  </button>
+                </div>
+              </div>
+
+              {/* Select With Button */}
+              <div>
+                <FormSectionTitle title="Select With Button" />
+                <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <select className="flex-1 px-3.5 py-2 text-xs text-slate-800 bg-white focus:outline-hidden cursor-pointer">
+                    <option>Choose...</option>
+                    <option>One</option>
+                    <option>Two</option>
+                    <option>Three</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action Select With Button diklik', 'info')}
+                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                  >
+                    Button
+                  </button>
+                </div>
+              </div>
+
+              {/* Select, Button & Input */}
+              <div>
+                <FormSectionTitle title="Select, Button & Input" />
+                <div className="flex rounded-lg border border-slate-200/90 overflow-hidden focus-within:border-[#1351b8] focus-within:ring-2 focus-within:ring-[#1351b8]/15 transition-all">
+                  <select className="px-3.5 py-2 text-xs text-slate-800 bg-white border-r border-slate-200/80 focus:outline-hidden cursor-pointer">
+                    <option>Choose...</option>
+                    <option>One</option>
+                    <option>Two</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Type value..."
+                    className="flex-1 px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => showToast('Action Select, Button & Input diklik', 'info')}
+                    className="px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold transition-all active:scale-95 cursor-pointer"
+                  >
+                    Button
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 7. Sizing */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Sizing</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              <div>
+                <FormSectionTitle title="Text" />
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">
+                      Text <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-sm</code>
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">Text (Normal)</label>
+                    <input
+                      type="text"
+                      className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">
+                      Text <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-lg</code>
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 focus:outline-hidden focus:border-[#1351b8]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Select" />
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">
+                      Select <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-sm</code>
+                    </label>
+                    <select className="w-full px-3 py-1.5 text-[11px] rounded-md border border-slate-200/90 text-slate-800 bg-white">
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">Select (Normal)</label>
+                    <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 text-slate-800 bg-white">
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">
+                      Select <code className="text-xs px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">.form-control-lg</code>
+                    </label>
+                    <select className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200/90 text-slate-800 bg-white">
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 8. Disabled & Read Only */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Disabled &amp; Read Only</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              <div>
+                <FormSectionTitle title="Text" />
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">Readonly</label>
+                    <input
+                      type="text"
+                      readOnly
+                      value="Readonly input field"
+                      className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/80 bg-slate-100 text-slate-500 cursor-not-allowed"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-600">Readonly Plain Text</label>
+                    <p className="text-sm font-semibold text-slate-800 py-1">Hello!</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Select" />
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-600">Select Disabled</label>
+                  <select disabled className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/80 bg-slate-100 text-slate-400 cursor-not-allowed">
+                    <option>Option 1</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Checkbox" />
+                <label className="inline-flex items-center gap-2 cursor-not-allowed opacity-60 text-xs text-slate-600">
+                  <input type="checkbox" disabled className="w-4 h-4 rounded-sm border-slate-300" />
+                  <span>Disabled checkbox</span>
+                </label>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Radio" />
+                <label className="inline-flex items-center gap-2 cursor-not-allowed opacity-60 text-xs text-slate-600">
+                  <input type="radio" disabled className="w-4 h-4 border-slate-300" />
+                  <span>Disabled radio</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* 9. Inline */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Inline</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-700 block">Inline Checkbox</label>
+                <div className="flex items-center gap-4">
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
+                    <span>1</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
+                    <span>2</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-400 cursor-not-allowed">
+                    <input type="checkbox" disabled className="w-4 h-4 rounded-sm border-slate-300" />
+                    <span>3 (disabled)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <label className="text-xs font-medium text-slate-700 block">Inline Radio</label>
+                <div className="flex items-center gap-4">
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="inlineRadio" className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>1</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="inlineRadio" className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>2</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 text-xs text-slate-400 cursor-not-allowed">
+                    <input type="radio" disabled name="inlineRadio" className="w-4 h-4 border-slate-300" />
+                    <span>3 (disabled)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 10. Horizontal Form (Grid Layout) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Horizontal Form</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Email</label>
+                  <input type="email" placeholder="Email" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Password</label>
+                  <input type="password" placeholder="Password" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">Address</label>
+                <input type="text" placeholder="1234 Main St" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">Address 2</label>
+                <input type="text" placeholder="Apartment, studio, or floor" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                <div className="sm:col-span-6 space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">City</label>
+                  <input type="text" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+                <div className="sm:col-span-4 space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">State</label>
+                  <select className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 bg-white focus:outline-hidden focus:border-[#1351b8]">
+                    <option>Choose...</option>
+                    <option>DKI Jakarta</option>
+                    <option>Jawa Barat</option>
+                  </select>
+                </div>
+                <div className="sm:col-span-2 space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">Zip</label>
+                  <input type="text" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+              </div>
+
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 pt-1">
+                <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
+                <span>Check me out</span>
+              </label>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => showToast('Horizontal form submitted!', 'success')}
+                  className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 11. Horizontal Form (Label Left Layout) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Horizontal Form</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <label className="sm:w-1/4 text-xs font-medium text-slate-700">Email</label>
+                <div className="sm:w-3/4">
+                  <input type="email" placeholder="Email" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <label className="sm:w-1/4 text-xs font-medium text-slate-700">Password</label>
+                <div className="sm:w-3/4">
+                  <input type="password" placeholder="Password" className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-200/90 focus:outline-hidden focus:border-[#1351b8]" />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <label className="sm:w-1/4 text-xs font-medium text-slate-700 pt-1">Radios</label>
+                <div className="sm:w-3/4 space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="horizRadio" defaultChecked className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>First radio</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="horizRadio" className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>Second radio</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-400 cursor-not-allowed">
+                    <input type="radio" disabled name="horizRadio" className="w-4 h-4 border-slate-300" />
+                    <span>Third disabled radio</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <label className="sm:w-1/4 text-xs font-medium text-slate-700">Checkbox</label>
+                <div className="sm:w-3/4">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300" />
+                    <span>Example checkbox</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => showToast('Sign in berhasil!', 'success')}
+                className="px-5 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+              >
+                Sign in
+              </button>
+            </div>
+          </div>
+
+          {/* 12. Custom Forms */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Custom Forms</h4>
+            </div>
+            <div className="p-6 space-y-5">
+              <div>
+                <FormSectionTitle title="Checkbox" />
+                <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                  <input type="checkbox" className="w-4 h-4 text-[#1351b8] rounded-sm border-slate-300 focus:ring-[#1351b8]/20" />
+                  <span>Check this custom checkbox</span>
+                </label>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Radio" />
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="customRadioSample" defaultChecked className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>Toggle this custom radio</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="customRadioSample" className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>Or toggle this other custom radio</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Inline" />
+                <div className="flex items-center gap-4">
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="customRadioInline" defaultChecked className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>Toggle this custom radio</span>
+                  </label>
+                  <label className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="radio" name="customRadioInline" className="w-4 h-4 text-[#1351b8] border-slate-300" />
+                    <span>Or toggle this other custom radio</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <FormSectionTitle title="Disabled" />
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-xs text-slate-400 cursor-not-allowed">
+                    <input type="checkbox" disabled className="w-4 h-4 rounded-sm border-slate-300" />
+                    <span>Check this custom checkbox</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-400 cursor-not-allowed">
+                    <input type="radio" disabled className="w-4 h-4 border-slate-300" />
+                    <span>Toggle this custom radio</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 13. Learn More */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Learn More</h4>
+            </div>
+            <div className="p-8 text-center bg-gradient-to-b from-slate-50/50 to-white">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800">Learn More</h3>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
+                All the above form elements are the default of bootstrap and you can learn them on the official documentation provided by Bootstrap.
+              </p>
+              <div className="mt-5">
+                <a
+                  href="https://getbootstrap.com/docs/4.0/components/forms/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <span>Learn more</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DashboardView() {
   const { data, isLoading } = useDashboardData();
 
@@ -3904,8 +4886,8 @@ export function App() {
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Dropdown'],
     },
     form: {
-      title: 'Form Elements',
-      breadcrumbs: ['Velora UI', 'Bootstrap', 'Form'],
+      title: 'Form',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Form'],
     },
     modal: {
       title: 'Modal & Dialog',
@@ -3962,6 +4944,8 @@ export function App() {
         return <CollapseView />;
       case 'dropdown':
         return <DropdownView />;
+      case 'form':
+        return <FormView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
