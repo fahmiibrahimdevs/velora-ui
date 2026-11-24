@@ -24,6 +24,11 @@ import {
   Lightbulb,
   RotateCcw,
   Plane,
+  Gauge,
+  FileText,
+  List,
+  Home,
+  ChevronRight,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -532,6 +537,226 @@ function BadgeView() {
                   </span>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Dedicated Breadcrumb Showcase matching ShizueFI & Stisla specification
+function BreadcrumbView() {
+  const gradientBackgrounds = [
+    {
+      name: 'Primary',
+      gradient: 'bg-gradient-to-r from-[#175cd3] via-[#1450be] to-[#0f3ba0] text-white shadow-xs',
+    },
+    {
+      name: 'Warning',
+      gradient: 'bg-gradient-to-r from-[#f59e0b] via-[#ea580c] to-[#d97706] text-white shadow-xs',
+    },
+    {
+      name: 'Success',
+      gradient: 'bg-gradient-to-r from-[#22c55e] via-[#16a34a] to-[#15803d] text-white shadow-xs',
+    },
+    {
+      name: 'Danger',
+      gradient: 'bg-gradient-to-r from-[#ef4444] via-[#dc2626] to-[#b91c1c] text-white shadow-xs',
+    },
+    {
+      name: 'Secondary',
+      gradient: 'bg-gradient-to-r from-[#cbd5e1] via-[#b8c2cc] to-[#94a3b8] text-white shadow-xs',
+    },
+    {
+      name: 'Dark',
+      gradient: 'bg-gradient-to-r from-[#1e293b] via-[#0f172a] to-[#020617] text-white shadow-xs',
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Breadcrumb</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Indicate the current page’s location within a navigational hierarchy that automatically adds separators via CSS.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Grid matching ShizueFI Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left Column: Default, Icon & Modern Chevron Improvements */}
+        <div className="space-y-6">
+          {/* Card 1: Default */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Default</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              {/* Item 1: Single Home */}
+              <nav aria-label="breadcrumb">
+                <ol className="flex items-center px-4.5 py-3 rounded-xl bg-slate-50/90 border border-slate-200/60 text-xs sm:text-sm font-medium text-slate-500">
+                  <li className="text-slate-600 font-semibold" aria-current="page">Home</li>
+                </ol>
+              </nav>
+
+              {/* Item 2: Home / Library / Data */}
+              <nav aria-label="breadcrumb">
+                <ol className="flex items-center px-4.5 py-3 rounded-xl bg-slate-50/90 border border-slate-200/60 text-xs sm:text-sm font-medium">
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke Home', 'info')}
+                      className="text-[#1351b8] hover:underline cursor-pointer"
+                    >
+                      Home
+                    </button>
+                  </li>
+                  <li className="text-slate-400 mx-2.5">/</li>
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke Library', 'info')}
+                      className="text-[#1351b8] hover:underline cursor-pointer"
+                    >
+                      Library
+                    </button>
+                  </li>
+                  <li className="text-slate-400 mx-2.5">/</li>
+                  <li className="text-slate-600 font-semibold" aria-current="page">Data</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+
+          {/* Card 2: Icon */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Icon</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              {/* Item 1: Icon Home */}
+              <nav aria-label="breadcrumb">
+                <ol className="flex items-center px-4.5 py-3 rounded-xl bg-slate-50/90 border border-slate-200/60 text-xs sm:text-sm font-medium text-slate-600 font-semibold">
+                  <li className="inline-flex items-center gap-1.5" aria-current="page">
+                    <Gauge className="w-4 h-4 text-slate-500" />
+                    Home
+                  </li>
+                </ol>
+              </nav>
+
+              {/* Item 2: Icon Home / Library / Data */}
+              <nav aria-label="breadcrumb">
+                <ol className="flex items-center px-4.5 py-3 rounded-xl bg-slate-50/90 border border-slate-200/60 text-xs sm:text-sm font-medium">
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke Home Dashboard', 'info')}
+                      className="inline-flex items-center gap-1.5 text-[#1351b8] hover:underline cursor-pointer"
+                    >
+                      <Gauge className="w-4 h-4" />
+                      Home
+                    </button>
+                  </li>
+                  <li className="text-slate-400 mx-2.5">/</li>
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke Library File', 'info')}
+                      className="inline-flex items-center gap-1.5 text-[#1351b8] hover:underline cursor-pointer"
+                    >
+                      <FileText className="w-4 h-4" />
+                      Library
+                    </button>
+                  </li>
+                  <li className="text-slate-400 mx-2.5">/</li>
+                  <li className="inline-flex items-center gap-1.5 text-slate-600 font-semibold" aria-current="page">
+                    <List className="w-4 h-4 text-slate-500" />
+                    Data
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+
+          {/* Card 3: Modern Chevron Improvement */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Modern Chevron Separators (Improvement)</h3>
+            </div>
+            <div className="p-6 space-y-3.5">
+              <nav aria-label="breadcrumb">
+                <ol className="flex items-center px-4.5 py-3 rounded-xl bg-slate-50/90 border border-slate-200/60 text-xs sm:text-sm font-medium">
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke App Root', 'info')}
+                      className="inline-flex items-center gap-1.5 text-slate-600 hover:text-[#1351b8] transition-colors cursor-pointer"
+                    >
+                      <Home className="w-4 h-4 text-[#1351b8]" />
+                      Velora
+                    </button>
+                  </li>
+                  <li className="mx-2 text-slate-400">
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => showToast('Navigasi ke Components', 'info')}
+                      className="text-slate-600 hover:text-[#1351b8] transition-colors cursor-pointer"
+                    >
+                      Bootstrap
+                    </button>
+                  </li>
+                  <li className="mx-2 text-slate-400">
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </li>
+                  <li className="text-[#1351b8] font-bold" aria-current="page">
+                    Breadcrumb
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Background (Gradients) */}
+        <div className="space-y-6">
+          {/* Card 4: Background */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Background</h3>
+            </div>
+            <div className="p-6 space-y-3.5">
+              {gradientBackgrounds.map((bg) => (
+                <nav key={bg.name} aria-label={`breadcrumb-${bg.name}`}>
+                  <ol className={`flex items-center px-5 py-3.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${bg.gradient}`}>
+                    <li>
+                      <button
+                        onClick={() => showToast(`Navigasi Home pada breadcrumb ${bg.name}`, 'info')}
+                        className="inline-flex items-center gap-1.5 text-white/85 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <Gauge className="w-4 h-4 opacity-90" />
+                        Home
+                      </button>
+                    </li>
+                    <li className="text-white/60 mx-2.5 font-light">/</li>
+                    <li>
+                      <button
+                        onClick={() => showToast(`Navigasi Library pada breadcrumb ${bg.name}`, 'info')}
+                        className="inline-flex items-center gap-1.5 text-white/85 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <FileText className="w-4 h-4 opacity-90" />
+                        Library
+                      </button>
+                    </li>
+                    <li className="text-white/60 mx-2.5 font-light">/</li>
+                    <li className="inline-flex items-center gap-1.5 text-white font-bold" aria-current="page">
+                      <List className="w-4 h-4" />
+                      Data
+                    </li>
+                  </ol>
+                </nav>
+              ))}
             </div>
           </div>
         </div>
@@ -1462,6 +1687,8 @@ export function App() {
         return <AlertView />;
       case 'badge':
         return <BadgeView />;
+      case 'breadcrumb':
+        return <BreadcrumbView />;
       case 'blank-page':
         return <BlankPageView />;
       case 'credits':
