@@ -39,6 +39,9 @@ import {
   X,
   Minus,
   ChevronDown,
+  ChevronUp,
+  Heart,
+  Clock,
   Mail,
   Lock,
   GripVertical,
@@ -2513,6 +2516,641 @@ function CollapseView() {
   );
 }
 
+// Dedicated Dropdown Showcase matching ShizueFI & Stisla with Interactive Overlays & Directions
+function DropdownView() {
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.dropdown-container')) {
+        setOpenDropdownId(null);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  const toggleDropdown = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDropdownId((prev) => (prev === id ? null : id));
+  };
+
+  const handleItemClick = (name: string) => {
+    showToast(`Memilih opsi: ${name}`, 'info');
+    setOpenDropdownId(null);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Dropdown</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Toggle contextual overlays for displaying lists of links and more with the Bootstrap dropdown plugin.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Column 1: Simple, Split, Direction */}
+        <div className="space-y-6">
+          {/* 1. Simple Dropdown */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Simple</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Blue Button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('simple-blue', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Easy Dropdown</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'simple-blue' && (
+                    <div className="absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Green Button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('simple-green', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Easy Dropdown</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'simple-green' && (
+                    <div className="absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Dark Button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('simple-dark', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Easy Dropdown</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'simple-dark' && (
+                    <div className="absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Split Dropdown */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Split</h4>
+            </div>
+            <div className="p-6">
+              <div className="relative inline-flex rounded-lg shadow-xs dropdown-container">
+                <button
+                  type="button"
+                  onClick={() => showToast('Tombol Split Dropdown utama diklik!', 'success')}
+                  className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-l-lg border-r border-rose-600/40 active:scale-98 transition-all cursor-pointer"
+                >
+                  Split Dropdown
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => toggleDropdown('split-red', e)}
+                  aria-label="Toggle split dropdown"
+                  className="px-2.5 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-r-lg active:scale-98 transition-all cursor-pointer"
+                >
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+
+                {openDropdownId === 'split-red' && (
+                  <div className="absolute left-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Action
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Another action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Another action
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Something else here')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Something else here
+                    </button>
+                    <div className="my-1 border-t border-slate-100" />
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Separated link')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Separated link
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Direction (Dropup, Dropright, Dropleft) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Direction</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Dropup */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('dir-dropup', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Dropup</span>
+                    <ChevronUp className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'dir-dropup' && (
+                    <div className="absolute left-0 bottom-full mb-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Dropright */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('dir-dropright', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Dropright</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'dir-dropright' && (
+                    <div className="absolute left-full top-0 ml-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Dropleft */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('dir-dropleft', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    <span>Dropleft</span>
+                  </button>
+
+                  {openDropdownId === 'dir-dropleft' && (
+                    <div className="absolute right-full top-0 mr-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Column 2: Icon, Size, Title */}
+        <div className="space-y-6">
+          {/* 4. Icon */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Icon</h4>
+            </div>
+            <div className="p-6">
+              <div className="relative inline-block dropdown-container">
+                <button
+                  type="button"
+                  onClick={(e) => toggleDropdown('icon-blue', e)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1351b8] hover:bg-[#0f449e] text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <span>With Icon</span>
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+
+                {openDropdownId === 'icon-blue' && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <Heart className="w-3.5 h-3.5 text-rose-500" />
+                      <span>Action</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Another action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Another action</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Something else here')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                    >
+                      <Clock className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Something else here</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 5. Size (Small, Normal, Large) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Size</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Small button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('size-sm', e)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-[11px] font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Small button</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+
+                  {openDropdownId === 'size-sm' && (
+                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Normal button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('size-normal', e)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Normal button</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  {openDropdownId === 'size-normal' && (
+                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Large button */}
+                <div className="relative dropdown-container">
+                  <button
+                    type="button"
+                    onClick={(e) => toggleDropdown('size-large', e)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Large button</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+
+                  {openDropdownId === 'size-large' && (
+                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Another action')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Another action
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Something else here')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Something else here
+                      </button>
+                      <div className="my-1 border-t border-slate-100" />
+                      <button
+                        type="button"
+                        onClick={() => handleItemClick('Separated link')}
+                        className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Separated link
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 6. Title */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-visible">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Title</h4>
+            </div>
+            <div className="p-6">
+              <div className="relative inline-block dropdown-container">
+                <button
+                  type="button"
+                  onClick={(e) => toggleDropdown('title-green', e)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <span>Options</span>
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+
+                {openDropdownId === 'title-green' && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      HI, JOHN!
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Action
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Another action')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Another action
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Something else here')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Something else here
+                    </button>
+                    <div className="my-1 border-t border-slate-100" />
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick('Separated link')}
+                      className="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                    >
+                      Separated link
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DashboardView() {
   const { data, isLoading } = useDashboardData();
 
@@ -3261,6 +3899,10 @@ export function App() {
       title: 'Collapse',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Collapse'],
     },
+    dropdown: {
+      title: 'Dropdown',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Dropdown'],
+    },
     form: {
       title: 'Form Elements',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Form'],
@@ -3318,6 +3960,8 @@ export function App() {
         return <CarouselView />;
       case 'collapse':
         return <CollapseView />;
+      case 'dropdown':
+        return <DropdownView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
