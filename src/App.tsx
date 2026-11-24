@@ -105,9 +105,8 @@ const alertDefinitions: AlertItemDef[] = [
   },
 ];
 
-// Dedicated Alerts Showcase matching ShizueFI & Stisla specification
+// Dedicated Alerts Showcase with Modern Gradient styling
 function AlertView() {
-  const [isGradient, setIsGradient] = useState(true);
   const [dismissedKeys, setDismissedKeys] = useState<string[]>([]);
 
   const handleDismiss = (key: string) => {
@@ -120,45 +119,17 @@ function AlertView() {
     showToast('Semua alert dismissable dikembalikan', 'success');
   };
 
-  const getAlertClass = (def: AlertItemDef) => (isGradient ? def.gradient : def.flat);
-
   return (
     <div className="space-y-6">
-      {/* Section Header with Blue Pill Accent & Style Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-800">Alerts</h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.
-          </p>
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Alerts</h2>
         </div>
-
-        {/* Gradient vs Solid Classic Toggle */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 flex-shrink-0 self-start sm:self-center">
-          <button
-            onClick={() => setIsGradient(true)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              isGradient
-                ? 'bg-white text-[#1351b8] shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            ✨ Modern Gradient
-          </button>
-          <button
-            onClick={() => setIsGradient(false)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              !isGradient
-                ? 'bg-white text-[#1351b8] shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            🎨 Solid Classic
-          </button>
-        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.
+        </p>
       </div>
 
       {/* 2-Column Responsive Grid matching ShizueFI Layout */}
@@ -174,9 +145,7 @@ function AlertView() {
               {alertDefinitions.map((item) => (
                 <div
                   key={item.key}
-                  className={`px-4.5 py-3.5 rounded-lg text-sm font-medium transition-all duration-200 ${getAlertClass(
-                    item
-                  )}`}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm font-medium transition-all duration-200 ${item.gradient}`}
                 >
                   This is a {item.name} alert.
                 </div>
@@ -193,9 +162,7 @@ function AlertView() {
               {alertDefinitions.map((item) => (
                 <div
                   key={item.key}
-                  className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center gap-3.5 transition-all duration-200 ${getAlertClass(
-                    item
-                  )}`}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center gap-3.5 transition-all duration-200 ${item.gradient}`}
                 >
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/15 backdrop-blur-xs">
                     <Lightbulb className="w-4.5 h-4.5" />
@@ -223,9 +190,7 @@ function AlertView() {
               {alertDefinitions.map((item) => (
                 <div
                   key={item.key}
-                  className={`px-4.5 py-3.5 rounded-lg text-sm transition-all duration-200 ${getAlertClass(
-                    item
-                  )}`}
+                  className={`px-4.5 py-3.5 rounded-lg text-sm transition-all duration-200 ${item.gradient}`}
                 >
                   <div className="font-bold text-sm tracking-tight mb-0.5">{item.title}</div>
                   <div className="text-xs sm:text-sm leading-relaxed opacity-95">
@@ -256,9 +221,7 @@ function AlertView() {
                 .map((item) => (
                   <div
                     key={item.key}
-                    className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center justify-between gap-3 transition-all duration-200 ${getAlertClass(
-                      item
-                    )}`}
+                    className={`px-4.5 py-3.5 rounded-lg text-sm flex items-center justify-between gap-3 transition-all duration-200 ${item.gradient}`}
                   >
                     <div className="text-xs sm:text-sm font-medium">
                       This is a {item.name} alert.
