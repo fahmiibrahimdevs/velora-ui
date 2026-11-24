@@ -5116,6 +5116,137 @@ function ListGroupView() {
   );
 }
 
+// Dedicated Media Object Showcase matching ShizueFI & Stisla
+function MediaObjectView() {
+  const dummyText =
+    'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.';
+
+  const shortText =
+    'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus oringilla. Donec lacinia congue felis in faucibus.';
+
+  const renderMediaThumbnail = () => (
+    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-blue-50/80 border border-blue-100 flex items-center justify-center text-[#1351b8] shrink-0 shadow-2xs">
+      <ImageIcon className="w-6 h-6 sm:w-7 sm:h-7 opacity-80" />
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Media Object</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for Bootstrap's media object to construct highly repetitive components like blog comments, tweets, and the like.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Simple */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Simple</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex items-start gap-4 sm:gap-5">
+                {renderMediaThumbnail()}
+                <div className="space-y-1">
+                  <h5 className="text-sm sm:text-base font-bold text-slate-800">Media heading</h5>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    {dummyText}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. List */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">List</h4>
+            </div>
+            <div className="p-6 space-y-6">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="flex items-start gap-4 sm:gap-5">
+                  {renderMediaThumbnail()}
+                  <div className="space-y-1">
+                    <h5 className="text-sm sm:text-base font-bold text-slate-800">List-based media object</h5>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                      {shortText}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Nesting */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Nesting</h4>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* Parent Media */}
+              <div className="flex items-start gap-4 sm:gap-5">
+                {renderMediaThumbnail()}
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h5 className="text-sm sm:text-base font-bold text-slate-800">Media heading</h5>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                      {dummyText}
+                    </p>
+                  </div>
+
+                  {/* Nested Child Media */}
+                  <div className="flex items-start gap-4 sm:gap-5 pt-1">
+                    {renderMediaThumbnail()}
+                    <div className="space-y-1">
+                      <h5 className="text-sm sm:text-base font-bold text-slate-800">Media heading</h5>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        {dummyText}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Order */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Order</h4>
+            </div>
+            <div className="p-6">
+              <div className="flex items-start justify-between gap-4 sm:gap-5">
+                <div className="space-y-1 flex-1">
+                  <h5 className="text-sm sm:text-base font-bold text-slate-800">Media object</h5>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    {dummyText}
+                  </p>
+                </div>
+                {renderMediaThumbnail()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -5245,6 +5376,10 @@ export function App() {
       title: 'List Group',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'List Group'],
     },
+    'media-object': {
+      title: 'Media Object',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Media Object'],
+    },
     modal: {
       title: 'Modal & Dialog',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Modal'],
@@ -5304,6 +5439,8 @@ export function App() {
         return <FormView />;
       case 'list-group':
         return <ListGroupView />;
+      case 'media-object':
+        return <MediaObjectView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
