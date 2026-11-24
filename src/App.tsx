@@ -7449,23 +7449,23 @@ function TableView() {
           </div>
         </div>
 
-        <div className="p-6 overflow-x-auto">
-          <table className="w-full text-left border-collapse border border-slate-200 text-xs">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-slate-100/90 text-slate-700 font-bold">
-                <th className="border border-slate-200 py-2.5 px-3.5 w-36">No. Invoice</th>
-                <th className="border border-slate-200 py-2.5 px-3.5">Nama Pelanggan</th>
-                <th className="border border-slate-200 py-2.5 px-3.5">Deskripsi Layanan</th>
-                <th className="border border-slate-200 py-2.5 px-3.5">Metode Bayar</th>
-                <th className="border border-slate-200 py-2.5 px-3.5 text-right w-36">Nominal (IDR)</th>
-                <th className="border border-slate-200 py-2.5 px-3.5 text-center w-28">Status</th>
-                <th className="border border-slate-200 py-2.5 px-3.5 text-center w-20">Aksi</th>
+              <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                <th className="py-3 pl-6 pr-4 w-36">No. Invoice</th>
+                <th className="py-3 px-4">Nama Pelanggan</th>
+                <th className="py-3 px-4">Deskripsi Layanan</th>
+                <th className="py-3 px-4">Metode Bayar</th>
+                <th className="py-3 px-4 text-right w-36">Nominal (IDR)</th>
+                <th className="py-3 px-4 text-center w-28">Status</th>
+                <th className="py-3 pl-4 pr-6 text-center w-20">Aksi</th>
               </tr>
             </thead>
-            <tbody className="text-slate-700 divide-y divide-slate-200">
+            <tbody className="text-slate-700">
               {/* === DATE GROUP 1: 24 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50 border-y-2 border-slate-200">
-                <td colSpan={7} className="py-2.5 px-3.5 font-bold text-slate-800">
+              <tr className="bg-slate-50/90 border-y border-slate-200/90">
+                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
@@ -7480,18 +7480,18 @@ function TableView() {
                   </div>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-081</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">PT Teknologi Bangsa</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Langganan Cloud ERP Enterprise (1 Tahun)</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Transfer Bank BCA</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 18.500.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-081</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Teknologi Bangsa</td>
+                <td className="py-2.5 px-4 text-slate-600">Langganan Cloud ERP Enterprise (1 Tahun)</td>
+                <td className="py-2.5 px-4 text-slate-600">Transfer Bank BCA</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 18.500.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                     Lunas
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-081', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7500,18 +7500,18 @@ function TableView() {
                   </button>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-082</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">CV Maju Bersama</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Setup Integrasi Modul Kasbon & Payroll</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">QRIS Mandiri</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 7.250.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-082</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">CV Maju Bersama</td>
+                <td className="py-2.5 px-4 text-slate-600">Setup Integrasi Modul Kasbon & Payroll</td>
+                <td className="py-2.5 px-4 text-slate-600">QRIS Mandiri</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 7.250.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                     Lunas
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-082', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7522,8 +7522,8 @@ function TableView() {
               </tr>
 
               {/* === DATE GROUP 2: 22 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50 border-y-2 border-slate-200">
-                <td colSpan={7} className="py-2.5 px-3.5 font-bold text-slate-800">
+              <tr className="bg-slate-50/90 border-y border-slate-200/90">
+                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
@@ -7538,18 +7538,18 @@ function TableView() {
                   </div>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-083</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">Studio Desain Kreatif</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Kustomisasi Desain Dashboard & Pelatihan</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Kartu Kredit Visa</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 12.000.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-083</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">Studio Desain Kreatif</td>
+                <td className="py-2.5 px-4 text-slate-600">Kustomisasi Desain Dashboard & Pelatihan</td>
+                <td className="py-2.5 px-4 text-slate-600">Kartu Kredit Visa</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 12.000.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
                     Pending
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-083', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7558,18 +7558,18 @@ function TableView() {
                   </button>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-084</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">PT Sumber Berkah Utama</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Lisensi Server On-Premise Multi-Cabang</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Virtual Account BNI</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 34.800.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-084</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Sumber Berkah Utama</td>
+                <td className="py-2.5 px-4 text-slate-600">Lisensi Server On-Premise Multi-Cabang</td>
+                <td className="py-2.5 px-4 text-slate-600">Virtual Account BNI</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 34.800.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60">
                     Jatuh Tempo
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-084', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7580,8 +7580,8 @@ function TableView() {
               </tr>
 
               {/* === DATE GROUP 3: 19 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50 border-y-2 border-slate-200">
-                <td colSpan={7} className="py-2.5 px-3.5 font-bold text-slate-800">
+              <tr className="bg-slate-50/90 border-y border-slate-200/90">
+                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
@@ -7596,18 +7596,18 @@ function TableView() {
                   </div>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-085</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">Global Logistik Nusantara Tbk</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Maintenance Berkala & Security Hardening</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Transfer Bank BNI</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 9.400.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-085</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">Global Logistik Nusantara Tbk</td>
+                <td className="py-2.5 px-4 text-slate-600">Maintenance Berkala & Security Hardening</td>
+                <td className="py-2.5 px-4 text-slate-600">Transfer Bank BNI</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 9.400.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                     Lunas
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-085', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7616,18 +7616,18 @@ function TableView() {
                   </button>
                 </td>
               </tr>
-              <tr className="hover:bg-blue-50/30 transition-colors">
-                <td className="border border-slate-200 py-2 px-3.5 font-mono font-medium text-blue-700">INV-2026-086</td>
-                <td className="border border-slate-200 py-2 px-3.5 font-semibold text-slate-800">PT Sentosa Abadi Makmur</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Modul Presensi Geolocation & Face Match</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-slate-600">Transfer Bank Mandiri</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-right font-semibold text-slate-800">Rp 15.600.000</td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-086</td>
+                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Sentosa Abadi Makmur</td>
+                <td className="py-2.5 px-4 text-slate-600">Modul Presensi Geolocation & Face Match</td>
+                <td className="py-2.5 px-4 text-slate-600">Transfer Bank Mandiri</td>
+                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 15.600.000</td>
+                <td className="py-2.5 px-4 text-center">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                     Lunas
                   </span>
                 </td>
-                <td className="border border-slate-200 py-2 px-3.5 text-center">
+                <td className="py-2.5 pl-4 pr-6 text-center">
                   <button
                     onClick={() => showToast('Detail invoice INV-2026-086', 'info')}
                     className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
@@ -7638,14 +7638,14 @@ function TableView() {
               </tr>
             </tbody>
             <tfoot>
-              <tr className="bg-slate-50 font-bold text-slate-800 border-t-2 border-slate-300">
-                <td colSpan={4} className="border border-slate-200 py-3 px-3.5 text-right font-bold text-slate-700">
+              <tr className="bg-slate-50/80 font-bold text-slate-800 border-t-2 border-slate-200">
+                <td colSpan={4} className="py-3 pl-6 pr-4 text-right font-bold text-slate-700">
                   Total Keseluruhan (6 Transaksi):
                 </td>
-                <td className="border border-slate-200 py-3 px-3.5 text-right text-[#1351b8] font-bold text-sm">
+                <td className="py-3 px-4 text-right text-[#1351b8] font-bold text-sm">
                   Rp 97.550.000
                 </td>
-                <td colSpan={2} className="border border-slate-200 py-3 px-3.5 text-center text-xs font-semibold text-slate-600">
+                <td colSpan={2} className="py-3 pl-4 pr-6 text-center text-xs font-semibold text-slate-600">
                   4 Lunas • 1 Pending • 1 Jatuh Tempo
                 </td>
               </tr>
