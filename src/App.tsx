@@ -6781,6 +6781,130 @@ function PopoverView() {
   );
 }
 
+// Dedicated Progress Showcase matching ShizueFI & Stisla with Master Gradients
+function ProgressView() {
+  const simpleValues = [0, 25, 50, 75, 100];
+  const labelValues = [0, 25, 50, 75, 100];
+  const heightVariants = [
+    { height: 'h-[5px]', width: '25%' },
+    { height: 'h-[10px]', width: '25%' },
+    { height: 'h-[15px]', width: '25%' },
+    { height: 'h-[20px]', width: '25%' },
+    { height: 'h-[25px]', width: '25%' },
+  ];
+
+  const backgroundVariants = [
+    { name: 'Success', width: '25%', gradient: 'from-[#22c55e] to-[#15803d]' },
+    { name: 'Info', width: '50%', gradient: 'from-[#0ea5e9] to-[#0284c7]' },
+    { name: 'Warning', width: '75%', gradient: 'from-[#f59e0b] to-[#d97706]' },
+    { name: 'Danger', width: '100%', gradient: 'from-[#ef4444] to-[#b91c1c]' },
+    { name: 'Info 100%', width: '100%', gradient: 'from-[#0ea5e9] to-[#0284c7]' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Progress</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Examples for using Bootstrap custom progress bars featuring support for stacked bars, animated backgrounds, and text labels.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Card: Simple */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Simple</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              {simpleValues.map((val, idx) => (
+                <div key={idx} className="w-full bg-slate-100 rounded-full h-[15px] overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] h-full rounded-full transition-all duration-500"
+                    style={{ width: `${val}%` }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2. Card: Label */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Label</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              {labelValues.map((val, idx) => (
+                <div key={idx} className="w-full bg-slate-100 rounded-full h-[18px] overflow-hidden relative">
+                  <div
+                    className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] h-full rounded-full flex items-center justify-center text-[10px] font-bold text-white transition-all duration-500 shadow-2xs"
+                    style={{ width: `${Math.max(val, 0)}%` }}
+                  >
+                    {val > 0 && `${val}%`}
+                  </div>
+                  {val === 0 && (
+                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-700">
+                      0%
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Card: Height */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Height</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              {heightVariants.map((item, idx) => (
+                <div key={idx} className={`w-full bg-slate-100 rounded-full ${item.height} overflow-hidden`}>
+                  <div
+                    className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] h-full rounded-full transition-all duration-500"
+                    style={{ width: item.width }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 4. Card: Background */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+            <div className="px-6 py-4.5 border-b border-slate-100">
+              <h4 className="text-base font-bold text-[#1351b8]">Background</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              {backgroundVariants.map((item, idx) => (
+                <div key={idx} className="w-full bg-slate-100 rounded-full h-[16px] overflow-hidden">
+                  <div
+                    className={`bg-gradient-to-r ${item.gradient} h-full rounded-full transition-all duration-500 shadow-2xs`}
+                    style={{ width: item.width }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -6934,6 +7058,10 @@ export function App() {
       title: 'Popover',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Popover'],
     },
+    progress: {
+      title: 'Progress',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Progress'],
+    },
     table: {
       title: 'Data Table Showcase',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Table'],
@@ -6969,6 +7097,8 @@ export function App() {
         return <PaginationView />;
       case 'popover':
         return <PopoverView />;
+      case 'progress':
+        return <ProgressView />;
       case 'table':
       case 'datatables':
       case 'components-table':
