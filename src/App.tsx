@@ -29,6 +29,13 @@ import {
   List,
   Home,
   ChevronRight,
+  Loader2,
+  Check,
+  Star,
+  AlertTriangle,
+  Info,
+  User,
+  X,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 
@@ -757,6 +764,422 @@ function BreadcrumbView() {
                   </ol>
                 </nav>
               ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Dedicated Buttons Showcase matching ShizueFI & Stisla with Modern Gradients
+function ButtonsView() {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const basicButtons = [
+    { name: 'Primary', class: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white' },
+    { name: 'Secondary', class: 'bg-gradient-to-r from-[#cbd5e1] to-[#94a3b8] hover:from-[#94a3b8] hover:to-[#64748b] text-white' },
+    { name: 'Info', class: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white' },
+    { name: 'Warning', class: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white' },
+    { name: 'Danger', class: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white' },
+    { name: 'Success', class: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white' },
+    { name: 'Light', class: 'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] hover:bg-slate-200 text-slate-800 border border-slate-200/80' },
+    { name: 'Dark', class: 'bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white' },
+    { name: 'Link', class: 'text-[#1351b8] hover:underline font-semibold bg-transparent shadow-none' },
+  ];
+
+  const outlineButtons = [
+    { name: 'Primary', class: 'border border-[#1351b8] text-[#1351b8] hover:bg-[#1351b8] hover:text-white' },
+    { name: 'Secondary', class: 'border border-slate-400 text-slate-600 hover:bg-slate-500 hover:text-white' },
+    { name: 'Info', class: 'border border-sky-500 text-sky-600 hover:bg-sky-500 hover:text-white' },
+    { name: 'Warning', class: 'border border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white' },
+    { name: 'Danger', class: 'border border-rose-500 text-rose-600 hover:bg-rose-500 hover:text-white' },
+    { name: 'Success', class: 'border border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white' },
+    { name: 'Light', class: 'border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-700' },
+    { name: 'Dark', class: 'border border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white' },
+  ];
+
+  const iconButtons = [
+    { name: 'Default', icon: User, class: 'bg-white text-slate-700 border border-slate-200/80 hover:bg-slate-50' },
+    { name: 'Primary', icon: Edit3, class: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white' },
+    { name: 'Secondary', icon: User, class: 'bg-gradient-to-r from-[#cbd5e1] to-[#94a3b8] text-white' },
+    { name: 'Info', icon: Info, class: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white' },
+    { name: 'Warning', icon: AlertTriangle, class: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white' },
+    { name: 'Danger', icon: X, class: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white' },
+    { name: 'Success', icon: Check, class: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] text-white' },
+    { name: 'Light', icon: Star, class: 'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] text-slate-800 border border-slate-200/80' },
+    { name: 'Dark', icon: FileText, class: 'bg-gradient-to-r from-[#1e293b] to-[#020617] text-white' },
+  ];
+
+  const onlyIconButtons = [
+    { icon: Edit3, class: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white' },
+    { icon: User, class: 'bg-gradient-to-r from-[#cbd5e1] to-[#94a3b8] text-white' },
+    { icon: Info, class: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white' },
+    { icon: AlertTriangle, class: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white' },
+    { icon: X, class: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white' },
+    { icon: Check, class: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] text-white' },
+    { icon: Star, class: 'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] text-slate-800 border border-slate-200/80' },
+    { icon: FileText, class: 'bg-gradient-to-r from-[#1e293b] to-[#020617] text-white' },
+  ];
+
+  const handleProgressClick = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      showToast('Aksi proses selesai!', 'success');
+    }, 1500);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Buttons</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Use Bootstrap’s custom button styles for actions in forms, dialogs, and more with support for multiple sizes, states, and more.
+        </p>
+      </div>
+
+      {/* Row 1: Basic & Buttons .btn-outline */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Card 1: Basic */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Basic</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn .btn-&#123;color&#125;</code> classes.
+            </p>
+            <div className="flex flex-wrap gap-2.5 items-center">
+              {basicButtons.map((btn) => (
+                <button
+                  key={`basic-${btn.name}`}
+                  onClick={() => showToast(`Tombol ${btn.name} diklik!`, 'info')}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer active:scale-95 shadow-xs hover:shadow-md ${btn.class}`}
+                >
+                  {btn.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Buttons .btn-outline */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">
+              Buttons <code className="text-sm font-mono text-[#1351b8] bg-blue-50 px-1.5 py-0.5 rounded-md">.btn-outline</code>
+            </h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn .btn-outline-&#123;color&#125;</code> classes.
+            </p>
+            <div className="flex flex-wrap gap-2.5 items-center">
+              {outlineButtons.map((btn) => (
+                <button
+                  key={`outline-${btn.name}`}
+                  onClick={() => showToast(`Tombol Outline ${btn.name} diklik!`, 'info')}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer active:scale-95 ${btn.class}`}
+                >
+                  {btn.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: Button Sizes & Button States */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Card 3: Button Sizes */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Button Sizes</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn-lg</code> or <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn-sm</code> classes.
+            </p>
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={() => showToast('Ukuran Small diklik', 'info')}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white shadow-xs cursor-pointer active:scale-95"
+              >
+                Small
+              </button>
+              <button
+                onClick={() => showToast('Ukuran Normal diklik', 'info')}
+                className="px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white shadow-xs cursor-pointer active:scale-95"
+              >
+                Normal
+              </button>
+              <button
+                onClick={() => showToast('Ukuran Large diklik', 'info')}
+                className="px-6 py-3 rounded-2xl text-base font-bold bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white shadow-sm cursor-pointer active:scale-95"
+              >
+                Large
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4: Button States */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Button States</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.disabled</code> or <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn-progress</code> classes.
+            </p>
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={() => showToast('State Normal', 'info')}
+                className="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs cursor-pointer active:scale-95"
+              >
+                Normal
+              </button>
+              <button
+                disabled
+                className="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-[#175cd3]/60 text-white/70 shadow-none cursor-not-allowed"
+              >
+                Disabled
+              </button>
+              <button
+                onClick={handleProgressClick}
+                className="px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs inline-flex items-center justify-center min-w-[90px] cursor-pointer"
+              >
+                {isProcessing ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <span className="flex items-center gap-1.5">
+                    <Loader2 className="w-4 h-4 animate-spin text-white/80" />
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Icon Button & Only Icon Button */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Card 5: Icon Button */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Icon Button</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn-icon</code> and <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.icon-left</code> classes.
+            </p>
+            <div className="flex flex-wrap gap-2.5 items-center">
+              {iconButtons.map((btn) => {
+                const IconComponent = btn.icon;
+                return (
+                  <button
+                    key={`icon-btn-${btn.name}`}
+                    onClick={() => showToast(`Icon Button ${btn.name} diklik!`, 'info')}
+                    className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-all duration-150 cursor-pointer active:scale-95 shadow-xs hover:shadow-md ${btn.class}`}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    {btn.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Card 6: Only Icon Button */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Only Icon Button</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-xs text-slate-500 mb-4 font-normal">
+              Use the <code className="text-pink-600 bg-pink-50 px-1 py-0.5 rounded text-[11px]">.btn-icon</code> class.
+            </p>
+            <div className="flex flex-wrap gap-2.5 items-center">
+              {onlyIconButtons.map((btn, idx) => {
+                const IconComponent = btn.icon;
+                return (
+                  <button
+                    key={`only-icon-${idx}`}
+                    onClick={() => showToast(`Icon button diklik!`, 'info')}
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-150 cursor-pointer active:scale-95 shadow-xs hover:shadow-md ${btn.class}`}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-slate-500 mt-5 mb-2.5 font-normal">Sizes.</p>
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => showToast('Small Icon Button', 'info')}
+                className="w-7 h-7 rounded-lg bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white flex items-center justify-center shadow-xs cursor-pointer active:scale-95"
+              >
+                <AlertTriangle className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => showToast('Normal Icon Button', 'info')}
+                className="w-9 h-9 rounded-xl bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white flex items-center justify-center shadow-xs cursor-pointer active:scale-95"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => showToast('Large Icon Button', 'info')}
+                className="w-12 h-12 rounded-2xl bg-gradient-to-r from-[#22c55e] to-[#15803d] text-white flex items-center justify-center shadow-sm cursor-pointer active:scale-95"
+              >
+                <Check className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 4: Button Group & Vertical Variation */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Card 7: Button Group */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Button Group</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            {/* Group 1: Secondary Group */}
+            <div className="inline-flex rounded-xl shadow-xs overflow-hidden" role="group">
+              <button
+                onClick={() => showToast('Left clicked', 'info')}
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer"
+              >
+                Left
+              </button>
+              <button
+                onClick={() => showToast('Middle clicked', 'info')}
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-r border-slate-300/80 cursor-pointer"
+              >
+                Middle
+              </button>
+              <button
+                onClick={() => showToast('Right clicked', 'info')}
+                className="px-4 py-2 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer"
+              >
+                Right
+              </button>
+            </div>
+
+            {/* Group 2: Colored Danger, Warning, Success */}
+            <div>
+              <div className="inline-flex rounded-xl shadow-xs overflow-hidden" role="group">
+                <button
+                  onClick={() => showToast('Left Danger', 'info')}
+                  className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white border-r border-black/10 cursor-pointer"
+                >
+                  Left
+                </button>
+                <button
+                  onClick={() => showToast('Middle Warning', 'info')}
+                  className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white border-r border-black/10 cursor-pointer"
+                >
+                  Middle
+                </button>
+                <button
+                  onClick={() => showToast('Right Success', 'info')}
+                  className="px-4 py-2 text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#22c55e] to-[#16a34a] text-white cursor-pointer"
+                >
+                  Right
+                </button>
+              </div>
+            </div>
+
+            {/* Group 3: Small Primary Group */}
+            <div>
+              <div className="inline-flex rounded-lg shadow-2xs overflow-hidden" role="group">
+                <button
+                  onClick={() => showToast('Left Small', 'info')}
+                  className="px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-[#175cd3] to-[#1244a2] text-white border-r border-blue-400/30 cursor-pointer"
+                >
+                  Left
+                </button>
+                <button
+                  onClick={() => showToast('Middle Small', 'info')}
+                  className="px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-[#175cd3] to-[#1244a2] text-white border-r border-blue-400/30 cursor-pointer"
+                >
+                  Middle
+                </button>
+                <button
+                  onClick={() => showToast('Right Small', 'info')}
+                  className="px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-[#175cd3] to-[#1244a2] text-white cursor-pointer"
+                >
+                  Right
+                </button>
+              </div>
+            </div>
+
+            {/* Group 4: Large Danger Group */}
+            <div>
+              <div className="inline-flex rounded-2xl shadow-sm overflow-hidden" role="group">
+                <button
+                  onClick={() => showToast('Left Large', 'info')}
+                  className="px-6 py-3 text-base font-bold bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white border-r border-red-700/40 cursor-pointer"
+                >
+                  Left
+                </button>
+                <button
+                  onClick={() => showToast('Middle Large', 'info')}
+                  className="px-6 py-3 text-base font-bold bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white border-r border-red-700/40 cursor-pointer"
+                >
+                  Middle
+                </button>
+                <button
+                  onClick={() => showToast('Right Large', 'info')}
+                  className="px-6 py-3 text-base font-bold bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white cursor-pointer"
+                >
+                  Right
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 8: Vertical Variation */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h3 className="text-base font-bold text-[#1351b8] tracking-tight">Vertical Variation</h3>
+          </div>
+          <div className="p-6">
+            <div className="inline-flex flex-col rounded-xl shadow-xs overflow-hidden w-28" role="group">
+              <button
+                onClick={() => showToast('Vertical: Left', 'info')}
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+              >
+                Left
+              </button>
+              <button
+                onClick={() => showToast('Vertical: Middle', 'info')}
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+              >
+                Middle
+              </button>
+              <button
+                onClick={() => showToast('Vertical: Right', 'info')}
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 border-b border-slate-300/80 cursor-pointer text-left"
+              >
+                Right
+              </button>
+              <button
+                onClick={() => showToast('Vertical: Justify', 'info')}
+                className="px-4 py-2.5 text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 cursor-pointer text-left"
+              >
+                Justify
+              </button>
             </div>
           </div>
         </div>
@@ -1689,6 +2112,8 @@ export function App() {
         return <BadgeView />;
       case 'breadcrumb':
         return <BreadcrumbView />;
+      case 'buttons':
+        return <ButtonsView />;
       case 'blank-page':
         return <BlankPageView />;
       case 'credits':
