@@ -29,6 +29,7 @@ import {
   List,
   Home,
   ChevronRight,
+  ChevronLeft,
   Loader2,
   Check,
   Star,
@@ -1984,6 +1985,336 @@ function CardsView() {
   );
 }
 
+// Dedicated Carousel Showcase matching ShizueFI & Stisla with Interactive Controls & Crossfade
+function CarouselView() {
+  // 1. Simple Carousel State (Auto-plays every 3.5s)
+  const [simpleIndex, setSimpleIndex] = useState(0);
+  const [isSimplePaused, setIsSimplePaused] = useState(false);
+
+  // 2. Caption Carousel State
+  const [captionIndex, setCaptionIndex] = useState(0);
+
+  // 3. Navigation & Indicator Carousel State
+  const [navIndex, setNavIndex] = useState(0);
+
+  // 4. Crossfade Carousel State
+  const [fadeIndex, setFadeIndex] = useState(0);
+
+  // Auto-play for Simple Carousel
+  useEffect(() => {
+    if (isSimplePaused) return;
+    const timer = setInterval(() => {
+      setSimpleIndex((prev) => (prev + 1) % 3);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [isSimplePaused]);
+
+  // Captions data
+  const captionSlides = [
+    {
+      title: 'Heading',
+      desc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      title: 'Velora Design System',
+      desc: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+    },
+    {
+      title: 'Reactive Architecture',
+      desc: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    },
+  ];
+
+  // Helper placeholder visual component (Blue Theme)
+  const renderBluePlaceholder = (slideNum: number) => (
+    <div className="w-full h-full bg-[#dff1fd] relative flex flex-col items-center justify-center select-none overflow-hidden">
+      {/* Decorative floating shapes */}
+      <span className="absolute top-8 left-12 text-[#93c5fd] font-bold text-xs select-none">+</span>
+      <span className="absolute bottom-12 left-16 w-2.5 h-2.5 border-2 border-[#93c5fd] rounded-xs select-none" />
+      <span className="absolute top-12 right-20 w-3 h-3 border-2 border-[#93c5fd] rounded-full select-none" />
+      <span className="absolute bottom-16 right-14 text-[#93c5fd] font-bold text-sm select-none">+</span>
+      <span className="absolute top-1/2 left-8 w-1.5 h-1.5 bg-[#93c5fd] rounded-full select-none" />
+
+      {/* Frame placeholder */}
+      <div className="relative z-10 flex flex-col items-center gap-3">
+        <div className="w-24 h-18 sm:w-28 sm:h-20 bg-[#38bdf8] rounded-xl p-2 flex flex-col justify-end relative shadow-sm overflow-hidden">
+          {/* Sun */}
+          <div className="absolute top-2.5 left-3.5 w-3.5 h-3.5 bg-white rounded-full shadow-xs" />
+          {/* Mountain silhouettes */}
+          <div className="flex items-end justify-center w-full">
+            <div className="w-0 h-0 border-l-[18px] border-l-transparent border-r-[18px] border-r-transparent border-b-[26px] border-b-white relative -mr-2" />
+            <div className="w-0 h-0 border-l-[28px] border-l-transparent border-r-[28px] border-r-transparent border-b-[38px] border-b-white/90" />
+          </div>
+        </div>
+        <p className="text-[11px] font-bold tracking-widest text-[#0284c7] uppercase">
+          PLACEHOLDER IMAGE {slideNum}
+        </p>
+      </div>
+    </div>
+  );
+
+  // Helper placeholder visual component (Mint Green Theme for Crossfade)
+  const renderGreenPlaceholder = (slideNum: number) => (
+    <div className="w-full h-full bg-[#dcfce7] relative flex flex-col items-center justify-center select-none overflow-hidden">
+      {/* Decorative floating shapes */}
+      <span className="absolute top-8 left-12 text-[#86efac] font-bold text-xs select-none">+</span>
+      <span className="absolute bottom-12 left-16 w-2.5 h-2.5 border-2 border-[#86efac] rounded-xs select-none" />
+      <span className="absolute top-12 right-20 w-3 h-3 border-2 border-[#86efac] rounded-full select-none" />
+      <span className="absolute bottom-16 right-14 text-[#86efac] font-bold text-sm select-none">+</span>
+      <span className="absolute top-1/2 left-8 w-1.5 h-1.5 bg-[#86efac] rounded-full select-none" />
+
+      {/* Frame placeholder */}
+      <div className="relative z-10 flex flex-col items-center gap-3">
+        <div className="w-24 h-18 sm:w-28 sm:h-20 bg-[#4ade80] rounded-xl p-2 flex flex-col justify-end relative shadow-sm overflow-hidden">
+          {/* Sun */}
+          <div className="absolute top-2.5 left-3.5 w-3.5 h-3.5 bg-white rounded-full shadow-xs" />
+          {/* Mountain silhouettes */}
+          <div className="flex items-end justify-center w-full">
+            <div className="w-0 h-0 border-l-[18px] border-l-transparent border-r-[18px] border-r-transparent border-b-[26px] border-b-white relative -mr-2" />
+            <div className="w-0 h-0 border-l-[28px] border-l-transparent border-r-[28px] border-r-transparent border-b-[38px] border-b-white/90" />
+          </div>
+        </div>
+        <p className="text-[11px] font-bold tracking-widest text-emerald-600 uppercase">
+          PLACEHOLDER IMAGE {slideNum}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header with Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-[#1351b8] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Carousel</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          A slideshow component for cycling through elements—images or slides of text—like a carousel.
+        </p>
+      </div>
+
+      {/* 2x2 Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* CARD 1: SIMPLE (Auto Slide) */}
+        {/* ======================================================== */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Simple</h4>
+            <span className="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2.5 py-0.5 rounded-full">
+              Auto Slide (3.5s)
+            </span>
+          </div>
+          <div className="p-6">
+            <div
+              className="relative h-64 sm:h-72 w-full rounded-xl overflow-hidden shadow-2xs"
+              onMouseEnter={() => setIsSimplePaused(true)}
+              onMouseLeave={() => setIsSimplePaused(false)}
+            >
+              {/* Slides wrapper with smooth sliding translateX */}
+              <div
+                className="flex w-full h-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${simpleIndex * 100}%)` }}
+              >
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(1)}</div>
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(2)}</div>
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(3)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* CARD 2: CAPTION */}
+        {/* ======================================================== */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Caption</h4>
+          </div>
+          <div className="p-6">
+            <div className="relative h-64 sm:h-72 w-full rounded-xl overflow-hidden shadow-2xs group">
+              {/* Slides wrapper with smooth sliding translateX */}
+              <div
+                className="flex w-full h-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${captionIndex * 100}%)` }}
+              >
+                <div className="w-full h-full shrink-0 relative">{renderBluePlaceholder(1)}</div>
+                <div className="w-full h-full shrink-0 relative">{renderBluePlaceholder(2)}</div>
+                <div className="w-full h-full shrink-0 relative">{renderBluePlaceholder(3)}</div>
+              </div>
+
+              {/* Caption Overlay */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/70 via-slate-900/35 to-transparent pt-10 pb-7 px-8 text-center text-white pointer-events-none">
+                <h5 className="text-base sm:text-lg font-bold mb-1">
+                  {captionSlides[captionIndex].title}
+                </h5>
+                <p className="text-xs text-white/90 leading-relaxed max-w-md mx-auto line-clamp-2">
+                  {captionSlides[captionIndex].desc}
+                </p>
+              </div>
+
+              {/* Previous Button */}
+              <button
+                type="button"
+                onClick={() => setCaptionIndex((prev) => (prev === 0 ? 2 : prev - 1))}
+                aria-label="Previous Slide"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/40 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                onClick={() => setCaptionIndex((prev) => (prev + 1) % 3)}
+                aria-label="Next Slide"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/40 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              {/* Bottom Indicators */}
+              <div className="absolute bottom-2.5 inset-x-0 flex items-center justify-center gap-1.5 z-10">
+                {[0, 1, 2].map((idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setCaptionIndex(idx)}
+                    aria-label={`Go to slide ${idx + 1}`}
+                    className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
+                      captionIndex === idx ? 'w-8 bg-white' : 'w-4 bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* CARD 3: NAVIGATION & INDICATOR */}
+        {/* ======================================================== */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100">
+            <h4 className="text-base font-bold text-[#1351b8]">Navigation &amp; Indicator</h4>
+          </div>
+          <div className="p-6">
+            <div className="relative h-64 sm:h-72 w-full rounded-xl overflow-hidden shadow-2xs group">
+              {/* Slides wrapper with smooth sliding translateX */}
+              <div
+                className="flex w-full h-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${navIndex * 100}%)` }}
+              >
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(1)}</div>
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(2)}</div>
+                <div className="w-full h-full shrink-0">{renderBluePlaceholder(3)}</div>
+              </div>
+
+              {/* Previous Button */}
+              <button
+                type="button"
+                onClick={() => setNavIndex((prev) => (prev === 0 ? 2 : prev - 1))}
+                aria-label="Previous Slide"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/50 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                onClick={() => setNavIndex((prev) => (prev + 1) % 3)}
+                aria-label="Next Slide"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/50 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              {/* Bottom Indicators */}
+              <div className="absolute bottom-3 inset-x-0 flex items-center justify-center gap-1.5 z-10">
+                {[0, 1, 2].map((idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setNavIndex(idx)}
+                    aria-label={`Go to slide ${idx + 1}`}
+                    className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
+                      navIndex === idx ? 'w-8 bg-[#1351b8]' : 'w-4 bg-slate-400/60 hover:bg-slate-500'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* CARD 4: CROSSFADE */}
+        {/* ======================================================== */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <h4 className="text-base font-bold text-[#1351b8]">Crossfade</h4>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+              Fade Transition
+            </span>
+          </div>
+          <div className="p-6">
+            <div className="relative h-64 sm:h-72 w-full rounded-xl overflow-hidden shadow-2xs group">
+              {/* Stacked Crossfade slides */}
+              {[1, 2, 3].map((slideNum, idx) => (
+                <div
+                  key={slideNum}
+                  className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+                    fadeIndex === idx ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                  }`}
+                >
+                  {renderGreenPlaceholder(slideNum)}
+                </div>
+              ))}
+
+              {/* Previous Button */}
+              <button
+                type="button"
+                onClick={() => setFadeIndex((prev) => (prev === 0 ? 2 : prev - 1))}
+                aria-label="Previous Slide"
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/50 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                onClick={() => setFadeIndex((prev) => (prev + 1) % 3)}
+                aria-label="Next Slide"
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white/50 hover:bg-white text-slate-800 shadow-xs backdrop-blur-2xs flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              {/* Bottom Indicators */}
+              <div className="absolute bottom-3 inset-x-0 flex items-center justify-center gap-1.5 z-20">
+                {[0, 1, 2].map((idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setFadeIndex(idx)}
+                    aria-label={`Go to slide ${idx + 1}`}
+                    className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
+                      fadeIndex === idx ? 'w-8 bg-emerald-600' : 'w-4 bg-emerald-400/50 hover:bg-emerald-600/70'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DashboardView() {
   const { data, isLoading } = useDashboardData();
 
@@ -2724,6 +3055,10 @@ export function App() {
       title: 'Card',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Card'],
     },
+    carousel: {
+      title: 'Carousel',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Carousel'],
+    },
     form: {
       title: 'Form Elements',
       breadcrumbs: ['Velora UI', 'Bootstrap', 'Form'],
@@ -2777,6 +3112,8 @@ export function App() {
         return <MataPelajaranView />;
       case 'card':
         return <CardsView />;
+      case 'carousel':
+        return <CarouselView />;
       case 'alert':
         return <AlertView />;
       case 'badge':
