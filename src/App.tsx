@@ -7276,9 +7276,9 @@ function TableView() {
             </table>
           </div>
           {/* Footer with Pagination */}
-          <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
-            <span>Menampilkan 1 - 4 dari 16 data</span>
-            <div className="inline-flex items-center gap-1">
+          <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white text-xs text-slate-500">
+            <span className="text-center sm:text-left">Menampilkan 1 - 4 dari 16 data</span>
+            <div className="inline-flex items-center justify-center gap-1 w-full sm:w-auto">
               <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
@@ -7449,11 +7449,11 @@ function TableView() {
             </table>
           </div>
           {/* Footer */}
-          <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
-            <span>Menampilkan 6 dari 28 anggota tim</span>
+          <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-0 bg-white text-xs text-slate-500">
+            <span className="text-center sm:text-left">Menampilkan 6 dari 28 anggota tim</span>
             <button
               onClick={() => showToast('Membuka seluruh daftar anggota tim...', 'info')}
-              className="text-[#1351b8] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+              className="text-[#1351b8] hover:underline font-semibold flex items-center justify-center gap-1 cursor-pointer w-full sm:w-auto text-center"
             >
               Lihat Semua <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
@@ -7544,9 +7544,9 @@ function TableView() {
               </tbody>
             </table>
           </div>
-          <div className="px-6 py-3 border-t border-slate-100 bg-white flex flex-wrap items-center justify-between text-xs text-slate-500">
+          <div className="px-4 py-3 sm:px-6 border-t border-slate-100 bg-white flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 text-center sm:text-left">
             <span>5 Server Nodes dipantau realtime</span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>Sistem Operasional Normal</span>
             </div>
@@ -7629,7 +7629,7 @@ function TableView() {
               </tbody>
             </table>
           </div>
-          <div className="px-6 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-white">
+          <div className="px-4 py-3 sm:px-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 bg-white text-center sm:text-left">
             <span>Total Throughput: 9.700 req/s</span>
             <span className="text-slate-400">Pembaruan otomatis tiap 5 dtk</span>
           </div>
@@ -7783,12 +7783,12 @@ function TableView() {
             </tfoot>
           </table>
         </div>
-        <div className="px-6 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-slate-500 bg-white">
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+        <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 bg-white">
+          <span className="flex items-center justify-center sm:justify-start gap-2 text-center sm:text-left">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
             Standar pembukuan jurnal akuntansi PSAK / IFRS terverifikasi
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center sm:justify-end gap-2 w-full sm:w-auto">
             <button
               onClick={() => showToast('Mengekspor laporan keuangan...', 'success')}
               className="text-[#1351b8] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
@@ -8211,9 +8211,11 @@ function TableView() {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white text-xs text-slate-500 rounded-b-2xl">
-          <span>Menampilkan {filteredProjects.length} dari {projectsData.length} proyek aktif</span>
-          <div className="flex items-center gap-1">
+        <div className="px-4 py-3.5 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white text-xs text-slate-500 rounded-b-2xl">
+          <span className="text-center sm:text-left">
+            Menampilkan {filteredProjects.length} dari {projectsData.length} proyek aktif
+          </span>
+          <div className="flex items-center justify-center gap-1 w-full sm:w-auto">
             <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
