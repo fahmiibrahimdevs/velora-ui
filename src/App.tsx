@@ -14690,179 +14690,99 @@ function UserView() {
       </div>
 
       {/* ======================================================== */}
-      {/* ROW 1: USER PROFILE CARDS (HORIZONTAL & VERTICAL STATS)  */}
+      {/* 2-COLUMN MASONRY STREAM (LEFT COLUMN 7 COLS, RIGHT 5 COLS)*/}
       {/* ======================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* CARD 1: HORIZONTAL PROFILE CARD (lg:col-span-7) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            {/* Avatar & Follow Button Column */}
-            <div className="flex flex-col items-center shrink-0">
-              <div className="w-24 h-24 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm">
-                <User className="w-12 h-12" />
-              </div>
-              <button
-                type="button"
-                onClick={() => toggleFollow('hasan-top', 'Hasan Basri')}
-                className={`w-28 mt-4 py-2 px-4 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer ${
-                  followingMap['hasan-top']
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white'
-                    : 'bg-[#175cd3] hover:bg-[#1351b8] text-white'
-                }`}
-              >
-                {followingMap['hasan-top'] ? 'Following' : 'Follow'}
-              </button>
-            </div>
-
-            {/* Profile Bio & Information */}
-            <div className="flex-1 text-center sm:text-left">
-              <h4 className="text-base font-bold text-slate-800">Hasan Basri</h4>
-              <p className="text-xs text-slate-500 font-medium mb-3">Web Developer</p>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-              </p>
-            </div>
-          </div>
-
-          {/* Card Footer: Social Media & View Posts link */}
-          <div className="pt-4 border-t border-slate-100 mt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-700">Follow Hasan On</span>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
-                  className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                  title="Facebook"
-                >
-                  <SocialFacebook />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
-                  className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                  title="Twitter"
-                >
-                  <SocialTwitter />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
-                  className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                  title="GitHub"
-                >
-                  <SocialGithub />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
-                  className="w-7 h-7 rounded-lg bg-[#c13584] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                  title="Instagram"
-                >
-                  <SocialInstagram />
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => showToast('Menampilkan semua publikasi artikel Hasan Basri', 'info')}
-              className="text-xs font-bold text-slate-700 hover:text-[#175cd3] flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <span>View Posts</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* CARD 2: VERTICAL PROFILE CARD WITH STATS (lg:col-span-5) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
-          <div>
-            {/* Stats Header Row */}
-            <div className="flex items-center justify-between pb-5 border-b border-slate-100">
-              <div className="w-18 h-18 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm shrink-0">
-                <User className="w-9 h-9" />
-              </div>
-
-              <div className="flex items-center gap-6 text-center">
-                <div>
-                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Posts</span>
-                  <span className="text-lg font-black text-slate-800 tracking-tight">187</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* LEFT COLUMN: CARD 1 (PROFILE), CARD 3 (USERS), CARD 5 (COMMENTS) */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* CARD 1: HORIZONTAL PROFILE CARD (Natural compact height) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <div className="flex items-start gap-5">
+              {/* Avatar & Follow Button Column */}
+              <div className="flex flex-col items-center shrink-0 w-20">
+                <div className="w-20 h-20 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm">
+                  <User className="w-10 h-10" />
                 </div>
-                <div className="w-px h-8 bg-slate-200" />
-                <div>
-                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Followers</span>
-                  <span className="text-lg font-black text-slate-800 tracking-tight">6,8K</span>
-                </div>
-                <div className="w-px h-8 bg-slate-200" />
-                <div>
-                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Following</span>
-                  <span className="text-lg font-black text-slate-800 tracking-tight">2,1K</span>
+                <button
+                  type="button"
+                  onClick={() => toggleFollow('hasan-top', 'Hasan Basri')}
+                  className={`w-full mt-3 py-1.5 px-3 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+                    followingMap['hasan-top']
+                      ? 'bg-rose-500 hover:bg-rose-600 text-white'
+                      : 'bg-[#175cd3] hover:bg-[#1351b8] text-white'
+                  }`}
+                >
+                  {followingMap['hasan-top'] ? 'Following' : 'Follow'}
+                </button>
+              </div>
+
+              {/* Profile Bio & Information */}
+              <div className="flex-1 text-left min-w-0">
+                <h4 className="text-base font-bold text-slate-800 leading-tight">Hasan Basri</h4>
+                <p className="text-xs text-slate-500 font-medium mt-0.5 mb-2.5">Web Developer</p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                  commodo consequat.
+                </p>
+              </div>
+            </div>
+
+            {/* Card Footer: Social Media & View Posts link (No border-t matching reference image) */}
+            <div className="mt-5 flex items-end justify-between gap-4">
+              <div>
+                <span className="block text-xs font-bold text-slate-700 mb-1.5">Follow Hasan On</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
+                    className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                    title="Facebook"
+                  >
+                    <SocialFacebook />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
+                    className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                    title="Twitter"
+                  >
+                    <SocialTwitter />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
+                    className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                    title="GitHub"
+                  >
+                    <SocialGithub />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
+                    className="w-7 h-7 rounded-lg bg-[#3f729b] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                    title="Instagram"
+                  >
+                    <SocialInstagram />
+                  </button>
                 </div>
               </div>
-            </div>
 
-            {/* Profile Bio */}
-            <div className="pt-4 text-center">
-              <h4 className="text-sm sm:text-base font-bold text-slate-800">
-                Hasan Basri <span className="text-slate-400 font-normal">/</span> <span className="text-slate-500 font-medium text-xs sm:text-sm">Web Developer</span>
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5 mb-5">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-            </div>
-          </div>
-
-          {/* Social Links Row */}
-          <div className="pt-3 border-t border-slate-100 flex flex-col items-center justify-center gap-2">
-            <span className="text-xs font-semibold text-slate-700">Follow Hasan On</span>
-            <div className="flex items-center gap-1.5">
               <button
                 type="button"
-                onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
-                className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                title="Facebook"
+                onClick={() => showToast('Menampilkan semua publikasi artikel Hasan Basri', 'info')}
+                className="text-xs font-bold text-slate-700 hover:text-[#175cd3] flex items-center gap-1 transition-colors cursor-pointer pb-1"
               >
-                <SocialFacebook />
-              </button>
-              <button
-                type="button"
-                onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
-                className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                title="Twitter"
-              >
-                <SocialTwitter />
-              </button>
-              <button
-                type="button"
-                onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
-                className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                title="GitHub"
-              >
-                <SocialGithub />
-              </button>
-              <button
-                type="button"
-                onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
-                className="w-7 h-7 rounded-lg bg-[#c13584] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
-                title="Instagram"
-              >
-                <SocialInstagram />
+                <span>View Posts</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* ======================================================== */}
-      {/* ROW 2: USERS CAROUSEL & AUTHORS GRID (1 ROW 2 CARDS)     */}
-      {/* ======================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* CARD 3: USERS ROW / CAROUSEL (lg:col-span-7) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
-          <div>
+          {/* CARD 3: USERS ROW / CAROUSEL (Floats immediately below Card 1) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
             <div className="flex items-center justify-between mb-5">
               <h4 className="text-base font-bold text-[#1351b8]">Users</h4>
               <button
@@ -14903,32 +14823,173 @@ function UserView() {
                 );
               })}
             </div>
+
+            {/* Carousel Pagination Dots */}
+            <div className="flex items-center justify-center gap-2 pt-4 border-t border-slate-100 mt-4">
+              <button
+                type="button"
+                onClick={() => setCarouselSlide(0)}
+                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                  carouselSlide === 0 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
+                }`}
+                title="Slide 1"
+              />
+              <button
+                type="button"
+                onClick={() => setCarouselSlide(1)}
+                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                  carouselSlide === 1 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
+                }`}
+                title="Slide 2"
+              />
+            </div>
           </div>
 
-          {/* Carousel Pagination Dots */}
-          <div className="flex items-center justify-center gap-2 pt-4 border-t border-slate-100 mt-4">
-            <button
-              type="button"
-              onClick={() => setCarouselSlide(0)}
-              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                carouselSlide === 0 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
-              }`}
-              title="Slide 1"
-            />
-            <button
-              type="button"
-              onClick={() => setCarouselSlide(1)}
-              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                carouselSlide === 1 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
-              }`}
-              title="Slide 2"
-            />
+          {/* CARD 5: COMMENTS (Floats below Card 3) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-base font-bold text-[#1351b8] mb-5">Comments</h4>
+
+            <div className="divide-y divide-slate-100">
+              {comments.map((comment) => (
+                <div key={comment.id} className="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-full ${comment.avatarBg} ${comment.avatarColor} flex items-center justify-center shrink-0 shadow-xs mt-1`}>
+                    <User className="w-6 h-6" />
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <h5 className="text-sm font-bold text-slate-800">{comment.name}</h5>
+                        <span className="text-[11px] text-slate-400 font-medium block">{comment.time}</span>
+                      </div>
+                      <span
+                        className={`text-xs font-semibold ${
+                          comment.status === 'Approved' ? 'text-[#175cd3]' : 'text-amber-500'
+                        }`}
+                      >
+                        {comment.status}
+                      </span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-2.5">
+                      {comment.body}
+                    </p>
+
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                      <button
+                        type="button"
+                        onClick={() => showToast(`Membuka detail komentar dari ${comment.name}`, 'info')}
+                        className="hover:text-[#175cd3] transition-colors cursor-pointer"
+                      >
+                        View
+                      </button>
+                      <span>•</span>
+                      <button
+                        type="button"
+                        onClick={() => showToast(`Mengedit komentar ${comment.name}`, 'info')}
+                        className="hover:text-[#175cd3] transition-colors cursor-pointer"
+                      >
+                        Edit
+                      </button>
+                      <span>•</span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="hover:text-rose-600 transition-colors cursor-pointer"
+                      >
+                        Trash
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* CARD 4: AUTHORS GRID (lg:col-span-5) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
-          <div>
+        {/* ======================================================== */}
+        {/* RIGHT COLUMN: CARD 2 (PROFILE STATS), CARD 4 (AUTHORS),  */}
+        {/* CARD 6 (USER PROGRESS), CARD 7 (USER DETAILS)            */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* CARD 2: VERTICAL PROFILE CARD WITH STATS (Matching reference image) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            {/* Stats Header Row */}
+            <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+              <div className="w-18 h-18 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm shrink-0 ring-4 ring-white">
+                <User className="w-9 h-9" />
+              </div>
+
+              <div className="flex items-center gap-5 sm:gap-7 text-center">
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Posts</span>
+                  <span className="text-base sm:text-lg font-black text-slate-800 tracking-tight">187</span>
+                </div>
+                <div className="w-px h-8 bg-slate-200" />
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Followers</span>
+                  <span className="text-base sm:text-lg font-black text-slate-800 tracking-tight">6,8K</span>
+                </div>
+                <div className="w-px h-8 bg-slate-200" />
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Following</span>
+                  <span className="text-base sm:text-lg font-black text-slate-800 tracking-tight">2,1K</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Bio (Left-aligned as in reference image) */}
+            <div className="pt-4 text-left">
+              <h4 className="text-sm sm:text-base font-bold text-slate-800">
+                Hasan Basri <span className="text-slate-400 font-normal">/</span> <span className="text-slate-500 font-medium text-xs sm:text-sm">Web Developer</span>
+              </h4>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-5">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+            </div>
+
+            {/* Social Links Row (Centered as in reference image, without border-t) */}
+            <div className="pt-1 flex flex-col items-center justify-center gap-2">
+              <span className="text-xs font-bold text-slate-700 text-center">Follow Hasan On</span>
+              <div className="flex items-center justify-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Facebook"
+                >
+                  <SocialFacebook />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Twitter"
+                >
+                  <SocialTwitter />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="GitHub"
+                >
+                  <SocialGithub />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#3f729b] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Instagram"
+                >
+                  <SocialInstagram />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 4: AUTHORS GRID */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
             <h4 className="text-base font-bold text-[#1351b8] mb-5">Authors</h4>
 
             {/* 8 Author Avatar Bubbles in 4x2 Grid */}
@@ -14970,81 +15031,12 @@ function UserView() {
                 );
               })}
             </div>
+
+            <div className="pt-4 border-t border-slate-100 mt-2 text-center text-xs text-slate-500">
+              Klik bubble untuk melihat kartu profil dan otorisasi author.
+            </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 mt-2 text-center text-xs text-slate-500">
-            Klik bubble untuk melihat kartu profil dan otorisasi author.
-          </div>
-        </div>
-      </div>
-
-      {/* ======================================================== */}
-      {/* ROW 3: COMMENTS (LEFT) & USER PROGRESS / DETAILS (RIGHT) */}
-      {/* ======================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* CARD 5: COMMENTS (lg:col-span-7) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
-          <h4 className="text-base font-bold text-[#1351b8] mb-5">Comments</h4>
-
-          <div className="divide-y divide-slate-100">
-            {comments.map((comment) => (
-              <div key={comment.id} className="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
-                <div className={`w-12 h-12 rounded-full ${comment.avatarBg} ${comment.avatarColor} flex items-center justify-center shrink-0 shadow-xs mt-1`}>
-                  <User className="w-6 h-6" />
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <h5 className="text-sm font-bold text-slate-800">{comment.name}</h5>
-                      <span className="text-[11px] text-slate-400 font-medium block">{comment.time}</span>
-                    </div>
-                    <span
-                      className={`text-xs font-semibold ${
-                        comment.status === 'Approved' ? 'text-[#175cd3]' : 'text-amber-500'
-                      }`}
-                    >
-                      {comment.status}
-                    </span>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-2.5">
-                    {comment.body}
-                  </p>
-
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                    <button
-                      type="button"
-                      onClick={() => showToast(`Membuka detail komentar dari ${comment.name}`, 'info')}
-                      className="hover:text-[#175cd3] transition-colors cursor-pointer"
-                    >
-                      View
-                    </button>
-                    <span>•</span>
-                    <button
-                      type="button"
-                      onClick={() => showToast(`Mengedit komentar ${comment.name}`, 'info')}
-                      className="hover:text-[#175cd3] transition-colors cursor-pointer"
-                    >
-                      Edit
-                    </button>
-                    <span>•</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="hover:text-rose-600 transition-colors cursor-pointer"
-                    >
-                      Trash
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: USER PROGRESS (TOP) & USER DETAILS (BOTTOM) (lg:col-span-5) */}
-        <div className="lg:col-span-5 space-y-6">
           {/* CARD 6: USER PROGRESS */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
             <h4 className="text-base font-bold text-[#1351b8] mb-5">User Progress</h4>
