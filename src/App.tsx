@@ -15051,24 +15051,25 @@ function UserView() {
 
             <div className="space-y-4">
               {userProgressData.map((u, idx) => (
-                <div key={idx} className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs`}>
+                <div key={idx} className="flex items-center justify-between gap-3 sm:gap-4">
+                  {/* Fixed-width User Info Column ensures all progress bars start at the exact same X position */}
+                  <div className="w-36 sm:w-44 shrink-0 flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs shrink-0`}>
                       <User className="w-5 h-5" />
                     </div>
-                    <div>
-                      <h5 className="text-xs sm:text-sm font-bold text-slate-800">{u.name}</h5>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    <div className="min-w-0 flex-1">
+                      <h5 className="text-xs sm:text-sm font-bold text-slate-800 truncate" title={u.name}>{u.name}</h5>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">
                         {u.role}
                       </span>
                     </div>
                   </div>
 
-                  {/* Progress Bar & Percentage */}
-                  <div className="flex-1 max-w-[120px] sm:max-w-[150px]">
-                    <div className="flex items-center justify-end mb-1">
-                      <span className="text-[11px] font-bold text-slate-700">{u.pct}%</span>
-                    </div>
+                  {/* Perfectly aligned Progress Bar & Percentage directly above the bar */}
+                  <div className="flex-1 max-w-[130px] sm:max-w-[170px]">
+                    <span className="block text-[11px] font-bold text-slate-700 mb-1 text-left">
+                      {u.pct}%
+                    </span>
                     <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
                       <div
                         style={{ width: `${u.pct}%` }}
@@ -15078,13 +15079,15 @@ function UserView() {
                   </div>
 
                   {/* Detail Action Button */}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedUserModal(u)}
-                    className="px-3.5 py-1 text-xs font-semibold text-slate-700 hover:text-[#175cd3] border border-slate-200 hover:border-[#175cd3] rounded-full transition-all cursor-pointer shadow-2xs"
-                  >
-                    Detail
-                  </button>
+                  <div className="shrink-0 text-right">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedUserModal(u)}
+                      className="px-3.5 py-1 text-xs font-semibold text-slate-700 hover:text-[#175cd3] border border-slate-200 hover:border-[#175cd3] rounded-full transition-all cursor-pointer shadow-2xs"
+                    >
+                      Detail
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -15096,30 +15099,31 @@ function UserView() {
 
             <div className="space-y-4">
               {userProgressData.map((u, idx) => (
-                <div key={idx} className="flex items-center justify-between gap-4 pb-3.5 border-b border-slate-100 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs`}>
+                <div key={idx} className="flex items-center justify-between gap-3 sm:gap-4 pb-3.5 border-b border-slate-100 last:border-0 last:pb-0">
+                  {/* Fixed-width User Info Column matching Card 6 */}
+                  <div className="w-36 sm:w-44 shrink-0 flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs shrink-0`}>
                       <User className="w-5 h-5" />
                     </div>
-                    <div>
-                      <h5 className="text-xs sm:text-sm font-bold text-slate-800">{u.name}</h5>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    <div className="min-w-0 flex-1">
+                      <h5 className="text-xs sm:text-sm font-bold text-slate-800 truncate" title={u.name}>{u.name}</h5>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">
                         {u.role}
                       </span>
                     </div>
                   </div>
 
-                  {/* Stat Columns: Posts, Followers, Following */}
-                  <div className="flex items-center gap-4 sm:gap-6 text-center">
-                    <div>
+                  {/* Stat Columns: Posts, Followers, Following perfectly aligned */}
+                  <div className="flex-1 flex items-center justify-end gap-3 sm:gap-6 text-center">
+                    <div className="w-12 sm:w-16">
                       <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.posts}</span>
                       <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Posts</span>
                     </div>
-                    <div>
+                    <div className="w-12 sm:w-16">
                       <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.followers}</span>
                       <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Followers</span>
                     </div>
-                    <div>
+                    <div className="w-12 sm:w-16">
                       <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.following}</span>
                       <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Following</span>
                     </div>
