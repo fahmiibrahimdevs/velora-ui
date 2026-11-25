@@ -7237,7 +7237,7 @@ function TableView() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                <tr className="border-b border-slate-200 bg-slate-100/90 text-[11px] font-bold uppercase tracking-wider text-slate-700">
                   <th className="py-3 px-4">Karyawan</th>
                   <th className="py-3 px-4">Departemen</th>
                   <th className="py-3 px-4">Posisi</th>
@@ -7245,8 +7245,8 @@ function TableView() {
                   <th className="py-3 px-4 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="text-xs text-slate-700 divide-y divide-slate-100">
-                <tr className="bg-white hover:bg-blue-50/40 transition-colors">
+              <tbody className="text-xs text-slate-700 divide-y divide-slate-200/60">
+                <tr className="bg-white hover:bg-blue-50/70 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
@@ -7268,7 +7268,7 @@ function TableView() {
                     </span>
                   </td>
                 </tr>
-                <tr className="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
+                <tr className="bg-slate-100 hover:bg-blue-50/70 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
@@ -7290,7 +7290,7 @@ function TableView() {
                     </span>
                   </td>
                 </tr>
-                <tr className="bg-white hover:bg-blue-50/40 transition-colors">
+                <tr className="bg-white hover:bg-blue-50/70 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
@@ -7312,7 +7312,7 @@ function TableView() {
                     </span>
                   </td>
                 </tr>
-                <tr className="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
+                <tr className="bg-slate-100 hover:bg-blue-50/70 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-600 to-purple-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
@@ -7334,12 +7334,56 @@ function TableView() {
                     </span>
                   </td>
                 </tr>
+                <tr className="bg-white hover:bg-blue-50/70 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        BS
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Budi Santoso</div>
+                        <div className="text-[11px] text-slate-500">budi@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">Mobile Development</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">React Native Engineer</td>
+                  <td className="py-3 px-4 text-slate-600">1.8 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Aktif
+                    </span>
+                  </td>
+                </tr>
+                <tr className="bg-slate-100 hover:bg-blue-50/70 transition-colors">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-600 to-pink-600 text-white font-semibold text-xs flex items-center justify-center shadow-2xs">
+                        DA
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800">Dewi Anggraeni</div>
+                        <div className="text-[11px] text-slate-500">dewi@velora.id</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-slate-600">DevOps & Cloud</td>
+                  <td className="py-3 px-4 font-medium text-slate-700">Cloud Infrastructure</td>
+                  <td className="py-3 px-4 text-slate-600">3.0 Tahun</td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/50">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Aktif
+                    </span>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
           {/* Footer */}
           <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
-            <span>Menampilkan 4 dari 28 anggota tim</span>
+            <span>Menampilkan 6 dari 28 anggota tim</span>
             <button
               onClick={() => showToast('Membuka seluruh daftar anggota tim...', 'info')}
               className="text-[#1351b8] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
