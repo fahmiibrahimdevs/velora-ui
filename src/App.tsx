@@ -11480,10 +11480,10 @@ function ChatBoxView() {
 
                     <div className={`max-w-[78%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                       <div
-                        className={`p-3 rounded-2xl text-xs sm:text-sm shadow-xs ${
+                        className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-xs ${
                           isMe
                             ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-br-xs'
-                            : 'bg-white text-slate-800 border border-slate-150 rounded-bl-xs'
+                            : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs shadow-xs'
                         }`}
                       >
                         <p className="leading-relaxed font-normal">{msg.text}</p>
@@ -11516,14 +11516,14 @@ function ChatBoxView() {
               {isRizalTyping && (
                 <div className="flex items-end gap-2.5 justify-start">
                   <Avatar name="Rizal Fakhri" size="xs" bg="bg-gradient-to-r from-blue-600 to-indigo-700" />
-                  <div className="p-3 bg-white text-slate-700 border border-slate-150 rounded-2xl rounded-bl-xs shadow-xs inline-flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
+                  <div className="px-4 py-3 bg-white text-slate-700 border border-slate-200/80 rounded-2xl rounded-bl-xs shadow-xs inline-flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" />
                     <span
-                      className="w-2 h-2 rounded-full bg-slate-400 animate-bounce"
+                      className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"
                       style={{ animationDelay: '150ms' }}
                     />
                     <span
-                      className="w-2 h-2 rounded-full bg-slate-400 animate-bounce"
+                      className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"
                       style={{ animationDelay: '300ms' }}
                     />
                   </div>
@@ -11673,10 +11673,10 @@ function ChatBoxView() {
 
                     <div className={`max-w-[78%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                       <div
-                        className={`p-3 rounded-2xl text-xs sm:text-sm shadow-xs ${
+                        className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-xs ${
                           isMe
                             ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white rounded-br-xs'
-                            : 'bg-white text-slate-800 border border-slate-150 rounded-bl-xs'
+                            : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs shadow-xs'
                         }`}
                       >
                         <p className="leading-relaxed font-normal">{msg.text}</p>
