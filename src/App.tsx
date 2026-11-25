@@ -75,6 +75,19 @@ import {
   UserX,
   ZoomIn,
   ZoomOut,
+  UploadCloud,
+  Upload,
+  FileCheck,
+  FileArchive,
+  TrendingUp,
+  CreditCard,
+  Activity,
+  BarChart3,
+  Package,
+  Cpu,
+  HardDrive,
+  ArrowUp,
+  Folder,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -12367,6 +12380,1044 @@ function GalleryView() {
   );
 }
 
+// ============================================================================
+// MULTIPLE UPLOAD SHOWCASE (Matching ShizueFI & Stisla with Rich Drag-Drop)
+// ============================================================================
+
+interface UploadFileItem {
+  id: string;
+  name: string;
+  size: number;
+  type: 'image' | 'pdf' | 'archive' | 'doc' | 'other';
+  progress: number;
+  status: 'uploading' | 'completed' | 'error';
+  uploadedAt: string;
+  previewUrl?: string;
+}
+
+function MultipleUploadView() {
+  const [files, setFiles] = useState<UploadFileItem[]>([
+    {
+      id: 'f-1',
+      name: 'Laporan-Keuangan-Q3-2026.pdf',
+      size: 2450000,
+      type: 'pdf',
+      progress: 100,
+      status: 'completed',
+      uploadedAt: '10:24 WIB',
+    },
+    {
+      id: 'f-2',
+      name: 'Dokumentasi-Rapat-Direksi-2026.jpg',
+      size: 4820000,
+      type: 'image',
+      progress: 100,
+      status: 'completed',
+      uploadedAt: '10:28 WIB',
+    },
+    {
+      id: 'f-3',
+      name: 'Arsip-Kasbon-Karyawan-Nov2026.zip',
+      size: 8150000,
+      type: 'archive',
+      progress: 100,
+      status: 'completed',
+      uploadedAt: '10:32 WIB',
+    },
+  ]);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewFile, setPreviewFile] = useState<UploadFileItem | null>(null);
+  const [filterType, setFilterType] = useState<'all' | 'image' | 'document'>('all');
+  const [maxSizeMB, setMaxSizeMB] = useState<number>(25);
+  const [autoUpload, setAutoUpload] = useState(true);
+
+  // Compact avatar upload state demo
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  const detectType = (name: string): 'image' | 'pdf' | 'archive' | 'doc' | 'other' => {
+    const ext = name.split('.').pop()?.toLowerCase() || '';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) return 'image';
+    if (['pdf'].includes(ext)) return 'pdf';
+    if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'archive';
+    if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt'].includes(ext)) return 'doc';
+    return 'other';
+  };
+
+  const handleProcessFiles = (newFiles: FileList | File[]) => {
+    const fileArray = Array.from(newFiles);
+    if (fileArray.length === 0) return;
+
+    const addedItems: UploadFileItem[] = [];
+    const maxBytes = maxSizeMB * 1024 * 1024;
+
+    fileArray.forEach((f, idx) => {
+      if (f.size > maxBytes) {
+        showToast(`Berkas "${f.name}" melebihi batas ${maxSizeMB}MB`, 'warning');
+        return;
+      }
+
+      const fileType = detectType(f.name);
+      if (filterType === 'image' && fileType !== 'image') {
+        showToast(`Berkas "${f.name}" bukan format gambar yang diizinkan`, 'warning');
+        return;
+      }
+      if (filterType === 'document' && !['pdf', 'doc'].includes(fileType)) {
+        showToast(`Berkas "${f.name}" bukan format dokumen yang diizinkan`, 'warning');
+        return;
+      }
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+      const newItem: UploadFileItem = {
+        id: `f-${Date.now()}-${idx}`,
+        name: f.name,
+        size: f.size,
+        type: fileType,
+        progress: autoUpload ? 20 : 0,
+        status: autoUpload ? 'uploading' : 'completed',
+        uploadedAt: timeStr,
+        previewUrl: fileType === 'image' ? URL.createObjectURL(f) : undefined,
+      };
+      addedItems.push(newItem);
+    });
+
+    if (addedItems.length === 0) return;
+
+    setFiles((prev) => [...addedItems, ...prev]);
+    showSuccess(`${addedItems.length} berkas berhasil ditambahkan ke antrean.`);
+
+    // If autoUpload, simulate realistic upload progress
+    if (autoUpload) {
+      addedItems.forEach((item) => {
+        let currentProg = 20;
+        const interval = setInterval(() => {
+          currentProg += Math.floor(Math.random() * 25) + 20;
+          if (currentProg >= 100) {
+            currentProg = 100;
+            clearInterval(interval);
+            setFiles((prev) =>
+              prev.map((f) => (f.id === item.id ? { ...f, progress: 100, status: 'completed' } : f))
+            );
+          } else {
+            setFiles((prev) =>
+              prev.map((f) => (f.id === item.id ? { ...f, progress: currentProg } : f))
+            );
+          }
+        }, 160);
+      });
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleProcessFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleDeleteFile = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+    showToast('Berkas dihapus dari antrean.', 'info');
+  };
+
+  const handleClearAll = () => {
+    if (files.length === 0) return;
+    setFiles([]);
+    showToast('Semua berkas telah dibersihkan dari antrean.', 'info');
+  };
+
+  const handleUploadAll = () => {
+    const pendingFiles = files.filter((f) => f.status === 'uploading' || f.progress < 100);
+    if (pendingFiles.length === 0) {
+      showToast('Semua berkas sudah selesai diunggah.', 'info');
+      return;
+    }
+    setFiles((prev) => prev.map((f) => ({ ...f, progress: 100, status: 'completed' })));
+    showSuccess('Seluruh berkas berhasil diselesaikan.');
+  };
+
+  const completedCount = files.filter((f) => f.status === 'completed').length;
+  const totalBytes = files.reduce((acc, curr) => acc + curr.size, 0);
+
+  const getBadgeTypeIcon = (type: UploadFileItem['type']) => {
+    switch (type) {
+      case 'image':
+        return <ImageIcon className="w-5 h-5 text-sky-600" />;
+      case 'pdf':
+        return <FileText className="w-5 h-5 text-rose-600" />;
+      case 'archive':
+        return <FileArchive className="w-5 h-5 text-amber-600" />;
+      case 'doc':
+        return <FileText className="w-5 h-5 text-blue-600" />;
+      default:
+        return <FileCheck className="w-5 h-5 text-slate-600" />;
+    }
+  };
+
+  const getBadgeTypeBg = (type: UploadFileItem['type']) => {
+    switch (type) {
+      case 'image':
+        return 'bg-sky-50 border-sky-200';
+      case 'pdf':
+        return 'bg-rose-50 border-rose-200';
+      case 'archive':
+        return 'bg-amber-50 border-amber-200';
+      case 'doc':
+        return 'bg-blue-50 border-blue-200';
+      default:
+        return 'bg-slate-50 border-slate-200';
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Multiple Upload</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            We use 'Dropzone.js' inspired modern uploader with drag & drop, file type verification, live queue, and simulated progress.
+          </p>
+        </div>
+
+        {/* Quick link button to Statistic view */}
+        <a
+          href="#/statistic"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#1351b8] text-xs font-semibold border border-blue-200/80 transition-all self-start sm:self-auto cursor-pointer shadow-2xs"
+        >
+          <BarChart3 className="w-4 h-4" />
+          <span>Lihat Halaman Statistic →</span>
+        </a>
+      </div>
+
+      {/* Main Grid: Dropzone & Queue on Left (8 cols) + Settings & Compact Dropzone on Right (4 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: MAIN DROPZONE & LIVE QUEUE (lg:col-span-8) */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Main Dropzone Card matching ShizueFI Header */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h4 className="text-base font-bold text-[#1351b8]">Multiple Upload</h4>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Tarik berkas ke dalam kotak putus-putus atau klik untuk menelusuri dari perangkat Anda.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg bg-slate-100 self-start sm:self-auto">
+                Maks {maxSizeMB} MB / berkas
+              </span>
+            </div>
+
+            <div className="p-6">
+              {/* Interactive Drag & Drop Area */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`w-full min-h-[220px] sm:min-h-[260px] rounded-2xl border-2 border-dashed flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all duration-200 select-none ${
+                  isDragging
+                    ? 'border-[#175cd3] bg-blue-50/70 scale-[1.01] shadow-md ring-4 ring-blue-500/10'
+                    : 'border-slate-300 hover:border-[#175cd3] bg-slate-50/50 hover:bg-blue-50/30'
+                }`}
+              >
+                {/* Hidden input element */}
+                <input
+                  type="file"
+                  multiple
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    if (e.target.files) handleProcessFiles(e.target.files);
+                    e.target.value = '';
+                  }}
+                  className="hidden"
+                />
+
+                <div
+                  className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-200 ${
+                    isDragging
+                      ? 'bg-blue-600 text-white scale-110 shadow-lg'
+                      : 'bg-blue-50 text-[#175cd3] border border-blue-200/80 shadow-xs'
+                  }`}
+                >
+                  <UploadCloud className="w-8 h-8" />
+                </div>
+
+                <h4 className="text-base sm:text-lg font-bold text-slate-800">
+                  Drop files here to upload
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1 font-normal leading-relaxed">
+                  Tarik dan jatuhkan berkas ke sini, atau{' '}
+                  <span className="text-[#1351b8] font-bold underline decoration-blue-400">
+                    pilih dari komputer
+                  </span>
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[10px] sm:text-xs font-semibold text-slate-500">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 shadow-2xs">
+                    PNG, JPG, WEBP
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 shadow-2xs">
+                    PDF, DOCX, XLSX
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 shadow-2xs">
+                    ZIP, RAR, 7Z
+                  </span>
+                </div>
+              </div>
+
+              {/* Uploaded Queue Section */}
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <h5 className="text-sm font-bold text-slate-800">Daftar Antrean Berkas</h5>
+                    <span className="px-2 py-0.5 rounded-full bg-[#175cd3] text-white text-[11px] font-bold">
+                      {files.length}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium">
+                      ({completedCount} dari {files.length} selesai • {formatFileSize(totalBytes)})
+                    </span>
+                  </div>
+
+                  {files.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleUploadAll}
+                        className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white text-xs font-semibold hover:shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Unggah Semua</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleClearAll}
+                        className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Bersihkan</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Queue File Items */}
+                {files.length === 0 ? (
+                  <div className="text-center py-8 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                    <Folder className="w-8 h-8 text-slate-400 mx-auto mb-2 opacity-60" />
+                    <p className="text-xs font-semibold text-slate-600">Antrean berkas masih kosong</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Tarik berkas ke dropzone di atas untuk memulai</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {files.map((file) => (
+                      <div
+                        key={file.id}
+                        className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          {/* File Icon / Thumbnail */}
+                          {file.previewUrl ? (
+                            <img
+                              src={file.previewUrl}
+                              alt={file.name}
+                              className="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0"
+                            />
+                          ) : (
+                            <div
+                              className={`w-11 h-11 rounded-xl border flex items-center justify-center shrink-0 ${getBadgeTypeBg(
+                                file.type
+                              )}`}
+                            >
+                              {getBadgeTypeIcon(file.type)}
+                            </div>
+                          )}
+
+                          {/* File Meta */}
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs sm:text-sm font-bold text-slate-800 truncate" title={file.name}>
+                              {file.name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+                              <span className="font-medium text-slate-600">{formatFileSize(file.size)}</span>
+                              <span>•</span>
+                              <span>{file.uploadedAt}</span>
+                              {file.status === 'completed' && (
+                                <>
+                                  <span>•</span>
+                                  <span className="inline-flex items-center gap-1 text-emerald-600 font-bold">
+                                    <CheckCircle2 className="w-3 h-3" /> Siap
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Progress Bar & Actions */}
+                        <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
+                          {/* Progress bar container */}
+                          <div className="w-28 sm:w-36 flex flex-col gap-1">
+                            <div className="flex items-center justify-between text-[10px] font-semibold">
+                              <span
+                                className={
+                                  file.status === 'completed'
+                                    ? 'text-emerald-700'
+                                    : 'text-blue-700'
+                                }
+                              >
+                                {file.status === 'completed' ? '100%' : `${file.progress}%`}
+                              </span>
+                              <span className="text-slate-400 uppercase text-[9px] font-bold">
+                                {file.status}
+                              </span>
+                            </div>
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                style={{ width: `${file.progress}%` }}
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  file.status === 'completed'
+                                    ? 'bg-emerald-500'
+                                    : 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]'
+                                }`}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-1 pl-2 border-l border-slate-100">
+                            <Tooltip content="Pratinjau Berkas" position="top">
+                              <button
+                                type="button"
+                                onClick={() => setPreviewFile(file)}
+                                className="p-1.5 rounded-lg text-slate-500 hover:text-[#1351b8] hover:bg-blue-50 transition-colors cursor-pointer"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                            <Tooltip content="Hapus Berkas" position="top">
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteFile(file.id)}
+                                className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: CONFIGURATION & COMPACT AVATAR UPLOADER (lg:col-span-4) */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Card: Upload Settings */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+                <Settings className="w-4 h-4 text-slate-600" />
+                Pengaturan Upload
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">Konfigurasi validasi dan batas sistem berkas.</p>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Auto Upload Toggle */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold text-slate-800 block">Auto-Upload Simultan</label>
+                  <span className="text-[11px] text-slate-500">Mulai unggah seketika saat berkas di-drop</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAutoUpload(!autoUpload)}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    autoUpload ? 'bg-[#175cd3]' : 'bg-slate-300'
+                  }`}
+                >
+                  <span
+                    className={`block w-4 h-4 rounded-full bg-white transition-transform shadow-xs absolute top-1 ${
+                      autoUpload ? 'left-6' : 'left-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100">
+                <label className="text-xs font-bold text-slate-800 block mb-2">Batas Ukuran Maksimal</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[5, 10, 25, 50].map((mb) => (
+                    <button
+                      key={mb}
+                      type="button"
+                      onClick={() => setMaxSizeMB(mb)}
+                      className={`py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        maxSizeMB === mb
+                          ? 'bg-[#175cd3] text-white shadow-xs'
+                          : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {mb}MB
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100">
+                <label className="text-xs font-bold text-slate-800 block mb-2">Filter Jenis Berkas</label>
+                <div className="flex flex-col gap-1.5">
+                  {[
+                    { id: 'all', label: 'Semua Tipe Berkas', desc: 'Gambar, Dokumen, dan Arsip Zip' },
+                    { id: 'image', label: 'Hanya Gambar (Image Only)', desc: 'JPG, PNG, WEBP, GIF, SVG' },
+                    { id: 'document', label: 'Hanya Dokumen', desc: 'PDF, DOCX, XLSX, PPTX' },
+                  ].map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setFilterType(f.id as any)}
+                      className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${
+                        filterType === f.id
+                          ? 'border-[#175cd3] bg-blue-50/50 text-[#1351b8]'
+                          : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold">{f.label}</span>
+                        {filterType === f.id && <Check className="w-3.5 h-3.5 text-[#175cd3]" />}
+                      </div>
+                      <span className="text-[10px] text-slate-500 block mt-0.5">{f.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card: Compact Single Profile / Avatar Uploader Demo */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Single Image Dropzone</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Contoh uploader foto profil avatar ringkas.</p>
+            </div>
+
+            <div className="p-6 text-center">
+              <input
+                type="file"
+                accept="image/*"
+                ref={avatarInputRef}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setAvatarPreview(URL.createObjectURL(e.target.files[0]));
+                    showSuccess('Foto profil berhasil dipilih.');
+                  }
+                }}
+                className="hidden"
+              />
+
+              <div
+                onClick={() => avatarInputRef.current?.click()}
+                className="w-28 h-28 mx-auto rounded-3xl border-2 border-dashed border-slate-300 hover:border-[#175cd3] bg-slate-50/60 hover:bg-blue-50/40 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group shadow-2xs"
+              >
+                {avatarPreview ? (
+                  <>
+                    <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold">
+                      Ganti Foto
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Camera className="w-7 h-7 text-slate-400 group-hover:text-[#175cd3] transition-colors mb-1" />
+                    <span className="text-[10px] font-bold text-slate-600 group-hover:text-[#1351b8]">
+                      Pilih Foto
+                    </span>
+                  </>
+                )}
+              </div>
+
+              <p className="text-xs text-slate-500 mt-3 font-normal">
+                Format disarankan persegi 1:1, rasio minimal 400x400 px.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* File Preview Modal */}
+      {previewFile && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 relative">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#175cd3]" />
+                <h4 className="text-sm sm:text-base font-bold text-slate-800">Detail Pratinjau Berkas</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewFile(null)}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="py-6 text-center">
+              {previewFile.previewUrl ? (
+                <div className="max-h-64 rounded-2xl overflow-hidden border border-slate-200 mb-4 flex items-center justify-center bg-slate-50">
+                  <img src={previewFile.previewUrl} alt={previewFile.name} className="max-h-64 object-contain" />
+                </div>
+              ) : (
+                <div
+                  className={`w-20 h-20 mx-auto rounded-3xl border flex items-center justify-center mb-4 ${getBadgeTypeBg(
+                    previewFile.type
+                  )}`}
+                >
+                  {getBadgeTypeIcon(previewFile.type)}
+                </div>
+              )}
+
+              <h5 className="text-base font-bold text-slate-800 break-all px-4">{previewFile.name}</h5>
+              <p className="text-xs text-slate-500 mt-1 font-medium">
+                Ukuran: {formatFileSize(previewFile.size)} • Diunggah pada {previewFile.uploadedAt}
+              </p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200 mt-3">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Berkas Siap Diproses Sistem
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setPreviewFile(null)}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Tutup
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  showSuccess(`Mengunduh berkas ${previewFile.name}`);
+                  setPreviewFile(null);
+                }}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white text-xs font-semibold hover:shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Unduh Berkas</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// STATISTIC SHOWCASE (Matching Stisla components-statistic.html)
+// ============================================================================
+
+function StatisticView() {
+  const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month' | 'year'>('month');
+
+  const statsData = {
+    today: {
+      admin: 10,
+      news: 4,
+      orders: 68,
+      online: 47,
+      pending: 4,
+      shipping: 6,
+      completed: 58,
+      totalOrders: 68,
+      openTickets: 2,
+      progressTickets: 5,
+      resolvedTickets: 21,
+      totalTickets: 28,
+      revenue: 'Rp 14.800.000',
+      revenueGrowth: '+3.2%',
+    },
+    week: {
+      admin: 10,
+      news: 12,
+      orders: 312,
+      online: 89,
+      pending: 9,
+      shipping: 14,
+      completed: 289,
+      totalOrders: 312,
+      openTickets: 5,
+      progressTickets: 9,
+      resolvedTickets: 54,
+      totalTickets: 68,
+      revenue: 'Rp 84.500.000',
+      revenueGrowth: '+5.7%',
+    },
+    month: {
+      admin: 10,
+      news: 42,
+      orders: 1201,
+      online: 154,
+      pending: 24,
+      shipping: 18,
+      completed: 120,
+      totalOrders: 162,
+      openTickets: 7,
+      progressTickets: 14,
+      resolvedTickets: 89,
+      totalTickets: 110,
+      revenue: 'Rp 284.500.000',
+      revenueGrowth: '+12.4%',
+    },
+    year: {
+      admin: 12,
+      news: 342,
+      orders: 14850,
+      online: 320,
+      pending: 42,
+      shipping: 68,
+      completed: 14740,
+      totalOrders: 14850,
+      openTickets: 12,
+      progressTickets: 25,
+      resolvedTickets: 890,
+      totalTickets: 927,
+      revenue: 'Rp 3.120.000.000',
+      revenueGrowth: '+28.9%',
+    },
+  }[timeframe];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Statistic</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Kumpulan widget metrik statistik Stisla (Card Statistic 1 & 2) yang dimodernisasi dengan visual eksekutif beresolusi tinggi.
+          </p>
+        </div>
+
+        {/* Timeframe Filter Tabs */}
+        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80 self-start sm:self-auto">
+          {[
+            { id: 'today', label: 'Hari Ini' },
+            { id: 'week', label: 'Minggu Ini' },
+            { id: 'month', label: 'Bulan Ini' },
+            { id: 'year', label: 'Tahun Ini' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setTimeframe(tab.id as any)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                timeframe === tab.id
+                  ? 'bg-white text-[#1351b8] shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 1: STISLA CARD-STATISTIC-1 (4-Column Metric Grid) */}
+      {/* ======================================================== */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400">
+            Card Statistic 1 (Iconic 4-Column Layout)
+          </h4>
+          <span className="text-xs font-semibold text-[#1351b8]">Otomatis Terhubung Data Waktu Nyata</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1: Total Admin */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <Users className="w-7 h-7" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+                Total Admin
+              </span>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.admin}</span>
+                <span className="text-[11px] font-bold text-emerald-600 inline-flex items-center gap-0.5">
+                  <ArrowUp className="w-3 h-3" /> 12%
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-400">Pengelola aktif sistem</span>
+            </div>
+          </div>
+
+          {/* Card 2: News / Articles */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <FileText className="w-7 h-7" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+                News & Artikel
+              </span>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.news}</span>
+                <span className="text-[11px] font-bold text-emerald-600 inline-flex items-center gap-0.5">
+                  <ArrowUp className="w-3 h-3" /> 8%
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-400">Publikasi terbit</span>
+            </div>
+          </div>
+
+          {/* Card 3: Orders / Transactions */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <CreditCard className="w-7 h-7" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+                Kasbon & Order
+              </span>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.orders}</span>
+                <span className="text-[11px] font-bold text-blue-600 inline-flex items-center gap-0.5">
+                  <ArrowUp className="w-3 h-3" /> 4%
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-400">Total permohonan</span>
+            </div>
+          </div>
+
+          {/* Card 4: Online Users */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <Activity className="w-7 h-7" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+                Online Users
+              </span>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.online}</span>
+                <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-400">Sesi terhubung sekarang</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 2: STISLA CARD-STATISTIC-2 (Composite Breakdown) */}
+      {/* ======================================================== */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400">
+            Card Statistic 2 (Progress & Breakdown Summary)
+          </h4>
+          <span className="text-xs font-semibold text-slate-500">Agregasi Sub-Kategori Status</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Card A: Order / Kasbon Status Breakdown */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 relative overflow-hidden">
+            {/* Top 3 Stats Items */}
+            <div className="grid grid-cols-3 gap-3 pb-5 border-b border-slate-100 text-center">
+              <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-100">
+                <span className="text-xl sm:text-2xl font-black text-amber-700 block">{statsData.pending}</span>
+                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-tight">Pending</span>
+              </div>
+              <div className="p-3 rounded-xl bg-sky-50/70 border border-sky-100">
+                <span className="text-xl sm:text-2xl font-black text-sky-700 block">{statsData.shipping}</span>
+                <span className="text-[11px] font-bold text-sky-800 uppercase tracking-tight">Diproses</span>
+              </div>
+              <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
+                <span className="text-xl sm:text-2xl font-black text-emerald-700 block">{statsData.completed}</span>
+                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-tight">Selesai</span>
+              </div>
+            </div>
+
+            {/* Total Metric Box */}
+            <div className="pt-5 flex items-center justify-between">
+              <div>
+                <h5 className="text-sm font-bold text-slate-800">Total Transaksi Kasbon</h5>
+                <p className="text-xs text-slate-500 mt-0.5">Distribusi penyelesaian permohonan periode ini</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <span className="text-2xl font-black text-slate-900 block">{statsData.totalOrders}</span>
+                  <span className="text-[11px] font-semibold text-emerald-600">74% Rasio Sukses</span>
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                  <Package className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* Multi-segmented Progress Bar */}
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 mb-1.5">
+                <span>Pencapaian Target</span>
+                <span>88% Efisiensi</span>
+              </div>
+              <div className="w-full h-2.5 rounded-full bg-slate-100 flex overflow-hidden">
+                <div style={{ width: '15%' }} className="bg-amber-400" title="Pending" />
+                <div style={{ width: '11%' }} className="bg-sky-400" title="Diproses" />
+                <div style={{ width: '74%' }} className="bg-emerald-500" title="Selesai" />
+              </div>
+            </div>
+          </div>
+
+          {/* Card B: Service Desk & Support Ticket Resolution */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 relative overflow-hidden">
+            {/* Top 3 Stats Items */}
+            <div className="grid grid-cols-3 gap-3 pb-5 border-b border-slate-100 text-center">
+              <div className="p-3 rounded-xl bg-rose-50/70 border border-rose-100">
+                <span className="text-xl sm:text-2xl font-black text-rose-700 block">{statsData.openTickets}</span>
+                <span className="text-[11px] font-bold text-rose-800 uppercase tracking-tight">Tiket Baru</span>
+              </div>
+              <div className="p-3 rounded-xl bg-indigo-50/70 border border-indigo-100">
+                <span className="text-xl sm:text-2xl font-black text-indigo-700 block">{statsData.progressTickets}</span>
+                <span className="text-[11px] font-bold text-indigo-800 uppercase tracking-tight">Dikerjakan</span>
+              </div>
+              <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
+                <span className="text-xl sm:text-2xl font-black text-emerald-700 block">{statsData.resolvedTickets}</span>
+                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-tight">Selesai</span>
+              </div>
+            </div>
+
+            {/* Total Metric Box */}
+            <div className="pt-5 flex items-center justify-between">
+              <div>
+                <h5 className="text-sm font-bold text-slate-800">Tiket Helpdesk & Support</h5>
+                <p className="text-xs text-slate-500 mt-0.5">SLA penanganan kendala pengguna sistem</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <span className="text-2xl font-black text-slate-900 block">{statsData.totalTickets}</span>
+                  <span className="text-[11px] font-semibold text-indigo-600">SLA 98.2%</span>
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
+                  <HelpCircle className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* SLA Progress Bar */}
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 mb-1.5">
+                <span>Tingkat Kepuasan Layanan</span>
+                <span>94.8% Rating Positif</span>
+              </div>
+              <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+                <div style={{ width: '94.8%' }} className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 3: INFRASTRUCTURE & REVENUE PERFORMANCE KPI */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* KPI 1: Server Load */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-[#175cd3]" /> CPU & Server Load
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">Normal</span>
+          </div>
+          <div className="flex items-baseline justify-between mb-2">
+            <span className="text-2xl font-black text-slate-900">42.8%</span>
+            <span className="text-xs text-slate-500 font-medium">8 Core • 32 GB RAM</span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div style={{ width: '42.8%' }} className="h-full bg-[#175cd3] rounded-full" />
+          </div>
+          <p className="text-[11px] text-slate-400 mt-2">Beban komputasi microservices stabil</p>
+        </div>
+
+        {/* KPI 2: Storage Usage */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <HardDrive className="w-4 h-4 text-amber-500" /> Cloud Storage
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold">NVMe RAID 10</span>
+          </div>
+          <div className="flex items-baseline justify-between mb-2">
+            <span className="text-2xl font-black text-slate-900">248 GB</span>
+            <span className="text-xs text-slate-500 font-medium">Kapasitas 500 GB</span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div style={{ width: '49.6%' }} className="h-full bg-amber-500 rounded-full" />
+          </div>
+          <p className="text-[11px] text-slate-400 mt-2">Penyimpanan arsip & database terenkripsi</p>
+        </div>
+
+        {/* KPI 3: Revenue / Target */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-500" /> Estimasi Kas Masuk
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">
+              {statsData.revenueGrowth}
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between mb-2">
+            <span className="text-xl sm:text-2xl font-black text-slate-900">{statsData.revenue}</span>
+            <span className="text-xs text-slate-500 font-medium">Bulan Ini</span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div style={{ width: '84%' }} className="h-full bg-emerald-500 rounded-full" />
+          </div>
+          <p className="text-[11px] text-slate-400 mt-2">Pencapaian target anggaran Q4</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -12552,6 +13603,14 @@ export function App() {
       title: 'Gallery',
       breadcrumbs: ['Dashboard', 'Components', 'Gallery'],
     },
+    'multiple-upload': {
+      title: 'Multiple Upload',
+      breadcrumbs: ['Dashboard', 'Components', 'Multiple Upload'],
+    },
+    statistic: {
+      title: 'Statistic',
+      breadcrumbs: ['Dashboard', 'Components', 'Statistic'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -12599,6 +13658,10 @@ export function App() {
         return <ChatBoxView />;
       case 'gallery':
         return <GalleryView />;
+      case 'multiple-upload':
+        return <MultipleUploadView />;
+      case 'statistic':
+        return <StatisticView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
