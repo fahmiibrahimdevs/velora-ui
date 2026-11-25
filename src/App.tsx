@@ -83,11 +83,12 @@ import {
   CreditCard,
   Activity,
   BarChart3,
-  Package,
   Cpu,
   HardDrive,
   ArrowUp,
   Folder,
+  PieChart,
+  Layers,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -13043,78 +13044,142 @@ function MultipleUploadView() {
 }
 
 // ============================================================================
-// STATISTIC SHOWCASE (Matching Stisla components-statistic.html)
+// STATISTIC SHOWCASE (Comprehensive Multi-Chart Dashboard matching Stisla)
 // ============================================================================
 
 function StatisticView() {
   const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month' | 'year'>('month');
+  const [activeLineIndex, setActiveLineIndex] = useState<number | null>(null);
+  const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+  const [activeDoughnutIndex, setActiveDoughnutIndex] = useState<number | null>(null);
+  const [activeRadarIndex, setActiveRadarIndex] = useState<number | null>(null);
+  const [activePolarIndex, setActivePolarIndex] = useState<number | null>(null);
 
-  const statsData = {
-    today: {
-      admin: 10,
-      news: 4,
-      orders: 68,
-      online: 47,
-      pending: 4,
-      shipping: 6,
-      completed: 58,
-      totalOrders: 68,
-      openTickets: 2,
-      progressTickets: 5,
-      resolvedTickets: 21,
-      totalTickets: 28,
-      revenue: 'Rp 14.800.000',
-      revenueGrowth: '+3.2%',
-    },
-    week: {
-      admin: 10,
-      news: 12,
-      orders: 312,
-      online: 89,
-      pending: 9,
-      shipping: 14,
-      completed: 289,
-      totalOrders: 312,
-      openTickets: 5,
-      progressTickets: 9,
-      resolvedTickets: 54,
-      totalTickets: 68,
-      revenue: 'Rp 84.500.000',
-      revenueGrowth: '+5.7%',
-    },
-    month: {
-      admin: 10,
-      news: 42,
-      orders: 1201,
-      online: 154,
-      pending: 24,
-      shipping: 18,
-      completed: 120,
-      totalOrders: 162,
-      openTickets: 7,
-      progressTickets: 14,
-      resolvedTickets: 89,
-      totalTickets: 110,
-      revenue: 'Rp 284.500.000',
-      revenueGrowth: '+12.4%',
-    },
-    year: {
-      admin: 12,
-      news: 342,
-      orders: 14850,
-      online: 320,
-      pending: 42,
-      shipping: 68,
-      completed: 14740,
-      totalOrders: 14850,
-      openTickets: 12,
-      progressTickets: 25,
-      resolvedTickets: 890,
-      totalTickets: 927,
-      revenue: 'Rp 3.120.000.000',
-      revenueGrowth: '+28.9%',
-    },
+  // Timeframe-sensitive datasets
+  const timeLabels = {
+    today: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+    week: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+    month: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+    year: ['2021', '2022', '2023', '2024', '2025', '2026'],
   }[timeframe];
+
+  const lineSeries1 = {
+    today: [12, 18, 45, 82, 64, 91],
+    week: [42, 58, 71, 85, 92, 60, 48],
+    month: [35, 48, 55, 68, 74, 62, 85, 94, 88, 105, 118, 142],
+    year: [320, 540, 780, 1120, 1540, 2180],
+  }[timeframe];
+
+  const lineSeries2 = {
+    today: [8, 12, 30, 54, 48, 62],
+    week: [28, 38, 52, 64, 70, 45, 32],
+    month: [24, 32, 40, 50, 58, 48, 65, 76, 70, 84, 92, 110],
+    year: [210, 390, 580, 840, 1190, 1680],
+  }[timeframe];
+
+  const barData1 = {
+    today: [45, 60, 80, 95, 70, 50],
+    week: [68, 84, 76, 92, 88, 58, 42],
+    month: [54, 68, 72, 85, 90, 82, 94, 105, 98, 112, 124, 138],
+    year: [450, 680, 920, 1250, 1680, 2240],
+  }[timeframe];
+
+  const barData2 = {
+    today: [30, 42, 55, 65, 48, 35],
+    week: [45, 58, 52, 68, 60, 38, 28],
+    month: [38, 48, 52, 62, 68, 58, 72, 80, 74, 88, 95, 108],
+    year: [310, 490, 680, 920, 1240, 1650],
+  }[timeframe];
+
+  const doughnutData = [
+    { label: 'Enterprise UI', value: 38, color: '#175cd3', count: '540 Aset' },
+    { label: 'Mobile Apps', value: 27, color: '#10b981', count: '384 Aset' },
+    { label: 'Cloud Services', value: 20, color: '#f59e0b', count: '284 Aset' },
+    { label: 'Security & SSO', value: 15, color: '#8b5cf6', count: '213 Aset' },
+  ];
+
+  const radarData = [
+    { axis: 'Kecepatan', value: 92, label: '92% Speed' },
+    { axis: 'Keamanan', value: 96, label: '96% Security' },
+    { axis: 'Skalabilitas', value: 85, label: '85% Scale' },
+    { axis: 'Keandalan', value: 90, label: '90% Uptime' },
+    { axis: 'Kemudahan UX', value: 88, label: '88% Usability' },
+    { axis: 'Efisiensi Biaya', value: 82, label: '82% Cost' },
+  ];
+
+  const polarData = [
+    { region: 'DKI Jakarta', value: 95, color: '#0284c7', pct: '34%' },
+    { region: 'Surabaya', value: 80, color: '#10b981', pct: '26%' },
+    { region: 'Bandung', value: 65, color: '#f59e0b', pct: '18%' },
+    { region: 'Medan', value: 50, color: '#f43f5e', pct: '13%' },
+    { region: 'Makassar', value: 38, color: '#8b5cf6', pct: '9%' },
+  ];
+
+  const departmentRanks = [
+    { name: 'Engineering & IT', value: 94, target: '94/100', color: 'bg-[#175cd3]' },
+    { name: 'Finance & Kasbon Approval', value: 88, target: '88/100', color: 'bg-emerald-500' },
+    { name: 'Human Resources & Talent', value: 81, target: '81/100', color: 'bg-indigo-500' },
+    { name: 'Marketing & Strategic Growth', value: 75, target: '75/100', color: 'bg-amber-500' },
+    { name: 'Operations & Logistics', value: 68, target: '68/100', color: 'bg-purple-500' },
+  ];
+
+  // Helper for SVG smooth line path
+  const maxLineVal = Math.max(...lineSeries1, ...lineSeries2) * 1.15;
+  const lineW = 600;
+  const lineH = 220;
+  const padX = 40;
+  const padY = 30;
+  const usableW = lineW - padX * 2;
+  const usableH = lineH - padY * 2;
+
+  const getLinePoints = (series: number[]) => {
+    return series.map((val, idx) => {
+      const x = padX + (idx / (series.length - 1)) * usableW;
+      const y = lineH - padY - (val / maxLineVal) * usableH;
+      return { x, y, val };
+    });
+  };
+
+  const points1 = getLinePoints(lineSeries1);
+  const points2 = getLinePoints(lineSeries2);
+
+  const makeSmoothPath = (pts: { x: number; y: number }[]) => {
+    if (pts.length === 0) return '';
+    let d = `M ${pts[0].x},${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const curr = pts[i];
+      const next = pts[i + 1];
+      const mx = (curr.x + next.x) / 2;
+      d += ` C ${mx},${curr.y} ${mx},${next.y} ${next.x},${next.y}`;
+    }
+    return d;
+  };
+
+  const path1 = makeSmoothPath(points1);
+  const path2 = makeSmoothPath(points2);
+  const areaPath1 = `${path1} L ${points1[points1.length - 1].x},${lineH - padY} L ${points1[0].x},${lineH - padY} Z`;
+
+  // Radar chart math (center: 150, 135, maxRadius: 85)
+  const radarCx = 150;
+  const radarCy = 135;
+  const radarR = 85;
+  const radarPoints = radarData.map((d, i) => {
+    const angle = (Math.PI / 3) * i - Math.PI / 2;
+    const r = (d.value / 100) * radarR;
+    return {
+      x: radarCx + r * Math.cos(angle),
+      y: radarCy + r * Math.sin(angle),
+      axisX: radarCx + (radarR + 24) * Math.cos(angle),
+      axisY: radarCy + (radarR + 18) * Math.sin(angle),
+      ...d,
+    };
+  });
+  const radarPolyPoints = radarPoints.map((p) => `${p.x},${p.y}`).join(' ');
+
+  // Polar area math (center: 150, 135)
+  const polarCx = 150;
+  const polarCy = 135;
+  const polarMaxR = 85;
 
   return (
     <div className="space-y-6">
@@ -13126,12 +13191,12 @@ function StatisticView() {
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Statistic</h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-500">
-            Kumpulan widget metrik statistik Stisla (Card Statistic 1 & 2) yang dimodernisasi dengan visual eksekutif beresolusi tinggi.
+            Halaman grafik analitik lengkap: Line Chart, Bar Chart, Doughnut, Radar, Polar Area, dan Sparklines.
           </p>
         </div>
 
         {/* Timeframe Filter Tabs */}
-        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80 self-start sm:self-auto">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80 self-start sm:self-auto shadow-2xs">
           {[
             { id: 'today', label: 'Hari Ini' },
             { id: 'week', label: 'Minggu Ini' },
@@ -13155,263 +13220,788 @@ function StatisticView() {
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION 1: STISLA CARD-STATISTIC-1 (4-Column Metric Grid) */}
+      {/* SECTION 1: METRIC CARDS ENHANCED WITH SPARKLINE CHARTS   */}
       {/* ======================================================== */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400">
-            Card Statistic 1 (Iconic 4-Column Layout)
-          </h4>
-          <span className="text-xs font-semibold text-[#1351b8]">Otomatis Terhubung Data Waktu Nyata</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1: Total Admin */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
-              <Users className="w-7 h-7" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Metric Card 1: Total Admin */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
                 Total Admin
               </span>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.admin}</span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">1,428</span>
                 <span className="text-[11px] font-bold text-emerald-600 inline-flex items-center gap-0.5">
-                  <ArrowUp className="w-3 h-3" /> 12%
+                  <ArrowUp className="w-3 h-3" /> +12%
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400">Pengelola aktif sistem</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <Users className="w-6 h-6" />
             </div>
           </div>
-
-          {/* Card 2: News / Articles */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform shrink-0">
-              <FileText className="w-7 h-7" />
+          {/* Mini Sparkline 1 */}
+          <div className="mt-4 pt-2 border-t border-slate-100">
+            <svg className="w-full h-9 overflow-visible" viewBox="0 0 120 30">
+              <path
+                d="M 0,22 Q 20,8 40,16 T 80,10 T 120,4"
+                fill="none"
+                stroke="#175cd3"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium mt-1">
+              <span>7 hari terakhir</span>
+              <span className="text-blue-600 font-bold">Tren Naik</span>
             </div>
-            <div className="min-w-0 flex-1">
-              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
-                News & Artikel
+          </div>
+        </div>
+
+        {/* Metric Card 2: News & Articles */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                News & Publikasi
               </span>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.news}</span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">342</span>
                 <span className="text-[11px] font-bold text-emerald-600 inline-flex items-center gap-0.5">
-                  <ArrowUp className="w-3 h-3" /> 8%
+                  <ArrowUp className="w-3 h-3" /> +8%
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400">Publikasi terbit</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <FileText className="w-6 h-6" />
             </div>
           </div>
-
-          {/* Card 3: Orders / Transactions */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
-              <CreditCard className="w-7 h-7" />
+          {/* Mini Sparkline 2 */}
+          <div className="mt-4 pt-2 border-t border-slate-100">
+            <svg className="w-full h-9 overflow-visible" viewBox="0 0 120 30">
+              <path
+                d="M 0,24 Q 25,20 50,12 T 90,14 T 120,6"
+                fill="none"
+                stroke="#f43f5e"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium mt-1">
+              <span>Rasio pembaca</span>
+              <span className="text-rose-600 font-bold">+18.4%</span>
             </div>
-            <div className="min-w-0 flex-1">
-              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
-                Kasbon & Order
+          </div>
+        </div>
+
+        {/* Metric Card 3: Orders & Kasbon */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                Transaksi Kasbon
               </span>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.orders}</span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">1,201</span>
                 <span className="text-[11px] font-bold text-blue-600 inline-flex items-center gap-0.5">
-                  <ArrowUp className="w-3 h-3" /> 4%
+                  <ArrowUp className="w-3 h-3" /> +4.2%
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400">Total permohonan</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <CreditCard className="w-6 h-6" />
             </div>
           </div>
-
-          {/* Card 4: Online Users */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all flex items-center gap-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform shrink-0">
-              <Activity className="w-7 h-7" />
+          {/* Mini Sparkline 3 */}
+          <div className="mt-4 pt-2 border-t border-slate-100">
+            <svg className="w-full h-9 overflow-visible" viewBox="0 0 120 30">
+              <path
+                d="M 0,18 Q 30,26 60,10 T 95,8 T 120,4"
+                fill="none"
+                stroke="#f59e0b"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium mt-1">
+              <span>Persetujuan SLA</span>
+              <span className="text-amber-600 font-bold">96%</span>
             </div>
-            <div className="min-w-0 flex-1">
-              <span className="text-xs font-semibold text-slate-500 block uppercase tracking-wider">
+          </div>
+        </div>
+
+        {/* Metric Card 4: Online Users */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs hover:shadow-md transition-all relative overflow-hidden group">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
                 Online Users
               </span>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-2xl font-black text-slate-900 tracking-tight">{statsData.online}</span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-2xl font-black text-slate-900 tracking-tight">154</span>
                 <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400">Sesi terhubung sekarang</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <Activity className="w-6 h-6" />
+            </div>
+          </div>
+          {/* Mini Sparkline 4 */}
+          <div className="mt-4 pt-2 border-t border-slate-100">
+            <svg className="w-full h-9 overflow-visible" viewBox="0 0 120 30">
+              <path
+                d="M 0,20 Q 20,24 45,14 T 80,18 T 120,5"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium mt-1">
+              <span>Kapasitas server</span>
+              <span className="text-emerald-600 font-bold">Optimal</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION 2: STISLA CARD-STATISTIC-2 (Composite Breakdown) */}
+      {/* SECTION 2: LINE CHART & BAR CHART (Primary Analytics)    */}
       {/* ======================================================== */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400">
-            Card Statistic 2 (Progress & Breakdown Summary)
-          </h4>
-          <span className="text-xs font-semibold text-slate-500">Agregasi Sub-Kategori Status</span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Card A: Order / Kasbon Status Breakdown */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 relative overflow-hidden">
-            {/* Top 3 Stats Items */}
-            <div className="grid grid-cols-3 gap-3 pb-5 border-b border-slate-100 text-center">
-              <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-100">
-                <span className="text-xl sm:text-2xl font-black text-amber-700 block">{statsData.pending}</span>
-                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-tight">Pending</span>
-              </div>
-              <div className="p-3 rounded-xl bg-sky-50/70 border border-sky-100">
-                <span className="text-xl sm:text-2xl font-black text-sky-700 block">{statsData.shipping}</span>
-                <span className="text-[11px] font-bold text-sky-800 uppercase tracking-tight">Diproses</span>
-              </div>
-              <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
-                <span className="text-xl sm:text-2xl font-black text-emerald-700 block">{statsData.completed}</span>
-                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-tight">Selesai</span>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* LINE & AREA CHART (lg:col-span-7) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#175cd3]" />
+                Line Chart: Tren Transaksi & Kunjungan
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Perbandingan data realisasi transaksi terhadap estimasi kunjungan.
+              </p>
             </div>
-
-            {/* Total Metric Box */}
-            <div className="pt-5 flex items-center justify-between">
-              <div>
-                <h5 className="text-sm font-bold text-slate-800">Total Transaksi Kasbon</h5>
-                <p className="text-xs text-slate-500 mt-0.5">Distribusi penyelesaian permohonan periode ini</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <span className="text-2xl font-black text-slate-900 block">{statsData.totalOrders}</span>
-                  <span className="text-[11px] font-semibold text-emerald-600">74% Rasio Sukses</span>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-                  <Package className="w-6 h-6" />
-                </div>
-              </div>
-            </div>
-
-            {/* Multi-segmented Progress Bar */}
-            <div className="mt-4 pt-3 border-t border-slate-100">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 mb-1.5">
-                <span>Pencapaian Target</span>
-                <span>88% Efisiensi</span>
-              </div>
-              <div className="w-full h-2.5 rounded-full bg-slate-100 flex overflow-hidden">
-                <div style={{ width: '15%' }} className="bg-amber-400" title="Pending" />
-                <div style={{ width: '11%' }} className="bg-sky-400" title="Diproses" />
-                <div style={{ width: '74%' }} className="bg-emerald-500" title="Selesai" />
-              </div>
+            {/* Series Legend */}
+            <div className="flex items-center gap-3 text-xs font-semibold">
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-full bg-[#175cd3]" />
+                Transaksi
+              </span>
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-full bg-[#10b981]" />
+                Kunjungan
+              </span>
             </div>
           </div>
 
-          {/* Card B: Service Desk & Support Ticket Resolution */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 relative overflow-hidden">
-            {/* Top 3 Stats Items */}
-            <div className="grid grid-cols-3 gap-3 pb-5 border-b border-slate-100 text-center">
-              <div className="p-3 rounded-xl bg-rose-50/70 border border-rose-100">
-                <span className="text-xl sm:text-2xl font-black text-rose-700 block">{statsData.openTickets}</span>
-                <span className="text-[11px] font-bold text-rose-800 uppercase tracking-tight">Tiket Baru</span>
-              </div>
-              <div className="p-3 rounded-xl bg-indigo-50/70 border border-indigo-100">
-                <span className="text-xl sm:text-2xl font-black text-indigo-700 block">{statsData.progressTickets}</span>
-                <span className="text-[11px] font-bold text-indigo-800 uppercase tracking-tight">Dikerjakan</span>
-              </div>
-              <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
-                <span className="text-xl sm:text-2xl font-black text-emerald-700 block">{statsData.resolvedTickets}</span>
-                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-tight">Selesai</span>
+          <div className="p-6">
+            <div className="w-full overflow-x-auto scrollbar-none">
+              <div className="min-w-[500px]">
+                <svg viewBox={`0 0 ${lineW} ${lineH}`} className="w-full h-64 overflow-visible select-none">
+                  <defs>
+                    <linearGradient id="areaGradientPrimary" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#175cd3" stopOpacity="0.28" />
+                      <stop offset="100%" stopColor="#175cd3" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Horizontal Grid lines */}
+                  {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
+                    const y = lineH - padY - pct * usableH;
+                    return (
+                      <g key={i}>
+                        <line
+                          x1={padX}
+                          y1={y}
+                          x2={lineW - padX}
+                          y2={y}
+                          stroke="#f1f5f9"
+                          strokeWidth="1.5"
+                          strokeDasharray="4 4"
+                        />
+                        <text
+                          x={padX - 8}
+                          y={y + 4}
+                          textAnchor="end"
+                          className="text-[10px] font-semibold fill-slate-400"
+                        >
+                          {Math.round(pct * maxLineVal)}
+                        </text>
+                      </g>
+                    );
+                  })}
+
+                  {/* Area fill */}
+                  <path d={areaPath1} fill="url(#areaGradientPrimary)" />
+
+                  {/* Series 2 Line (Green) */}
+                  <path
+                    d={path2}
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Series 1 Line (Blue) */}
+                  <path
+                    d={path1}
+                    fill="none"
+                    stroke="#175cd3"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Interactive Points Series 1 */}
+                  {points1.map((p, idx) => (
+                    <g key={idx} className="cursor-pointer" onMouseEnter={() => setActiveLineIndex(idx)} onMouseLeave={() => setActiveLineIndex(null)}>
+                      <circle
+                        cx={p.x}
+                        cy={p.y}
+                        r={activeLineIndex === idx ? 6.5 : 4}
+                        fill="#ffffff"
+                        stroke="#175cd3"
+                        strokeWidth="3"
+                        className="transition-all duration-150"
+                      />
+                      {activeLineIndex === idx && (
+                        <g>
+                          <rect
+                            x={p.x - 36}
+                            y={p.y - 36}
+                            width="72"
+                            height="24"
+                            rx="8"
+                            fill="#0f172a"
+                            className="shadow-lg"
+                          />
+                          <text
+                            x={p.x}
+                            y={p.y - 20}
+                            textAnchor="middle"
+                            className="text-[11px] font-bold fill-white"
+                          >
+                            {p.val} Order
+                          </text>
+                        </g>
+                      )}
+                    </g>
+                  ))}
+
+                  {/* X-axis Labels */}
+                  {points1.map((p, idx) => (
+                    <text
+                      key={idx}
+                      x={p.x}
+                      y={lineH - 8}
+                      textAnchor="middle"
+                      className="text-[11px] font-semibold fill-slate-500"
+                    >
+                      {timeLabels[idx] || `T-${idx}`}
+                    </text>
+                  ))}
+                </svg>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Total Metric Box */}
-            <div className="pt-5 flex items-center justify-between">
-              <div>
-                <h5 className="text-sm font-bold text-slate-800">Tiket Helpdesk & Support</h5>
-                <p className="text-xs text-slate-500 mt-0.5">SLA penanganan kendala pengguna sistem</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <span className="text-2xl font-black text-slate-900 block">{statsData.totalTickets}</span>
-                  <span className="text-[11px] font-semibold text-indigo-600">SLA 98.2%</span>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
-                  <HelpCircle className="w-6 h-6" />
-                </div>
-              </div>
+        {/* BAR CHART (lg:col-span-5) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#175cd3]" />
+                Bar Chart: Performa Periode
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">Komparasi target vs realisasi mingguan.</p>
+            </div>
+            <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+              Rata-rata 89%
+            </span>
+          </div>
+
+          <div className="p-6">
+            <div className="w-full">
+              <svg viewBox="0 0 380 220" className="w-full h-64 overflow-visible select-none">
+                {/* Horizontal Grid lines */}
+                {[0, 0.33, 0.66, 1].map((pct, i) => (
+                  <line
+                    key={i}
+                    x1="25"
+                    y1={190 - pct * 150}
+                    x2="365"
+                    y2={190 - pct * 150}
+                    stroke="#f1f5f9"
+                    strokeWidth="1.5"
+                    strokeDasharray="4 4"
+                  />
+                ))}
+
+                {/* Bars */}
+                {barData1.slice(0, 6).map((val, idx) => {
+                  const barMax = Math.max(...barData1, ...barData2) * 1.1;
+                  const groupX = 40 + idx * 54;
+                  const h1 = (val / barMax) * 150;
+                  const h2 = (barData2[idx] / barMax) * 150;
+                  const isHovered = activeBarIndex === idx;
+
+                  return (
+                    <g
+                      key={idx}
+                      className="cursor-pointer transition-all"
+                      onMouseEnter={() => setActiveBarIndex(idx)}
+                      onMouseLeave={() => setActiveBarIndex(null)}
+                    >
+                      {/* Bar 1 (Primary) */}
+                      <rect
+                        x={groupX}
+                        y={190 - h1}
+                        width="16"
+                        height={h1}
+                        rx="4"
+                        fill={isHovered ? '#103a94' : '#175cd3'}
+                        className="transition-colors"
+                      />
+                      {/* Bar 2 (Emerald) */}
+                      <rect
+                        x={groupX + 19}
+                        y={190 - h2}
+                        width="16"
+                        height={h2}
+                        rx="4"
+                        fill={isHovered ? '#059669' : '#10b981'}
+                        className="transition-colors"
+                      />
+
+                      {/* Tooltip on hover */}
+                      {isHovered && (
+                        <g>
+                          <rect
+                            x={groupX - 10}
+                            y={190 - Math.max(h1, h2) - 30}
+                            width="55"
+                            height="22"
+                            rx="6"
+                            fill="#0f172a"
+                            className="shadow-lg"
+                          />
+                          <text
+                            x={groupX + 17}
+                            y={190 - Math.max(h1, h2) - 15}
+                            textAnchor="middle"
+                            className="text-[10px] font-bold fill-white"
+                          >
+                            {val} / {barData2[idx]}
+                          </text>
+                        </g>
+                      )}
+
+                      {/* X label */}
+                      <text
+                        x={groupX + 17}
+                        y="208"
+                        textAnchor="middle"
+                        className="text-[11px] font-semibold fill-slate-500"
+                      >
+                        {timeLabels[idx] || `D${idx + 1}`}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
             </div>
 
-            {/* SLA Progress Bar */}
-            <div className="mt-4 pt-3 border-t border-slate-100">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 mb-1.5">
-                <span>Tingkat Kepuasan Layanan</span>
-                <span>94.8% Rating Positif</span>
-              </div>
-              <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                <div style={{ width: '94.8%' }} className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-600" />
-              </div>
+            <div className="flex items-center justify-center gap-6 mt-2 pt-3 border-t border-slate-100 text-xs font-semibold">
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-md bg-[#175cd3]" />
+                Realisasi
+              </span>
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-md bg-[#10b981]" />
+                Target Rencana
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION 3: INFRASTRUCTURE & REVENUE PERFORMANCE KPI */}
+      {/* SECTION 3: DOUGHNUT, RADAR & POLAR AREA CHARTS           */}
       {/* ======================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* KPI 1: Server Load */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-[#175cd3]" /> CPU & Server Load
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">Normal</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* CHART 3: DOUGHNUT CHART */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <PieChart className="w-4 h-4 text-[#175cd3]" />
+              Doughnut Chart: Kategori
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">Proporsi distribusi pemanfaatan aset sistem.</p>
           </div>
-          <div className="flex items-baseline justify-between mb-2">
-            <span className="text-2xl font-black text-slate-900">42.8%</span>
-            <span className="text-xs text-slate-500 font-medium">8 Core • 32 GB RAM</span>
+
+          <div className="p-6">
+            <div className="flex items-center justify-center">
+              <svg viewBox="0 0 300 270" className="w-56 h-56 select-none overflow-visible">
+                {/* SVG Donut Slices */}
+                {(() => {
+                  let cumulativePct = 0;
+                  return doughnutData.map((slice, idx) => {
+                    const startAngle = (cumulativePct / 100) * 2 * Math.PI - Math.PI / 2;
+                    cumulativePct += slice.value;
+                    const endAngle = (cumulativePct / 100) * 2 * Math.PI - Math.PI / 2;
+                    const isHovered = activeDoughnutIndex === idx;
+                    const rOut = isHovered ? 104 : 98;
+                    const rIn = isHovered ? 60 : 64;
+
+                    const x1 = 150 + rOut * Math.cos(startAngle);
+                    const y1 = 135 + rOut * Math.sin(startAngle);
+                    const x2 = 150 + rOut * Math.cos(endAngle);
+                    const y2 = 135 + rOut * Math.sin(endAngle);
+
+                    const x3 = 150 + rIn * Math.cos(endAngle);
+                    const y3 = 135 + rIn * Math.sin(endAngle);
+                    const x4 = 150 + rIn * Math.cos(startAngle);
+                    const y4 = 135 + rIn * Math.sin(startAngle);
+
+                    const largeArc = slice.value > 50 ? 1 : 0;
+                    const d = `M ${x1},${y1} A ${rOut},${rOut} 0 ${largeArc} 1 ${x2},${y2} L ${x3},${y3} A ${rIn},${rIn} 0 ${largeArc} 0 ${x4},${y4} Z`;
+
+                    return (
+                      <path
+                        key={idx}
+                        d={d}
+                        fill={slice.color}
+                        className="cursor-pointer transition-all duration-200 hover:opacity-90"
+                        onMouseEnter={() => setActiveDoughnutIndex(idx)}
+                        onMouseLeave={() => setActiveDoughnutIndex(null)}
+                      />
+                    );
+                  });
+                })()}
+
+                {/* Center Badge */}
+                <circle cx="150" cy="135" r="54" fill="#ffffff" className="shadow-inner" />
+                <text x="150" y="130" textAnchor="middle" className="text-xl font-black fill-slate-900 tracking-tight">
+                  {activeDoughnutIndex !== null ? `${doughnutData[activeDoughnutIndex].value}%` : '1,420'}
+                </text>
+                <text x="150" y="146" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
+                  {activeDoughnutIndex !== null ? doughnutData[activeDoughnutIndex].label : 'Total Aset'}
+                </text>
+              </svg>
+            </div>
+
+            {/* Doughnut Legend */}
+            <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100">
+              {doughnutData.map((d, i) => (
+                <div
+                  key={i}
+                  className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                    activeDoughnutIndex === i
+                      ? 'border-[#175cd3] bg-blue-50/50'
+                      : 'border-slate-100 hover:border-slate-200'
+                  }`}
+                  onMouseEnter={() => setActiveDoughnutIndex(i)}
+                  onMouseLeave={() => setActiveDoughnutIndex(null)}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+                    <span className="text-xs font-bold text-slate-700 truncate">{d.label}</span>
+                  </div>
+                  <span className="text-[11px] text-slate-500 font-semibold block pl-4 mt-0.5">
+                    {d.value}% ({d.count})
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-            <div style={{ width: '42.8%' }} className="h-full bg-[#175cd3] rounded-full" />
-          </div>
-          <p className="text-[11px] text-slate-400 mt-2">Beban komputasi microservices stabil</p>
         </div>
 
-        {/* KPI 2: Storage Usage */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-              <HardDrive className="w-4 h-4 text-amber-500" /> Cloud Storage
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold">NVMe RAID 10</span>
+        {/* CHART 4: RADAR / SPIDER WEB CHART */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <Activity className="w-4 h-4 text-[#175cd3]" />
+              Radar Chart: Metrik Sistem
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">Evaluasi kapabilitas dan keandalan arsitektur.</p>
           </div>
-          <div className="flex items-baseline justify-between mb-2">
-            <span className="text-2xl font-black text-slate-900">248 GB</span>
-            <span className="text-xs text-slate-500 font-medium">Kapasitas 500 GB</span>
+
+          <div className="p-6">
+            <div className="flex items-center justify-center">
+              <svg viewBox="0 0 300 270" className="w-56 h-56 select-none overflow-visible">
+                {/* Concentric Web Rings (20%, 40%, 60%, 80%, 100%) */}
+                {[0.25, 0.5, 0.75, 1].map((lvl, idx) => {
+                  const ringR = radarR * lvl;
+                  const ringPts = Array.from({ length: 6 }).map((_, i) => {
+                    const angle = (Math.PI / 3) * i - Math.PI / 2;
+                    return `${radarCx + ringR * Math.cos(angle)},${radarCy + ringR * Math.sin(angle)}`;
+                  }).join(' ');
+                  return (
+                    <polygon
+                      key={idx}
+                      points={ringPts}
+                      fill="none"
+                      stroke="#e2e8f0"
+                      strokeWidth="1.2"
+                    />
+                  );
+                })}
+
+                {/* Axis Radial Lines */}
+                {Array.from({ length: 6 }).map((_, i) => {
+                  const angle = (Math.PI / 3) * i - Math.PI / 2;
+                  return (
+                    <line
+                      key={i}
+                      x1={radarCx}
+                      y1={radarCy}
+                      x2={radarCx + radarR * Math.cos(angle)}
+                      y2={radarCy + radarR * Math.sin(angle)}
+                      stroke="#cbd5e1"
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+
+                {/* Radar Data Polygon */}
+                <polygon
+                  points={radarPolyPoints}
+                  fill="#175cd3"
+                  fillOpacity="0.25"
+                  stroke="#175cd3"
+                  strokeWidth="2.5"
+                  className="transition-all duration-300"
+                />
+
+                {/* Data Vertex Dots & Hover */}
+                {radarPoints.map((pt, i) => (
+                  <g
+                    key={i}
+                    className="cursor-pointer"
+                    onMouseEnter={() => setActiveRadarIndex(i)}
+                    onMouseLeave={() => setActiveRadarIndex(null)}
+                  >
+                    <circle
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={activeRadarIndex === i ? 6 : 4}
+                      fill="#ffffff"
+                      stroke="#175cd3"
+                      strokeWidth="2.5"
+                    />
+                    {/* Axis Label */}
+                    <text
+                      x={pt.axisX}
+                      y={pt.axisY}
+                      textAnchor="middle"
+                      className="text-[10px] font-bold fill-slate-600"
+                    >
+                      {pt.axis}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+
+            {/* Radar Legend Footer */}
+            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-600">
+              <span>Overall Score: <strong className="text-[#1351b8]">90.5/100</strong></span>
+              <span className="text-emerald-600 font-bold">Status: Sangat Andal</span>
+            </div>
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-            <div style={{ width: '49.6%' }} className="h-full bg-amber-500 rounded-full" />
-          </div>
-          <p className="text-[11px] text-slate-400 mt-2">Penyimpanan arsip & database terenkripsi</p>
         </div>
 
-        {/* KPI 3: Revenue / Target */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-500" /> Estimasi Kas Masuk
+        {/* CHART 5: POLAR AREA CHART */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <Layers className="w-4 h-4 text-[#175cd3]" />
+              Polar Area: Wilayah Operasional
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">Sebaran beban server berdasarkan zona regional.</p>
+          </div>
+
+          <div className="p-6">
+            <div className="flex items-center justify-center">
+              <svg viewBox="0 0 300 270" className="w-56 h-56 select-none overflow-visible">
+                {/* Concentric Guide Circles */}
+                {[0.33, 0.66, 1].map((pct, i) => (
+                  <circle
+                    key={i}
+                    cx={polarCx}
+                    cy={polarCy}
+                    r={polarMaxR * pct}
+                    fill="none"
+                    stroke="#f1f5f9"
+                    strokeWidth="1.5"
+                  />
+                ))}
+
+                {/* Polar Area Slices (5 Slices) */}
+                {polarData.map((slice, i) => {
+                  const sliceAngle = (2 * Math.PI) / polarData.length;
+                  const startA = i * sliceAngle - Math.PI / 2;
+                  const endA = (i + 1) * sliceAngle - Math.PI / 2;
+                  const r = (slice.value / 100) * polarMaxR;
+                  const isHovered = activePolarIndex === i;
+
+                  const x1 = polarCx + r * Math.cos(startA);
+                  const y1 = polarCy + r * Math.sin(startA);
+                  const x2 = polarCx + r * Math.cos(endA);
+                  const y2 = polarCy + r * Math.sin(endA);
+
+                  const d = `M ${polarCx},${polarCy} L ${x1},${y1} A ${r},${r} 0 0 1 ${x2},${y2} Z`;
+
+                  return (
+                    <path
+                      key={i}
+                      d={d}
+                      fill={slice.color}
+                      fillOpacity={isHovered ? 0.9 : 0.65}
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                      className="cursor-pointer transition-all duration-200"
+                      onMouseEnter={() => setActivePolarIndex(i)}
+                      onMouseLeave={() => setActivePolarIndex(null)}
+                    />
+                  );
+                })}
+
+                <circle cx={polarCx} cy={polarCy} r="5" fill="#0f172a" />
+              </svg>
+            </div>
+
+            {/* Polar Legend */}
+            <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100 text-xs">
+              {polarData.map((p, i) => (
+                <div
+                  key={i}
+                  className={`p-1.5 rounded-lg border flex items-center justify-between cursor-pointer transition-colors ${
+                    activePolarIndex === i ? 'bg-slate-50 border-slate-300' : 'border-slate-100'
+                  }`}
+                  onMouseEnter={() => setActivePolarIndex(i)}
+                  onMouseLeave={() => setActivePolarIndex(null)}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color }} />
+                    <span className="font-semibold text-slate-700">{p.region}</span>
+                  </div>
+                  <span className="font-bold text-slate-900">{p.pct}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 4: HORIZONTAL BARS & INFRASTRUCTURE KPI METERS   */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Horizontal Bar Chart (lg:col-span-6) */}
+        <div className="lg:col-span-6 bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8]">Horizontal Bar: Peringkat Divisi</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Aktivitas dan kepatuhan sistem per departemen.</p>
+            </div>
+            <span className="text-xs font-bold text-slate-500">Top 5 Divisi</span>
+          </div>
+
+          <div className="p-6 space-y-4">
+            {departmentRanks.map((dept, idx) => (
+              <div key={idx} className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs font-bold">
+                  <span className="text-slate-700 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center text-[10px]">
+                      {idx + 1}
+                    </span>
+                    {dept.name}
+                  </span>
+                  <span className="text-slate-900">{dept.target}</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    style={{ width: `${dept.value}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${dept.color}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* System Resource Gauges (lg:col-span-6) */}
+        <div className="lg:col-span-6 bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8]">Status Utilisasi & Sumber Daya</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Monitoring kapasitas memori, storage, dan jaringan.</p>
+            </div>
+            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+              Semua Layanan Sehat
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">
-              {statsData.revenueGrowth}
-            </span>
           </div>
-          <div className="flex items-baseline justify-between mb-2">
-            <span className="text-xl sm:text-2xl font-black text-slate-900">{statsData.revenue}</span>
-            <span className="text-xs text-slate-500 font-medium">Bulan Ini</span>
+
+          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <Cpu className="w-4 h-4 text-[#175cd3]" /> CPU Multi-Core
+                </span>
+                <span className="text-xs font-extrabold text-[#175cd3]">42.8%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div style={{ width: '42.8%' }} className="h-full bg-[#175cd3] rounded-full" />
+              </div>
+              <p className="text-[10px] text-slate-400 mt-2">8 Cores @ 3.8 GHz • Suhu 48°C</p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <HardDrive className="w-4 h-4 text-emerald-600" /> RAM Memory
+                </span>
+                <span className="text-xs font-extrabold text-emerald-600">64.2%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div style={{ width: '64.2%' }} className="h-full bg-emerald-500 rounded-full" />
+              </div>
+              <p className="text-[10px] text-slate-400 mt-2">20.5 GB / 32 GB DDR5 Terpakai</p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <HardDrive className="w-4 h-4 text-amber-600" /> NVMe SSD Storage
+                </span>
+                <span className="text-xs font-extrabold text-amber-600">49.6%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div style={{ width: '49.6%' }} className="h-full bg-amber-500 rounded-full" />
+              </div>
+              <p className="text-[10px] text-slate-400 mt-2">248 GB / 500 GB RAID 10</p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <Activity className="w-4 h-4 text-purple-600" /> Bandwidth Gateway
+                </span>
+                <span className="text-xs font-extrabold text-purple-600">28.4%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                <div style={{ width: '28.4%' }} className="h-full bg-purple-500 rounded-full" />
+              </div>
+              <p className="text-[10px] text-slate-400 mt-2">284 Mbps / 1 Gbps Dedicated</p>
+            </div>
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-            <div style={{ width: '84%' }} className="h-full bg-emerald-500 rounded-full" />
-          </div>
-          <p className="text-[11px] text-slate-400 mt-2">Pencapaian target anggaran Q4</p>
         </div>
       </div>
     </div>
