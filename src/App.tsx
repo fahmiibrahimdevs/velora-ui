@@ -59,6 +59,9 @@ import {
   Quote,
   Type,
   Palette,
+  Bookmark,
+  Flame,
+  ArrowRight,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -9715,6 +9718,696 @@ const theme: TypographyTheme = {
   );
 }
 
+// Dedicated Article Showcase matching ShizueFI & Stisla with Master Gradients & Interactive Features
+interface ArticleItem {
+  id: number;
+  title: string;
+  category: string;
+  desc: string;
+  date?: string;
+  readTime: string;
+  badge?: string;
+  badgeColor?: string;
+  accentGradient: string;
+  iconBg: string;
+  iconColor: string;
+  author?: {
+    name: string;
+    role: string;
+    initials: string;
+    bg: string;
+  };
+  views?: string;
+  likes?: number;
+}
+
+function ArticleView() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
+  const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([2, 6]);
+  const [likedIds, setLikedIds] = useState<number[]>([1, 5, 9]);
+  const [activeArticleModal, setActiveArticleModal] = useState<ArticleItem | null>(null);
+
+  const categories = ['Semua', 'Engineering', 'Design System', 'Security', 'Cloud & DevOps'];
+
+  const toggleBookmark = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBookmarkedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+    showToast(
+      bookmarkedIds.includes(id)
+        ? 'Artikel dihapus dari bookmark'
+        : 'Artikel berhasil disimpan ke bookmark!',
+      'info'
+    );
+  };
+
+  const toggleLike = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLikedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+    showToast(
+      likedIds.includes(id) ? 'Batal menyukai artikel' : 'Menyukai artikel ini!',
+      'success'
+    );
+  };
+
+  // Section 1: Article Style A (Overlay Title Banner)
+  const articlesStyleA: ArticleItem[] = [
+    {
+      id: 1,
+      title: 'Arsitektur Micro-Frontend Skala Enterprise',
+      category: 'Engineering',
+      readTime: '5 mnt baca',
+      desc: 'Panduan lengkap pemisahan aplikasi web monolitik menjadi modul independen dengan isolasi runtime.',
+      accentGradient: 'from-blue-600/20 via-sky-500/15 to-indigo-600/25',
+      iconBg: 'bg-blue-500/10 border-blue-200 text-blue-600',
+      iconColor: '#175cd3',
+    },
+    {
+      id: 2,
+      title: 'Optimasi Query & Sharding Database Skala Besar',
+      category: 'Engineering',
+      readTime: '7 mnt baca',
+      desc: 'Strategi pemartisian tabel horizontal dan replikasi multi-master untuk menangani jutaan transaksi.',
+      accentGradient: 'from-orange-500/20 via-amber-500/15 to-orange-600/25',
+      iconBg: 'bg-orange-500/10 border-orange-200 text-orange-600',
+      iconColor: '#f97316',
+    },
+    {
+      id: 3,
+      title: 'Integrasi Single Sign-On (SSO) Terpusat',
+      category: 'Security',
+      readTime: '4 mnt baca',
+      desc: 'Implementasi protokol OAuth 2.0 dan SAML 2.0 untuk autentikasi terpusat pada seluruh sistem ekosistem.',
+      accentGradient: 'from-amber-600/20 via-amber-500/15 to-yellow-600/25',
+      iconBg: 'bg-amber-500/10 border-amber-200 text-amber-600',
+      iconColor: '#d97706',
+    },
+    {
+      id: 4,
+      title: 'Penerapan Zero Trust Network Access (ZTNA)',
+      category: 'Security',
+      readTime: '6 mnt baca',
+      desc: 'Paradigma keamanan modern berbasis verifikasi eksplisit, akses hak terkecil, dan asumsi pelanggaran.',
+      accentGradient: 'from-emerald-500/20 via-teal-500/15 to-emerald-600/25',
+      iconBg: 'bg-emerald-500/10 border-emerald-200 text-emerald-600',
+      iconColor: '#059669',
+    },
+  ];
+
+  // Section 2: Article Style B (Editorial Card with Badges)
+  const articlesStyleB: ArticleItem[] = [
+    {
+      id: 5,
+      title: 'Standar Desain Velora UI v2: Executive Clean Cards',
+      category: 'Design System',
+      readTime: '4 mnt baca',
+      badge: 'Trending',
+      badgeColor: 'bg-rose-500 text-white',
+      desc: 'Evolusi prinsip visual modern dengan Master Gradients dan tipografi kontras tinggi tanpa abu-abu pudar.',
+      accentGradient: 'from-sky-500/15 via-blue-500/10 to-indigo-500/15',
+      iconBg: 'bg-sky-500/10 border-sky-200 text-sky-600',
+      iconColor: '#0284c7',
+    },
+    {
+      id: 6,
+      title: 'Strategi Caching Redis untuk Latensi Sub-Milidetik',
+      category: 'Cloud & DevOps',
+      readTime: '6 mnt baca',
+      badge: 'Populer',
+      badgeColor: 'bg-amber-500 text-white',
+      desc: 'Meningkatkan throughput pemrosesan transaksi hingga 10x lipat dengan caching berlapis dan invalidasi cerdas.',
+      accentGradient: 'from-rose-500/15 via-pink-500/10 to-red-500/15',
+      iconBg: 'bg-rose-500/10 border-rose-200 text-rose-600',
+      iconColor: '#e11d48',
+    },
+    {
+      id: 7,
+      title: 'Manajemen Autentikasi JWT & Rotasi Refresh Token',
+      category: 'Security',
+      readTime: '5 mnt baca',
+      badge: 'Pilihan Editor',
+      badgeColor: 'bg-emerald-600 text-white',
+      desc: 'Praktik terbaik mengamankan sesi pengguna web modern dari serangan token replay dan CSRF vulnerabilities.',
+      accentGradient: 'from-emerald-500/15 via-teal-500/10 to-emerald-500/15',
+      iconBg: 'bg-emerald-500/10 border-emerald-200 text-emerald-600',
+      iconColor: '#10b981',
+    },
+    {
+      id: 8,
+      title: 'Automasi Pipeline CI/CD Menggunakan GitHub Actions',
+      category: 'Cloud & DevOps',
+      readTime: '8 mnt baca',
+      badge: 'Rilis Baru',
+      badgeColor: 'bg-blue-600 text-white',
+      desc: 'Workflow rilis multi-tahap dengan pengujian otomatis, pemeriksaan keamanan, dan deploy tanpa downtime.',
+      accentGradient: 'from-lime-500/15 via-emerald-500/10 to-teal-500/15',
+      iconBg: 'bg-teal-500/10 border-teal-200 text-teal-600',
+      iconColor: '#0d9488',
+    },
+  ];
+
+  // Section 3: Article Style C (Author Byline & Rich Author Details)
+  const articlesStyleC: ArticleItem[] = [
+    {
+      id: 9,
+      title: 'Modernisasi Sistem Payroll & Kasbon Karyawan Berbasis Cloud',
+      category: 'Engineering',
+      date: 'NEWS • 5 HARI LALU',
+      readTime: '5 mnt baca',
+      desc: 'Transformasi modul penggajian otomatis dengan validasi multi-level approval secara real-time dan audit trail akurat.',
+      accentGradient: 'from-blue-600/20 via-sky-500/15 to-indigo-600/20',
+      iconBg: 'bg-blue-500/10 border-blue-200 text-blue-600',
+      iconColor: '#175cd3',
+      author: {
+        name: 'Hasan Basri',
+        role: 'WEB DEVELOPER',
+        initials: 'HB',
+        bg: 'bg-blue-600',
+      },
+      views: '1.4k',
+      likes: 84,
+    },
+    {
+      id: 10,
+      title: 'Riset Desain UI/UX: Mengurangi Friction pada Form Checkout Enterprise',
+      category: 'Design System',
+      date: 'DESIGN • 3 HARI LALU',
+      readTime: '4 mnt baca',
+      desc: 'Hasil uji kegunaan (usability testing) pada 500 pengguna aktif dengan tingkat konversi alur transaksi mencapai 98%.',
+      accentGradient: 'from-orange-500/20 via-amber-500/15 to-orange-600/20',
+      iconBg: 'bg-orange-500/10 border-orange-200 text-orange-600',
+      iconColor: '#f97316',
+      author: {
+        name: 'Rizal Fakhri',
+        role: 'UX DESIGNER',
+        initials: 'RF',
+        bg: 'bg-sky-500',
+      },
+      views: '2.1k',
+      likes: 126,
+    },
+    {
+      id: 11,
+      title: 'Pengembangan Aplikasi Pendamping Mobile dengan React Native 0.76',
+      category: 'Engineering',
+      date: 'MOBILE • 1 HARI LALU',
+      readTime: '6 mnt baca',
+      desc: 'Sinkronisasi offline-first dan push notification instan untuk verifikasi kehadiran dan perizinan karyawan di lapangan.',
+      accentGradient: 'from-purple-600/20 via-indigo-500/15 to-purple-600/20',
+      iconBg: 'bg-purple-500/10 border-purple-200 text-purple-600',
+      iconColor: '#9333ea',
+      author: {
+        name: 'Irwansyah Saputra',
+        role: 'MOBILE DEVELOPER',
+        initials: 'IS',
+        bg: 'bg-purple-600',
+      },
+      views: '980',
+      likes: 62,
+    },
+  ];
+
+  const filterArticles = (list: ArticleItem[]) => {
+    return list.filter((item) => {
+      const matchCategory = selectedCategory === 'Semua' || item.category === selectedCategory;
+      const matchSearch =
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.desc.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchCategory && matchSearch;
+    });
+  };
+
+  const filteredStyleA = filterArticles(articlesStyleA);
+  const filteredStyleB = filterArticles(articlesStyleB);
+  const filteredStyleC = filterArticles(articlesStyleC);
+
+  return (
+    <div className="space-y-8">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Article</h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500">
+            This article component is based on card and flexbox, featuring multiple modern layout variants.
+          </p>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative w-full sm:w-64">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari artikel..."
+            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 text-xs rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1351b8] shadow-xs"
+          />
+        </div>
+      </div>
+
+      {/* Category Filter Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              selectedCategory === cat
+                ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 1: ARTICLES (ARTICLE STYLE A - OVERLAY BANNER) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h3 className="text-base font-bold text-slate-800">Articles</h3>
+          </div>
+          <p className="text-xs text-slate-500">
+            This article component is based on card and flexbox.
+          </p>
+        </div>
+
+        {filteredStyleA.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-xs text-slate-500">
+            Tidak ada artikel yang cocok dengan filter.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredStyleA.map((article) => (
+              <div
+                key={article.id}
+                className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col group"
+              >
+                {/* Image Header with Overlay Title Banner (Matching ShizueFI) */}
+                <div
+                  className={`relative aspect-[16/10] bg-gradient-to-br ${article.accentGradient} flex flex-col items-center justify-center p-4 overflow-hidden`}
+                >
+                  {/* Decorative Tech Graphic */}
+                  <div
+                    className={`w-14 h-14 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-6`}
+                  >
+                    <BookOpen className="w-7 h-7" />
+                  </div>
+
+                  {/* Overlaid Title Banner at Bottom of Image (Signature ShizueFI Style) */}
+                  <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-slate-900/80 via-slate-900/50 to-transparent">
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-blue-300 block mb-0.5">
+                      {article.category} • {article.readTime}
+                    </span>
+                    <h4 className="text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug drop-shadow-xs">
+                      {article.title}
+                    </h4>
+                  </div>
+                </div>
+
+                {/* Card Body with centered button */}
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal">
+                    {article.desc}
+                  </p>
+
+                  <div className="pt-2 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setActiveArticleModal(article)}
+                      className="px-5 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer inline-flex items-center gap-1.5"
+                    >
+                      <span>Read More</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 2: ARTICLE STYLE B (EDITORIAL WITH TOP BADGES) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h3 className="text-base font-bold text-slate-800">Article Style B</h3>
+          </div>
+          <p className="text-xs text-slate-500">
+            Minimalist editorial card with category badge, reading progress, and directional read-more link.
+          </p>
+        </div>
+
+        {filteredStyleB.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-xs text-slate-500">
+            Tidak ada artikel yang cocok dengan filter.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredStyleB.map((article) => {
+              const isBookmarked = bookmarkedIds.includes(article.id);
+              return (
+                <div
+                  key={article.id}
+                  className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col group"
+                >
+                  {/* Image Header with Top Badge */}
+                  <div
+                    className={`relative aspect-[16/10] bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
+                  >
+                    {/* Top-Left Badge (Matching ShizueFI 🔥 Trending) */}
+                    {article.badge && (
+                      <div className="absolute top-3 left-3 z-10">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs ${
+                            article.badge === 'Trending' ? 'bg-rose-500 text-white' : 'bg-[#1351b8] text-white'
+                          }`}
+                        >
+                          {article.badge === 'Trending' && <Flame className="w-3 h-3" />}
+                          {article.badge}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Top-Right Bookmark Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => toggleBookmark(article.id, e)}
+                      title="Simpan artikel"
+                      className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-600 hover:text-[#1351b8] flex items-center justify-center shadow-xs transition-all cursor-pointer"
+                    >
+                      <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-[#1351b8] text-[#1351b8]' : ''}`} />
+                    </button>
+
+                    {/* Decorative Graphic */}
+                    <div
+                      className={`w-12 h-12 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <BookOpen className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* Card Body with Title Below Image & Right Arrow Link */}
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
+                        {article.category} • {article.readTime}
+                      </span>
+                      <h4 className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-[#1351b8] transition-colors leading-snug">
+                        {article.title}
+                      </h4>
+                      <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal pt-1">
+                        {article.desc}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-50 flex items-center justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setActiveArticleModal(article)}
+                        className="text-xs font-semibold text-[#1351b8] hover:text-[#0c2869] inline-flex items-center gap-1 group/btn cursor-pointer transition-colors"
+                      >
+                        <span>Read More</span>
+                        <ChevronRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 3: ARTICLE STYLE C (AUTHOR BYLINE & PROFILE) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h3 className="text-base font-bold text-slate-800">Article Style C</h3>
+          </div>
+          <p className="text-xs text-slate-500">
+            Feature article card with category meta, published time, and author profile details.
+          </p>
+        </div>
+
+        {filteredStyleC.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-xs text-slate-500">
+            Tidak ada artikel yang cocok dengan filter.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {filteredStyleC.map((article) => {
+              const isLiked = likedIds.includes(article.id);
+              return (
+                <div
+                  key={article.id}
+                  className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col group"
+                >
+                  {/* Image Header */}
+                  <div
+                    className={`relative aspect-[16/9] bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
+                  >
+                    <div
+                      className={`w-14 h-14 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xs`}
+                    >
+                      <BookOpen className="w-7 h-7" />
+                    </div>
+                  </div>
+
+                  {/* Card Body with Author Footer */}
+                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                        {article.date}
+                      </span>
+                      <h4
+                        onClick={() => setActiveArticleModal(article)}
+                        className="text-base font-bold text-slate-800 line-clamp-2 hover:text-[#1351b8] cursor-pointer transition-colors leading-snug"
+                      >
+                        {article.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed font-normal">
+                        {article.desc}
+                      </p>
+                    </div>
+
+                    {/* Author Byline Footer (Matching ShizueFI Style C) */}
+                    {article.author && (
+                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-9 h-9 rounded-full ${article.author.bg} text-white font-bold text-xs flex items-center justify-center shadow-xs shrink-0`}
+                          >
+                            {article.author.initials}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1">
+                              <h5 className="text-xs font-bold text-slate-800">{article.author.name}</h5>
+                              <CheckCircle2 className="w-3 h-3 text-blue-500 fill-blue-500/20" />
+                            </div>
+                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide block">
+                              {article.author.role}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Interactive Engagement Counters */}
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => toggleLike(article.id, e)}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-rose-500 transition-colors p-1"
+                          >
+                            <Heart
+                              className={`w-3.5 h-3.5 ${
+                                isLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-400'
+                              }`}
+                            />
+                            <span>{(article.likes || 0) + (isLiked ? 1 : 0)}</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 4: FEATURED EDITORIAL STORY (HERO SPLIT ARTICLE) */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12">
+          {/* Left Hero Graphic Banner */}
+          <div className="lg:col-span-5 bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] p-8 sm:p-10 flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+            <div className="relative z-10 space-y-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-xs text-xs font-semibold text-white shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                Featured Editorial Story
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold leading-tight">
+                Masa Depan Desain Sistem Modern: Mengintegrasikan React 19, Tailwind CSS v4, dan Aksesibilitas
+              </h3>
+            </div>
+
+            <div className="relative z-10 pt-8 mt-6 border-t border-white/20 flex items-center justify-between text-xs text-blue-100">
+              <span>Ditulis oleh Fahmi Ibrahim</span>
+              <span>10 Menit Membaca</span>
+            </div>
+          </div>
+
+          {/* Right Content & Actions */}
+          <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                <Calendar className="w-3.5 h-3.5" />
+                <span>25 November 2026</span>
+                <span>•</span>
+                <span className="text-[#1351b8]">Teknologi & Desain</span>
+              </div>
+              <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                Desain sistem bukan lagi sekadar komponen UI statis, melainkan arsitektur menyeluruh yang memastikan konsistensi visual, efisiensi render DOM, serta kesiapan aksesibilitas WCAG 2.2. Pelajari bagaimana Velora UI menerapkan Master Gradients, komponen tanpa washed-out text, dan interaktivitas instan.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 font-medium">React 19</span>
+                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 font-medium">Tailwind v4</span>
+                <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 font-medium">Design Tokens</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveArticleModal({
+                    id: 99,
+                    title: 'Masa Depan Desain Sistem Modern: Mengintegrasikan React 19, Tailwind CSS v4, dan Aksesibilitas',
+                    category: 'Design System',
+                    readTime: '10 mnt baca',
+                    desc: 'Desain sistem bukan lagi sekadar komponen UI statis, melainkan arsitektur menyeluruh yang memastikan konsistensi visual, efisiensi render DOM, serta kesiapan aksesibilitas WCAG 2.2.',
+                    accentGradient: 'from-blue-600/30 to-indigo-800/40',
+                    iconBg: 'bg-blue-500/10 border-blue-200 text-blue-600',
+                    iconColor: '#175cd3',
+                  })
+                }
+                className="px-5 py-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <span>Baca Artikel Penuh</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* Lightbox / Reader Modal for Articles */}
+      {/* ======================================================== */}
+      {activeArticleModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                  {activeArticleModal.category} • {activeArticleModal.readTime}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveArticleModal(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 sm:p-8 overflow-y-auto space-y-4">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+                {activeArticleModal.title}
+              </h3>
+
+              <div className="flex items-center gap-3 text-xs text-slate-500 pb-3 border-b border-slate-100">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {activeArticleModal.readTime}
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <User className="w-3.5 h-3.5" />
+                  {activeArticleModal.author ? activeArticleModal.author.name : 'Velora Tech Team'}
+                </span>
+              </div>
+
+              <div className="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                <p className="text-slate-800 font-medium">{activeArticleModal.desc}</p>
+                <p>
+                  Dalam ekosistem aplikasi enterprise modern, implementasi komponen artikel yang modular memudahkan tim konten dan pengembang dalam mempublikasikan berita, release notes, serta panduan teknis tanpa perlu merombak ulang struktur tata letak.
+                </p>
+                <div className="border-l-4 border-[#175cd3] pl-4 py-2 bg-slate-50/80 rounded-r-xl italic text-slate-700">
+                  "Konsistensi visual dan performa render adalah pondasi utama dalam menciptakan pengalaman membaca digital yang nyaman."
+                </div>
+                <p>
+                  Velora UI menyediakan 3 gaya artikel standar (Style A, Style B, dan Style C) serta format editorial hero banner yang sepenuhnya responsif pada perangkat seluler, tablet, hingga layar ultra-lebar.
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  showToast('Tautan artikel berhasil disalin!', 'success');
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#1351b8] cursor-pointer"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Bagikan Tautan</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveArticleModal(null)}
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer"
+              >
+                Tutup Pembaca
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -9884,6 +10577,10 @@ export function App() {
       title: 'Typography',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Typography'],
     },
+    article: {
+      title: 'Article',
+      breadcrumbs: ['Dashboard', 'Components', 'Article'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -9923,6 +10620,8 @@ export function App() {
         return <TooltipView />;
       case 'typography':
         return <TypographyView />;
+      case 'article':
+        return <ArticleView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
