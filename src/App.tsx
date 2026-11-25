@@ -56,6 +56,9 @@ import {
   HelpCircle,
   Share2,
   Code2,
+  Quote,
+  Type,
+  Palette,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -8989,6 +8992,729 @@ function TooltipView() {
   );
 }
 
+// Dedicated Typography Showcase matching ShizueFI & Stisla with Master Gradients & Advanced Interactivity
+function TypographyView() {
+  const [fontSize, setFontSize] = useState<'text-xs' | 'text-sm' | 'text-base' | 'text-lg' | 'text-xl' | 'text-2xl' | 'text-3xl'>('text-lg');
+  const [fontWeight, setFontWeight] = useState<'font-normal' | 'font-medium' | 'font-semibold' | 'font-bold' | 'font-extrabold'>('font-semibold');
+  const [lineHeight, setLineHeight] = useState<'leading-tight' | 'leading-normal' | 'leading-relaxed' | 'leading-loose'>('leading-relaxed');
+  const [previewText, setPreviewText] = useState('Velora UI menghadirkan hierarki tipografi yang tajam, proporsional, dan mudah dibaca pada berbagai ukuran layar.');
+  const [copiedCodeSnippet, setCopiedCodeSnippet] = useState(false);
+  const [checklistTasks, setChecklistTasks] = useState<{ id: number; text: string; done: boolean }[]>([
+    { id: 1, text: 'Konfigurasi hierarki heading H1 - H6 proporsional', done: true },
+    { id: 2, text: 'Gunakan kontras teks slate tajam (#1e293b / #334155)', done: true },
+    { id: 3, text: 'Hindari teks washed-out abu-abu pudar (#94a3b8) pada body text', done: true },
+    { id: 4, text: 'Implementasikan blockquote dengan accent border Master Blue', done: false },
+    { id: 5, text: 'Dukung sintaks kode inline dan blok kode teknis', done: false },
+  ]);
+
+  const toggleChecklist = (id: number) => {
+    setChecklistTasks((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, done: !item.done } : item))
+    );
+  };
+
+  const colorPalette = [
+    {
+      name: 'Primary',
+      hex: '#175cd3',
+      subHex: '#0f3ba0',
+      bgClass: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Brand Master Gradient, tombol aksi utama, link aktif',
+    },
+    {
+      name: 'Secondary',
+      hex: '#64748b',
+      bgClass: 'bg-slate-500',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Teks sekunder, border pembatas, tombol sekunder',
+    },
+    {
+      name: 'Success',
+      hex: '#059669',
+      bgClass: 'bg-emerald-600',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Status aktif, verifikasi berhasil, badge positif',
+    },
+    {
+      name: 'Info',
+      hex: '#0ea5e9',
+      bgClass: 'bg-sky-500',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Pemberitahuan informatif, panduan bantuan sistem',
+    },
+    {
+      name: 'Warning',
+      hex: '#f59e0b',
+      bgClass: 'bg-amber-500',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Peringatan perhatian, masa tenggang, status pending',
+    },
+    {
+      name: 'Danger',
+      hex: '#e11d48',
+      bgClass: 'bg-rose-600',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Pesan kesalahan fatal, aksi destruktif, alert kritis',
+    },
+    {
+      name: 'Light',
+      hex: '#f8fafc',
+      bgClass: 'bg-slate-100',
+      textClass: 'text-slate-700',
+      borderClass: 'border-slate-200',
+      usage: 'Background container, area non-aktif, badge netral',
+    },
+    {
+      name: 'Dark',
+      hex: '#0f172a',
+      bgClass: 'bg-slate-900',
+      textClass: 'text-white',
+      borderClass: 'border-transparent',
+      usage: 'Teks heading utama, footer pekat, tooltip popover',
+    },
+  ];
+
+  const codeSnippet = `// Inisialisasi tema tipografi Velora UI
+interface TypographyTheme {
+  fontFamily: 'Inter, sans-serif';
+  baseSize: '16px';
+  headingWeight: 600;
+  crispSlateContrast: '#1e293b';
+}
+
+const theme: TypographyTheme = {
+  fontFamily: 'Inter, sans-serif',
+  baseSize: '16px',
+  headingWeight: 600,
+  crispSlateContrast: '#1e293b',
+};`;
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    setCopiedCodeSnippet(true);
+    showToast('Cuplikan kode berhasil disalin!', 'success');
+    setTimeout(() => setCopiedCodeSnippet(false), 2000);
+  };
+
+  const copyColor = (name: string, hex: string) => {
+    navigator.clipboard.writeText(hex);
+    showToast(`Warna ${name} (${hex}) disalin ke clipboard!`, 'success');
+  };
+
+  const generatedSandboxClass = `${fontSize} ${fontWeight} ${lineHeight} text-slate-800 transition-all`;
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Typography</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Documentation and examples for Bootstrap typography, including global settings, headings, body text, lists, and more.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI & Stisla */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Card: Text & Headings */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+              <h4 className="text-base font-bold text-[#1351b8]">Text</h4>
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">H1 - H6 Scale</span>
+            </div>
+            <div className="p-6 space-y-5">
+              {/* Heading 1 to 6 with visual labels */}
+              <div className="space-y-3 pb-5 border-b border-slate-100">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Heading 1</h1>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">36px / 2.25rem</span>
+                </div>
+
+                <div className="flex items-baseline justify-between gap-2">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Heading 2</h2>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">30px / 1.875rem</span>
+                </div>
+
+                <div className="flex items-baseline justify-between gap-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-800">Heading 3</h3>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">24px / 1.5rem</span>
+                </div>
+
+                <div className="flex items-baseline justify-between gap-2">
+                  <h4 className="text-lg sm:text-xl font-bold text-slate-800">Heading 4</h4>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">20px / 1.25rem</span>
+                </div>
+
+                <div className="flex items-baseline justify-between gap-2">
+                  <h5 className="text-base sm:text-lg font-semibold text-slate-800">Heading 5</h5>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">18px / 1.125rem</span>
+                </div>
+
+                <div className="flex items-baseline justify-between gap-2">
+                  <h6 className="text-sm sm:text-base font-semibold text-slate-700">Heading 6</h6>
+                  <span className="text-[11px] font-mono font-medium text-slate-400 shrink-0">16px / 1.0rem</span>
+                </div>
+              </div>
+
+              {/* Fancy Display Heading with secondary text */}
+              <div className="space-y-1">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-800">
+                  Fancy display heading{' '}
+                  <span className="text-slate-400 font-normal text-base sm:text-lg">With faded secondary text</span>
+                </h3>
+              </div>
+
+              {/* Lead Paragraph */}
+              <div className="space-y-1">
+                <p className="text-base sm:text-lg text-slate-700 font-normal leading-relaxed">
+                  <span className="font-semibold text-slate-900">Lead — </span>
+                  Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo
+                  luctus.
+                </p>
+              </div>
+
+              {/* Standard Paragraph */}
+              <div className="space-y-1">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  <span className="font-semibold text-slate-800">Paragraph — </span>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua. Ut enim ad minim veniam.
+                </p>
+              </div>
+
+              {/* Interactive Clickable Link */}
+              <div>
+                <a
+                  href="#/typography"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showToast('Tautan interaktif berhasil diklik!', 'info');
+                  }}
+                  className="text-[#1351b8] hover:text-[#0c2869] text-xs sm:text-sm font-semibold underline inline-flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  You can click me!
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Card: Text Colors */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Text Colors</h4>
+            </div>
+            <div className="p-6 space-y-3">
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-[#1351b8] font-bold text-sm">Text Primary</span>
+                <span className="text-xs font-mono text-slate-400">text-[#1351b8]</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500 font-medium text-sm">Text Secondary</span>
+                <span className="text-xs font-mono text-slate-400">text-slate-500</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-emerald-600 font-semibold text-sm">Text Success</span>
+                <span className="text-xs font-mono text-slate-400">text-emerald-600</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-sky-600 font-semibold text-sm">Text Info</span>
+                <span className="text-xs font-mono text-slate-400">text-sky-600</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-amber-600 font-semibold text-sm">Text Warning</span>
+                <span className="text-xs font-mono text-slate-400">text-amber-600</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="text-rose-600 font-semibold text-sm">Text Danger</span>
+                <span className="text-xs font-mono text-slate-400">text-rose-600</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-50">
+                <span className="bg-slate-900 text-slate-200 px-2 py-0.5 rounded text-xs font-semibold">
+                  Text Light (Dark Background)
+                </span>
+                <span className="text-xs font-mono text-slate-400">text-slate-200</span>
+              </div>
+              <div className="flex items-center justify-between py-1">
+                <span className="text-slate-900 font-extrabold text-sm">Text Dark</span>
+                <span className="text-xs font-mono text-slate-400">text-slate-900</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Card: Inline Text Element */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Inline Text Element</h4>
+            </div>
+            <div className="p-6 space-y-3.5 text-xs sm:text-sm text-slate-700">
+              <p>
+                You can use the mark tag to{' '}
+                <mark className="bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-semibold">highlight</mark>{' '}
+                text.
+              </p>
+              <p>
+                <del className="line-through text-slate-500">
+                  This line of text is meant to be treated as deleted text.
+                </del>
+              </p>
+              <p>
+                <s className="line-through text-slate-500">
+                  This line of text is meant to be treated as no longer accurate.
+                </s>
+              </p>
+              <p>
+                <ins className="underline decoration-[#1351b8] text-slate-900 font-medium">
+                  This line of text is meant to be treated as an addition to the document.
+                </ins>
+              </p>
+              <p>
+                <u className="underline decoration-slate-400">This line of text will render as underlined</u>
+              </p>
+              <p>
+                <small className="text-xs text-slate-500">This line of text is meant to be treated as fine print.</small>
+              </p>
+              <p>
+                <strong className="font-bold text-slate-900">This line rendered as bold text.</strong>
+              </p>
+              <p>
+                <em className="italic text-slate-700">This line rendered as italicized text.</em>
+              </p>
+              <p className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-600">
+                <span>Pintasan keyboard: Tekan</span>
+                <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono font-bold text-slate-700 shadow-xs">
+                  Ctrl + S
+                </kbd>
+                <span>untuk menyimpan perubahan.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* 4. Card: Abbreviations with Interactive Tooltip */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Abbreviations</h4>
+            </div>
+            <div className="p-6 space-y-3">
+              <p className="text-xs text-slate-500 mb-2">
+                Arahkan kursor pada singkatan di bawah untuk melihat kepanjangannya melalui tooltip otomatis:
+              </p>
+              <div className="flex flex-wrap items-center gap-6">
+                <div>
+                  <Tooltip content="Attribute: Properti tambahan pada tag markup HTML." position="top">
+                    <abbr className="text-sm font-bold text-slate-800 border-b border-dotted border-slate-400 cursor-help">
+                      attr
+                    </abbr>
+                  </Tooltip>
+                </div>
+
+                <div>
+                  <Tooltip
+                    content="HyperText Markup Language: Format standar pembuatan halaman web sedunia."
+                    position="top"
+                    variant="primary"
+                  >
+                    <abbr className="text-sm font-bold text-[#1351b8] border-b border-dotted border-[#1351b8] cursor-help">
+                      HTML
+                    </abbr>
+                  </Tooltip>
+                </div>
+
+                <div>
+                  <Tooltip
+                    content="Application Programming Interface: Saluran integrasi antar sistem backend."
+                    position="top"
+                    variant="dark"
+                  >
+                    <abbr className="text-sm font-bold text-slate-800 border-b border-dotted border-slate-400 cursor-help">
+                      API
+                    </abbr>
+                  </Tooltip>
+                </div>
+
+                <div>
+                  <Tooltip
+                    content="Software as a Service: Model aplikasi cloud siap pakai berbasis langganan."
+                    position="top"
+                    variant="success"
+                  >
+                    <abbr className="text-sm font-bold text-emerald-700 border-b border-dotted border-emerald-500 cursor-help">
+                      SaaS
+                    </abbr>
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 5. Card: Brand & Semantic Palette (Color) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <h4 className="text-base font-bold text-[#1351b8]">Color</h4>
+                <p className="text-xs text-slate-500 mt-0.5">Klik kotak warna untuk menyalin nilai HEX ke clipboard.</p>
+              </div>
+              <Palette className="w-4 h-4 text-[#1351b8]" />
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {colorPalette.map((col) => (
+                  <button
+                    key={col.name}
+                    type="button"
+                    onClick={() => copyColor(col.name, col.hex)}
+                    className={`${col.bgClass} ${col.textClass} border ${col.borderClass} p-3 rounded-xl shadow-xs text-center hover:scale-105 active:scale-95 transition-all cursor-pointer relative group flex flex-col items-center justify-center min-h-[64px]`}
+                  >
+                    <span className="text-xs font-bold">{col.name}</span>
+                    <span className="text-[10px] font-mono opacity-80 mt-0.5">{col.hex}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 6. Card: Text Block, Quotes & Code */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Text Block</h4>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* Blockquote with Blue Pill Accent */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">Blockquote</span>
+                </div>
+                <div className="border-l-4 border-[#175cd3] pl-4 py-3 bg-slate-50/70 rounded-r-xl italic text-slate-700 text-xs sm:text-sm relative">
+                  <Quote className="w-4 h-4 text-blue-300 absolute top-2 right-2 opacity-50" />
+                  "SHIZUEFI made with hand — elevated into Velora UI with performance and executive elegance."
+                </div>
+              </div>
+
+              {/* Inline Code with Blue Pill Accent */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">Inline Code</span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                  aliquip ex ea commodo consequat. Gunakan helper{' '}
+                  <code className="text-xs font-mono font-semibold bg-slate-100 text-[#1351b8] px-2 py-0.5 rounded-lg border border-slate-200">
+                    formatSlug()
+                  </code>{' '}
+                  untuk format otomatis.
+                </p>
+              </div>
+
+              {/* Code Block with Blue Pill Accent */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">Code Block</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={copyCode}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-[#1351b8] transition-colors cursor-pointer"
+                  >
+                    {copiedCodeSnippet ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
+                    <span>{copiedCodeSnippet ? 'Tersalin' : 'Salin Kode'}</span>
+                  </button>
+                </div>
+                <p className="text-xs text-slate-500 mb-2">
+                  We use modern clean styling for syntax blocks, you can adjust themes, syntax and more. Visit their documentation.
+                </p>
+                <div className="bg-slate-900 rounded-xl p-3.5 text-xs font-mono text-slate-300 border border-slate-800 shadow-inner overflow-x-auto">
+                  <pre className="text-emerald-400"><code>var code = 'Hello';</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 7. Card: Display Headings */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Display</h4>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-baseline justify-between border-b border-slate-50 pb-3">
+                <span className="text-5xl sm:text-6xl font-light text-slate-700 tracking-tight">Display 1</span>
+                <span className="text-xs font-mono text-slate-400">text-6xl</span>
+              </div>
+              <div className="flex items-baseline justify-between border-b border-slate-50 pb-3">
+                <span className="text-4xl sm:text-5xl font-light text-slate-700 tracking-tight">Display 2</span>
+                <span className="text-xs font-mono text-slate-400">text-5xl</span>
+              </div>
+              <div className="flex items-baseline justify-between border-b border-slate-50 pb-3">
+                <span className="text-3xl sm:text-4xl font-normal text-slate-700 tracking-tight">Display 3</span>
+                <span className="text-xs font-mono text-slate-400">text-4xl</span>
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span className="text-2xl sm:text-3xl font-normal text-slate-700 tracking-tight">Display 4</span>
+                <span className="text-xs font-mono text-slate-400">text-3xl</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 8. Card: Naming a Source */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Naming a Source</h4>
+            </div>
+            <div className="p-6">
+              <blockquote className="border-l-4 border-slate-300 pl-4 py-2 text-slate-700 text-xs sm:text-sm">
+                <p className="italic leading-relaxed font-normal">
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante."
+                </p>
+                <footer className="mt-2 text-xs font-medium text-slate-500">
+                  — Someone famous in <cite className="text-[#1351b8] font-semibold not-italic">Source Title</cite>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION: LISTS (UNORDERED, ORDERED, AND INTERACTIVE CHECKLIST) */}
+      {/* ======================================================== */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+            <h3 className="text-base font-bold text-slate-800">List</h3>
+          </div>
+          <p className="text-xs text-slate-500">
+            Penyajian informasi terstruktur dalam format tidak berurutan, berurutan nomor, dan daftar tugas interaktif.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Card: Unordered List */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-sm font-bold text-[#1351b8] mb-3">Unordered List</h4>
+            <p className="text-xs text-slate-500 mb-3">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
+            <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 font-normal">
+              <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</li>
+              <li>tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</li>
+              <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</li>
+              <li>consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</li>
+              <li>cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non</li>
+              <li>proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+            </ul>
+          </div>
+
+          {/* Card: Ordered List */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-sm font-bold text-[#1351b8] mb-3">Ordered List</h4>
+            <p className="text-xs text-slate-500 mb-3">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
+            <ol className="list-decimal pl-5 space-y-1.5 text-xs text-slate-600 font-normal">
+              <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</li>
+              <li>tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</li>
+              <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</li>
+              <li>consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</li>
+              <li>cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non</li>
+              <li>proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+              <li>consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</li>
+            </ol>
+          </div>
+
+          {/* Card: Interactive Task Checklist */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-sm font-bold text-[#1351b8] mb-3">Interactive Checklist</h4>
+            <p className="text-xs text-slate-500 mb-3">Standar penulisan tipografi sistem Velora UI:</p>
+            <div className="space-y-2.5">
+              {checklistTasks.map((task) => (
+                <button
+                  key={task.id}
+                  type="button"
+                  onClick={() => toggleChecklist(task.id)}
+                  className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-start gap-2.5 cursor-pointer ${
+                    task.done
+                      ? 'bg-blue-50/50 border-blue-200/60 text-slate-800'
+                      : 'bg-slate-50/70 border-slate-200/80 text-slate-600 hover:bg-slate-100/70'
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 w-4 h-4 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                      task.done ? 'bg-[#1351b8] text-white' : 'border border-slate-300 bg-white'
+                    }`}
+                  >
+                    {task.done && <Check className="w-3 h-3 stroke-[3]" />}
+                  </span>
+                  <span className={`text-xs ${task.done ? 'font-medium text-slate-800' : 'text-slate-600'}`}>
+                    {task.text}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION: INTERACTIVE TYPOGRAPHY SANDBOX & SCALE TESTER */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <Type className="w-4 h-4 text-[#1351b8]" />
+              Interactive Typography Sandbox & Scale Tester
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Eksplorasi perpaduan ukuran font, ketebalan (*weight*), dan jarak baris (*leading*) secara dinamis.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(generatedSandboxClass);
+              showToast('Class Tailwind berhasil disalin!', 'success');
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer active:scale-95 self-start sm:self-auto"
+          >
+            <Copy className="w-3.5 h-3.5" />
+            <span>Salin Class Tailwind</span>
+          </button>
+        </div>
+
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Controls (6 cols) */}
+          <div className="lg:col-span-6 space-y-4">
+            {/* Font Size Pills */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Ukuran Font (Font Size):</label>
+              <div className="flex flex-wrap gap-1.5">
+                {(['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl'] as const).map(
+                  (sz) => (
+                    <button
+                      key={sz}
+                      type="button"
+                      onClick={() => setFontSize(sz)}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
+                        fontSize === sz
+                          ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {sz}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* Font Weight Pills */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Ketebalan Font (Font Weight):</label>
+              <div className="flex flex-wrap gap-1.5">
+                {(
+                  [
+                    { id: 'font-normal', label: 'Regular (400)' },
+                    { id: 'font-medium', label: 'Medium (500)' },
+                    { id: 'font-semibold', label: 'Semibold (600)' },
+                    { id: 'font-bold', label: 'Bold (700)' },
+                    { id: 'font-extrabold', label: 'Extrabold (800)' },
+                  ] as const
+                ).map((wt) => (
+                  <button
+                    key={wt.id}
+                    type="button"
+                    onClick={() => setFontWeight(wt.id)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
+                      fontWeight === wt.id
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {wt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Line Height Pills */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Jarak Baris (Line Height):</label>
+              <div className="flex flex-wrap gap-1.5">
+                {(
+                  [
+                    { id: 'leading-tight', label: 'Tight (1.25)' },
+                    { id: 'leading-normal', label: 'Normal (1.5)' },
+                    { id: 'leading-relaxed', label: 'Relaxed (1.625)' },
+                    { id: 'leading-loose', label: 'Loose (2.0)' },
+                  ] as const
+                ).map((lh) => (
+                  <button
+                    key={lh.id}
+                    type="button"
+                    onClick={() => setLineHeight(lh.id)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
+                      lineHeight === lh.id
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {lh.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Editable Preview Text Input */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Ubah Teks Uji Coba:</label>
+              <textarea
+                rows={2}
+                value={previewText}
+                onChange={(e) => setPreviewText(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1351b8]"
+              />
+            </div>
+          </div>
+
+          {/* Real-time Rendered Result (6 cols) */}
+          <div className="lg:col-span-6 space-y-3">
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/80 border border-slate-200 rounded-2xl p-6 min-h-[200px] flex flex-col justify-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-3 block">
+                Live Rendered Output
+              </span>
+              <p className={generatedSandboxClass}>{previewText || 'Ketik teks untuk melihat pratinjau...'}</p>
+            </div>
+
+            <div className="bg-slate-900 rounded-xl px-4 py-2.5 text-xs font-mono text-emerald-400 flex items-center justify-between border border-slate-800">
+              <span className="text-slate-400">Class:</span>
+              <span className="font-semibold">{generatedSandboxClass}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -9154,6 +9880,10 @@ export function App() {
       title: 'Tooltip',
       breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Tooltip'],
     },
+    typography: {
+      title: 'Typography',
+      breadcrumbs: ['Dashboard', 'Bootstrap Components', 'Typography'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -9191,6 +9921,8 @@ export function App() {
         return <TableView />;
       case 'tooltip':
         return <TooltipView />;
+      case 'typography':
+        return <TypographyView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
