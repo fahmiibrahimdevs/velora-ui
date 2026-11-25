@@ -341,12 +341,33 @@ export function AdvancedFormsView() {
   const [timeHour, setTimeHour] = useState(1);
   const [timeMinute, setTimeMinute] = useState(15);
   const [timeAmPm, setTimeAmPm] = useState<'AM' | 'PM'>('PM');
+  const [timeHourInput, setTimeHourInput] = useState('1');
+  const [timeMinuteInput, setTimeMinuteInput] = useState('15');
 
   const updateTimeVal = (h: number, m: number, ap: 'AM' | 'PM') => {
     setTimeHour(h);
     setTimeMinute(m);
     setTimeAmPm(ap);
+    setTimeHourInput(String(h));
+    setTimeMinuteInput(String(m).padStart(2, '0'));
     setTimePickerVal(`${h}:${String(m).padStart(2, '0')} ${ap}`);
+  };
+
+  const handleMainTimeInputChange = (val: string) => {
+    setTimePickerVal(val);
+    const match = val.trim().match(/^(\d{1,2}):(\d{1,2})(?:\s*([AP]M))?$/i);
+    if (match) {
+      const h = parseInt(match[1], 10);
+      const m = parseInt(match[2], 10);
+      const ap = match[3] ? (match[3].toUpperCase() as 'AM' | 'PM') : timeAmPm;
+      if (h >= 1 && h <= 12 && m >= 0 && m <= 59) {
+        setTimeHour(h);
+        setTimeMinute(m);
+        setTimeAmPm(ap);
+        setTimeHourInput(String(h));
+        setTimeMinuteInput(String(m).padStart(2, '0'));
+      }
+    }
   };
 
   // Tag helper
@@ -1270,7 +1291,8 @@ export function AdvancedFormsView() {
                       setDatePickerVal(e.target.value);
                       setTempDateStr(e.target.value);
                     }}
-                    onClick={() => togglePopover('date-picker')}
+                    onFocus={() => setActivePopover('date-picker')}
+                    onClick={() => setActivePopover('date-picker')}
                     placeholder="YYYY-MM-DD"
                     className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-sm text-slate-800 transition-all cursor-text focus:outline-none ${
                       activePopover === 'date-picker'
@@ -1379,7 +1401,8 @@ export function AdvancedFormsView() {
                     type="text"
                     value={dateTimePickerVal}
                     onChange={(e) => setDateTimePickerVal(e.target.value)}
-                    onClick={() => togglePopover('datetime-picker')}
+                    onFocus={() => setActivePopover('datetime-picker')}
+                    onClick={() => setActivePopover('datetime-picker')}
                     placeholder="YYYY-MM-DD HH:mm"
                     className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-sm text-slate-800 transition-all cursor-text focus:outline-none ${
                       activePopover === 'datetime-picker'
@@ -1531,7 +1554,8 @@ export function AdvancedFormsView() {
                     type="text"
                     value={dateRangeVal}
                     onChange={(e) => setDateRangeVal(e.target.value)}
-                    onClick={() => togglePopover('date-range')}
+                    onFocus={() => setActivePopover('date-range')}
+                    onClick={() => setActivePopover('date-range')}
                     placeholder="YYYY-MM-DD - YYYY-MM-DD"
                     className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 focus:outline-none"
                   />
@@ -1731,17 +1755,18 @@ export function AdvancedFormsView() {
                   <input
                     type="text"
                     value={timePickerVal}
-                    onChange={(e) => setTimePickerVal(e.target.value)}
-                    onClick={() => togglePopover('time-picker')}
+                    onChange={(e) => handleMainTimeInputChange(e.target.value)}
+                    onFocus={() => setActivePopover('time-picker')}
+                    onClick={() => setActivePopover('time-picker')}
                     placeholder="HH:MM AM/PM"
                     className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 focus:outline-none"
                   />
                 </div>
 
-                {/* Spinner Popover */}
+                {/* Spinner Popover with Direct Editable Numbers */}
                 {activePopover === 'time-picker' && (
-                  <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 w-56 animate-in fade-in duration-150">
-                    <div className="flex items-center justify-center gap-3">
+                  <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 w-60 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-center gap-2">
                       {/* Hour Column */}
                       <div className="flex flex-col items-center">
                         <button
@@ -1754,9 +1779,29 @@ export function AdvancedFormsView() {
                         >
                           <ChevronUp className="w-4 h-4" />
                         </button>
-                        <span className="w-10 py-1.5 text-center text-sm font-bold text-slate-800">
-                          {timeHour}
-                        </span>
+                        <input
+                          type="text"
+                          maxLength={2}
+                          value={timeHourInput}
+                          onChange={(e) => {
+                            const raw = e.target.value.replace(/\D/g, '');
+                            setTimeHourInput(raw);
+                            const num = parseInt(raw, 10);
+                            if (!isNaN(num) && num >= 1 && num <= 12) {
+                              setTimeHour(num);
+                              setTimePickerVal(`${num}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                            }
+                          }}
+                          onBlur={() => {
+                            let num = parseInt(timeHourInput, 10);
+                            if (isNaN(num) || num < 1) num = 1;
+                            if (num > 12) num = 12;
+                            setTimeHour(num);
+                            setTimeHourInput(String(num));
+                            setTimePickerVal(`${num}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="w-10 py-1 text-center text-sm font-bold text-slate-800 bg-slate-50 border border-slate-200 focus:border-[#175cd3] focus:bg-white focus:ring-1 focus:ring-[#175cd3] rounded-lg outline-none"
+                        />
                         <button
                           type="button"
                           onClick={() => {
@@ -1771,7 +1816,7 @@ export function AdvancedFormsView() {
 
                       <span className="text-slate-500 font-bold mb-0.5">:</span>
 
-                      {/* Minute Column (with active focus box) */}
+                      {/* Minute Column (with blue border box as in Screenshot 8) */}
                       <div className="flex flex-col items-center">
                         <button
                           type="button"
@@ -1783,9 +1828,29 @@ export function AdvancedFormsView() {
                         >
                           <ChevronUp className="w-4 h-4" />
                         </button>
-                        <span className="w-10 py-1 text-center text-sm font-bold text-slate-800 border-2 border-[#175cd3] rounded-lg">
-                          {String(timeMinute).padStart(2, '0')}
-                        </span>
+                        <input
+                          type="text"
+                          maxLength={2}
+                          value={timeMinuteInput}
+                          onChange={(e) => {
+                            const raw = e.target.value.replace(/\D/g, '');
+                            setTimeMinuteInput(raw);
+                            const num = parseInt(raw, 10);
+                            if (!isNaN(num) && num >= 0 && num <= 59) {
+                              setTimeMinute(num);
+                              setTimePickerVal(`${timeHour}:${String(num).padStart(2, '0')} ${timeAmPm}`);
+                            }
+                          }}
+                          onBlur={() => {
+                            let num = parseInt(timeMinuteInput, 10);
+                            if (isNaN(num) || num < 0) num = 0;
+                            if (num > 59) num = 59;
+                            setTimeMinute(num);
+                            setTimeMinuteInput(String(num).padStart(2, '0'));
+                            setTimePickerVal(`${timeHour}:${String(num).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="w-10 py-1 text-center text-sm font-bold text-slate-800 border-2 border-[#175cd3] rounded-lg outline-none bg-white focus:ring-2 focus:ring-[#175cd3]/20"
+                        />
                         <button
                           type="button"
                           onClick={() => {
@@ -1810,9 +1875,16 @@ export function AdvancedFormsView() {
                         >
                           <ChevronUp className="w-4 h-4" />
                         </button>
-                        <span className="w-10 py-1.5 text-center text-xs font-bold text-slate-800">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newA = timeAmPm === 'AM' ? 'PM' : 'AM';
+                            updateTimeVal(timeHour, timeMinute, newA);
+                          }}
+                          className="w-10 py-1 text-center text-xs font-bold text-slate-800 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg cursor-pointer"
+                        >
                           {timeAmPm}
-                        </span>
+                        </button>
                         <button
                           type="button"
                           onClick={() => {
