@@ -6918,6 +6918,12 @@ function TableView() {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'in_progress' | 'completed'>('all');
   const filterDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Pagination state for Simple Table & Interactive Table
+  const [simplePageSize, setSimplePageSize] = useState(4);
+  const [simpleCurrentPage, setSimpleCurrentPage] = useState(1);
+  const [projectPageSize, setProjectPageSize] = useState(5);
+  const [projectCurrentPage, setProjectCurrentPage] = useState(1);
+
   // Close filter dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -7094,7 +7100,79 @@ function TableView() {
       progress: 100,
       priority: 'High',
     },
+    {
+      id: 7,
+      name: 'Desain Sistem Komponen UI v3',
+      category: 'Design System',
+      members: ['Fahmi', 'Budi'],
+      deadline: '20 Jan 2027',
+      progress: 90,
+      priority: 'High',
+    },
+    {
+      id: 8,
+      name: 'Implementasi Rate Limiting Redis',
+      category: 'Infrastructure',
+      members: ['Dewi', 'Ahmad'],
+      deadline: '25 Jan 2027',
+      progress: 70,
+      priority: 'Medium',
+    },
+    {
+      id: 9,
+      name: 'Migrasi Database PostgreSQL ke Cloud',
+      category: 'Infrastructure',
+      members: ['Rahmat', 'Hasan'],
+      deadline: '02 Feb 2027',
+      progress: 40,
+      priority: 'High',
+    },
+    {
+      id: 10,
+      name: 'Integrasi WhatsApp Gateway OTP',
+      category: 'Security & Auth',
+      members: ['Hasan', 'Fahmi'],
+      deadline: '08 Feb 2027',
+      progress: 80,
+      priority: 'Medium',
+    },
+    {
+      id: 11,
+      name: 'Optimasi Bundle Size & Tree Shaking',
+      category: 'Frontend Core',
+      members: ['Irwansyah'],
+      deadline: '14 Feb 2027',
+      progress: 100,
+      priority: 'Low',
+    },
+    {
+      id: 12,
+      name: 'Dashboard Monitoring Log Sentry',
+      category: 'DevOps & Cloud',
+      members: ['Dewi', 'Siti'],
+      deadline: '20 Feb 2027',
+      progress: 55,
+      priority: 'High',
+    },
   ];
+
+  // Simple Table Tasks Data with Pagination
+  const simpleTasksData = [
+    { id: 1, name: 'Redesign Landing Page', progress: 100, gradient: 'from-[#22c55e] to-[#15803d]', deadline: '12 Jun 2026', status: 'Selesai', statusBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60' },
+    { id: 2, name: 'Fix Payment Gateway API', progress: 65, gradient: 'from-[#175cd3] to-[#0f3ba0]', deadline: '16 Jun 2026', status: 'Proses', statusBg: 'bg-blue-50 text-blue-700 border-blue-200/60' },
+    { id: 3, name: 'Mobile Responsive Audit', progress: 35, gradient: 'from-[#f59e0b] to-[#d97706]', deadline: '21 Jun 2026', status: 'Tertunda', statusBg: 'bg-amber-50 text-amber-700 border-amber-200/60' },
+    { id: 4, name: 'Database Schema Migration', progress: 15, gradient: 'from-[#ef4444] to-[#b91c1c]', deadline: '25 Jun 2026', status: 'Pending', statusBg: 'bg-rose-50 text-rose-700 border-rose-200/60' },
+    { id: 5, name: 'Implementasi Webhook Kasbon', progress: 85, gradient: 'from-[#175cd3] to-[#0f3ba0]', deadline: '28 Jun 2026', status: 'Proses', statusBg: 'bg-blue-50 text-blue-700 border-blue-200/60' },
+    { id: 6, name: 'Kustomisasi Rekap Slip Gaji PDF', progress: 100, gradient: 'from-[#22c55e] to-[#15803d]', deadline: '02 Jul 2026', status: 'Selesai', statusBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/60' },
+    { id: 7, name: 'Optimalisasi Index PostgreSQL', progress: 45, gradient: 'from-[#f59e0b] to-[#d97706]', deadline: '05 Jul 2026', status: 'Tertunda', statusBg: 'bg-amber-50 text-amber-700 border-amber-200/60' },
+    { id: 8, name: 'Testing Stress Load Presensi', progress: 20, gradient: 'from-[#ef4444] to-[#b91c1c]', deadline: '10 Jul 2026', status: 'Pending', statusBg: 'bg-rose-50 text-rose-700 border-rose-200/60' },
+  ];
+
+  const totalSimplePages = Math.max(1, Math.ceil(simpleTasksData.length / simplePageSize));
+  const paginatedSimpleTasks = simpleTasksData.slice(
+    (simpleCurrentPage - 1) * simplePageSize,
+    simpleCurrentPage * simplePageSize
+  );
 
   const activeFilterCount =
     selectedPriorities.length + (selectedStatus !== 'all' ? 1 : 0);
@@ -7103,6 +7181,7 @@ function TableView() {
     setSelectedPriorities([]);
     setSelectedStatus('all');
     setProjectSearch('');
+    setProjectCurrentPage(1);
     showToast('Filter dan pencarian direset', 'info');
   };
 
@@ -7129,11 +7208,19 @@ function TableView() {
     return true;
   });
 
+  const totalProjectPages = Math.max(1, Math.ceil(filteredProjects.length / projectPageSize));
+  const paginatedProjects = filteredProjects.slice(
+    (projectCurrentPage - 1) * projectPageSize,
+    projectCurrentPage * projectPageSize
+  );
+
   const toggleSelectAll = () => {
-    if (selectedProjects.length === filteredProjects.length) {
-      setSelectedProjects([]);
+    const paginatedIds = paginatedProjects.map((p) => p.id);
+    const areAllPageSelected = paginatedIds.length > 0 && paginatedIds.every((id) => selectedProjects.includes(id));
+    if (areAllPageSelected) {
+      setSelectedProjects((prev) => prev.filter((id) => !paginatedIds.includes(id)));
     } else {
-      setSelectedProjects(filteredProjects.map((p) => p.id));
+      setSelectedProjects((prev) => Array.from(new Set([...prev, ...paginatedIds])));
     }
   };
 
@@ -7144,7 +7231,7 @@ function TableView() {
   };
 
   const isAllSelected =
-    filteredProjects.length > 0 && selectedProjects.length === filteredProjects.length;
+    paginatedProjects.length > 0 && paginatedProjects.every((p) => selectedProjects.includes(p.id));
 
   return (
     <div className="space-y-6">
@@ -7180,115 +7267,89 @@ function TableView() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
-                <tr className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-3 px-4 text-center font-medium text-slate-500">1</td>
-                  <td className="py-3 px-4 font-semibold text-slate-800">Redesign Landing Page</td>
-                  <td className="py-3 px-4">
-                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-gradient-to-r from-[#22c55e] to-[#15803d] h-full rounded-full w-full" />
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-slate-600">12 Jun 2026</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                      Selesai
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => showToast('Detail tugas Redesign Landing Page', 'info')}
-                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      Detail
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-3 px-4 text-center font-medium text-slate-500">2</td>
-                  <td className="py-3 px-4 font-semibold text-slate-800">Fix Payment Gateway API</td>
-                  <td className="py-3 px-4">
-                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] h-full rounded-full w-[65%]" />
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-slate-600">16 Jun 2026</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60">
-                      Proses
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => showToast('Detail tugas Fix Payment Gateway API', 'info')}
-                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      Detail
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-3 px-4 text-center font-medium text-slate-500">3</td>
-                  <td className="py-3 px-4 font-semibold text-slate-800">Mobile Responsive Audit</td>
-                  <td className="py-3 px-4">
-                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] h-full rounded-full w-[35%]" />
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-slate-600">21 Jun 2026</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
-                      Tertunda
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => showToast('Detail tugas Mobile Responsive Audit', 'info')}
-                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      Detail
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-3 px-4 text-center font-medium text-slate-500">4</td>
-                  <td className="py-3 px-4 font-semibold text-slate-800">Database Schema Migration</td>
-                  <td className="py-3 px-4">
-                    <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-gradient-to-r from-[#ef4444] to-[#b91c1c] h-full rounded-full w-[15%]" />
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-slate-600">25 Jun 2026</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60">
-                      Pending
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => showToast('Detail tugas Database Schema Migration', 'info')}
-                      className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      Detail
-                    </button>
-                  </td>
-                </tr>
+                {paginatedSimpleTasks.map((task) => (
+                  <tr key={task.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="py-3 px-4 text-center font-medium text-slate-500">{task.id}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-800">{task.name}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 sm:w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                          <div className={`bg-gradient-to-r ${task.gradient} h-full rounded-full`} style={{ width: `${task.progress}%` }} />
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-500 w-7">{task.progress}%</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{task.deadline}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border ${task.statusBg}`}>
+                        {task.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center whitespace-nowrap">
+                      <button
+                        onClick={() => showToast(`Detail tugas: ${task.name}`, 'info')}
+                        className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Detail
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-          {/* Footer with Pagination */}
+          {/* Footer with Pagination & Show Entries */}
           <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white text-xs text-slate-500">
-            <span className="text-center sm:text-left">Menampilkan 1 - 4 dari 16 data</span>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 text-xs text-slate-500">
+              <ShowEntriesSelector
+                pageSize={simplePageSize}
+                onPageSizeChange={(sz) => {
+                  setSimplePageSize(sz);
+                  setSimpleCurrentPage(1);
+                }}
+                options={[4, 8]}
+                labelPrefix="Tampilkan"
+                labelSuffix="data"
+              />
+              <span className="text-slate-300 hidden sm:inline">•</span>
+              <span className="text-center sm:text-left">
+                Menampilkan {(simpleCurrentPage - 1) * simplePageSize + 1} - {Math.min(simpleCurrentPage * simplePageSize, simpleTasksData.length)} dari {simpleTasksData.length} data
+              </span>
+            </div>
             <div className="inline-flex items-center justify-center gap-1 w-full sm:w-auto">
-              <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
+              <button
+                onClick={() => setSimpleCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={simpleCurrentPage === 1}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
+                  simpleCurrentPage === 1
+                    ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                    : 'border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer'
+                }`}
+              >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
-              <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-semibold shadow-2xs">
-                1
-              </button>
-              <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
-                2
-              </button>
-              <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+              {Array.from({ length: totalSimplePages }, (_, i) => i + 1).map((pg) => (
+                <button
+                  key={pg}
+                  onClick={() => setSimpleCurrentPage(pg)}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    pg === simpleCurrentPage
+                      ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-2xs'
+                      : 'border border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {pg}
+                </button>
+              ))}
+              <button
+                onClick={() => setSimpleCurrentPage((p) => Math.min(totalSimplePages, p + 1))}
+                disabled={simpleCurrentPage === totalSimplePages}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
+                  simpleCurrentPage === totalSimplePages
+                    ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                    : 'border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer'
+                }`}
+              >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -7809,19 +7870,39 @@ function TableView() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+            {/* Show Entries in Header Toolbar */}
+            <div className="hidden sm:flex items-center">
+              <ShowEntriesSelector
+                pageSize={projectPageSize}
+                onPageSizeChange={(sz) => {
+                  setProjectPageSize(sz);
+                  setProjectCurrentPage(1);
+                }}
+                options={[5, 10, 20]}
+                labelPrefix="Tampilkan"
+                labelSuffix="data"
+              />
+            </div>
+
             <div className="relative w-full sm:w-48">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={projectSearch}
-                onChange={(e) => setProjectSearch(e.target.value)}
+                onChange={(e) => {
+                  setProjectSearch(e.target.value);
+                  setProjectCurrentPage(1);
+                }}
                 placeholder="Cari proyek..."
                 className="w-full pl-8.5 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 transition-all"
               />
               {projectSearch && (
                 <button
                   type="button"
-                  onClick={() => setProjectSearch('')}
+                  onClick={() => {
+                    setProjectSearch('');
+                    setProjectCurrentPage(1);
+                  }}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
                   <X className="w-3 h-3" />
@@ -8102,7 +8183,7 @@ function TableView() {
                   </td>
                 </tr>
               ) : (
-                filteredProjects.map((project) => {
+                paginatedProjects.map((project) => {
                   const isChecked = selectedProjects.includes(project.id);
                   return (
                     <tr
@@ -8210,19 +8291,58 @@ function TableView() {
           </table>
         </div>
 
-        {/* Footer */}
+        {/* Footer with Pagination & Show Entries */}
         <div className="px-4 py-3.5 sm:px-6 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white text-xs text-slate-500 rounded-b-2xl">
-          <span className="text-center sm:text-left">
-            Menampilkan {filteredProjects.length} dari {projectsData.length} proyek aktif
-          </span>
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 text-xs text-slate-500">
+            <ShowEntriesSelector
+              pageSize={projectPageSize}
+              onPageSizeChange={(sz) => {
+                setProjectPageSize(sz);
+                setProjectCurrentPage(1);
+              }}
+              options={[5, 10, 20]}
+              labelPrefix="Tampilkan"
+              labelSuffix="data"
+            />
+            <span className="text-slate-300 hidden sm:inline">•</span>
+            <span className="text-center sm:text-left">
+              Menampilkan {filteredProjects.length === 0 ? 0 : (projectCurrentPage - 1) * projectPageSize + 1} - {Math.min(projectCurrentPage * projectPageSize, filteredProjects.length)} dari {filteredProjects.length} proyek aktif
+            </span>
+          </div>
           <div className="flex items-center justify-center gap-1 w-full sm:w-auto">
-            <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
+            <button
+              onClick={() => setProjectCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={projectCurrentPage === 1}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
+                projectCurrentPage === 1
+                  ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer'
+              }`}
+            >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-semibold shadow-2xs">
-              1
-            </button>
-            <button className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+            {Array.from({ length: totalProjectPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => setProjectCurrentPage(pageNum)}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  pageNum === projectCurrentPage
+                    ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-2xs'
+                    : 'border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                {pageNum}
+              </button>
+            ))}
+            <button
+              onClick={() => setProjectCurrentPage((prev) => Math.min(totalProjectPages, prev + 1))}
+              disabled={projectCurrentPage === totalProjectPages || filteredProjects.length === 0}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border transition-colors ${
+                projectCurrentPage === totalProjectPages || filteredProjects.length === 0
+                  ? 'border-slate-200 text-slate-300 cursor-not-allowed'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer'
+              }`}
+            >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
