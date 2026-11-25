@@ -9514,8 +9514,8 @@ const theme: TypographyTheme = {
           {/* Card: Unordered List */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
             <h4 className="text-sm font-bold text-[#1351b8] mb-3">Unordered List</h4>
-            <p className="text-xs text-slate-500 mb-3">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600 font-normal">
+            <p className="text-xs text-slate-500 mb-3.5">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
+            <ul className="list-disc pl-8 sm:pl-9 space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
               <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</li>
               <li>tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</li>
               <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</li>
@@ -9528,8 +9528,8 @@ const theme: TypographyTheme = {
           {/* Card: Ordered List */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
             <h4 className="text-sm font-bold text-[#1351b8] mb-3">Ordered List</h4>
-            <p className="text-xs text-slate-500 mb-3">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
-            <ol className="list-decimal pl-5 space-y-1.5 text-xs text-slate-600 font-normal">
+            <p className="text-xs text-slate-500 mb-3.5">Sunt in culpa qui officia deserunt mollit anim id est laborum:</p>
+            <ol className="list-decimal pl-8 sm:pl-9 space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
               <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</li>
               <li>tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</li>
               <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</li>
