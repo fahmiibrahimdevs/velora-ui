@@ -73,6 +73,8 @@ import {
   Video,
   CheckCheck,
   UserX,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -11738,6 +11740,535 @@ function ChatBoxView() {
   );
 }
 
+// Dedicated Gallery Showcase matching ShizueFI & Stisla with Full Lightbox Modal & Advanced Interactivity
+interface GalleryImage {
+  id: number;
+  title: string;
+  category: string;
+  gradient: string;
+  iconBg: string;
+  caption: string;
+}
+
+function GalleryView() {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [lightboxZoom, setLightboxZoom] = useState(1);
+  const [portfolioCategory, setPortfolioCategory] = useState<string>('Semua');
+
+  // Master gallery images dataset (9 items matching ShizueFI 9-image set)
+  const galleryImages: GalleryImage[] = [
+    {
+      id: 1,
+      title: 'Image 1: Design Tokens & Colors',
+      category: 'Design System',
+      gradient: 'from-blue-400/20 via-sky-300/20 to-blue-500/25',
+      iconBg: 'bg-blue-500/10 text-blue-600 border-blue-200',
+      caption: 'Palet warna dan token desain antarmuka enterprise.',
+    },
+    {
+      id: 2,
+      title: 'Image 2: Dashboard Analytics Flow',
+      category: 'Dashboard UI',
+      gradient: 'from-emerald-400/20 via-teal-300/20 to-emerald-500/25',
+      iconBg: 'bg-emerald-500/10 text-emerald-600 border-emerald-200',
+      caption: 'Alur visualisasi data grafik metrik waktu nyata.',
+    },
+    {
+      id: 3,
+      title: 'Image 3: Mobile Banking Application',
+      category: 'Mobile App',
+      gradient: 'from-cyan-400/20 via-sky-300/20 to-blue-400/25',
+      iconBg: 'bg-cyan-500/10 text-cyan-600 border-cyan-200',
+      caption: 'Pratinjau antarmuka transaksi perbankan digital di smartphone.',
+    },
+    {
+      id: 4,
+      title: 'Image 4: Payroll & Kasbon Approval',
+      category: 'Dashboard UI',
+      gradient: 'from-amber-400/20 via-orange-300/20 to-amber-500/25',
+      iconBg: 'bg-amber-500/10 text-amber-600 border-amber-200',
+      caption: 'Modul persetujuan berjenjang kasbon dan penggajian karyawan.',
+    },
+    {
+      id: 5,
+      title: 'Image 5: Security Architecture & SSO',
+      category: 'Brand Identity',
+      gradient: 'from-rose-400/20 via-red-300/20 to-rose-500/25',
+      iconBg: 'bg-rose-500/10 text-rose-600 border-rose-200',
+      caption: 'Diagram keamanan terpusat OAuth 2.0 dan Single Sign-On.',
+    },
+    {
+      id: 6,
+      title: 'Image 6: Cloud Sharding & Database',
+      category: 'Design System',
+      gradient: 'from-indigo-400/20 via-purple-300/20 to-indigo-500/25',
+      iconBg: 'bg-indigo-500/10 text-indigo-600 border-indigo-200',
+      caption: 'Infrastruktur sharding database dengan replikasi multi-master.',
+    },
+    {
+      id: 7,
+      title: 'Image 7: CI/CD Pipeline Automation',
+      category: 'Brand Identity',
+      gradient: 'from-lime-400/20 via-emerald-300/20 to-teal-400/25',
+      iconBg: 'bg-emerald-500/10 text-emerald-600 border-emerald-200',
+      caption: 'Workflow otomatisasi deployment tanpa downtime.',
+    },
+    {
+      id: 8,
+      title: 'Image 8: Placeholder Lightbox Preview',
+      category: 'Mobile App',
+      gradient: 'from-teal-400/20 via-cyan-300/20 to-blue-400/25',
+      iconBg: 'bg-teal-500/10 text-teal-600 border-teal-200',
+      caption: 'Tampilan lightbox resolusi tinggi dengan navigasi keyboard.',
+    },
+    {
+      id: 9,
+      title: 'Image 9: Design System Components v2',
+      category: 'Design System',
+      gradient: 'from-purple-400/20 via-indigo-300/20 to-purple-500/25',
+      iconBg: 'bg-purple-500/10 text-purple-600 border-purple-200',
+      caption: 'Koleksi komponen UI modern berbasis React 19 dan Tailwind v4.',
+    },
+  ];
+
+  const portfolioCategories = ['Semua', 'Dashboard UI', 'Mobile App', 'Brand Identity', 'Design System'];
+
+  const filteredPortfolio = galleryImages.filter((img) =>
+    portfolioCategory === 'Semua' ? true : img.category === portfolioCategory
+  );
+
+  const openLightbox = (index: number) => {
+    setActiveImageIndex(index);
+    setLightboxZoom(1);
+    setIsLightboxOpen(true);
+  };
+
+  const nextImage = () => {
+    setActiveImageIndex((prev) => (prev + 1) % galleryImages.length);
+    setLightboxZoom(1);
+  };
+
+  const prevImage = () => {
+    setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    setLightboxZoom(1);
+  };
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextImage();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevImage();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        setIsLightboxOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLightboxOpen]);
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Gallery</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Grouping multiple images on one component with interactive lightbox image preview and keyboard controls.
+        </p>
+      </div>
+
+      {/* 3-Column Responsive Grid matching ShizueFI & Stisla */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1: SMALL GALLERY THUMBNAILS (md:col-span-12 lg:col-span-4) */}
+        {/* ======================================================== */}
+        <div className="md:col-span-12 lg:col-span-4 space-y-6">
+          {/* Card 1: Gallery (Small Single Row) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Gallery</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Baris thumbnail ringkas ukuran kecil.</p>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                {galleryImages.slice(0, 8).map((img, idx) => (
+                  <Tooltip key={img.id} content={`Image ${idx + 1}`} position="top">
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(idx)}
+                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer`}
+                    >
+                      <ImageIcon className="w-4 h-4 text-slate-600 opacity-70" />
+                    </button>
+                  </Tooltip>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Gallery with Overflow Count (+2) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Gallery</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Baris thumbnail dengan penanda sisa gambar (+2).</p>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                {galleryImages.slice(0, 7).map((img, idx) => (
+                  <Tooltip key={img.id} content={`Image ${idx + 1}`} position="top">
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(idx)}
+                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer`}
+                    >
+                      <ImageIcon className="w-4 h-4 text-slate-600 opacity-70" />
+                    </button>
+                  </Tooltip>
+                ))}
+
+                {/* +2 Overflow Tile */}
+                <Tooltip content="Lihat 2 gambar lainnya" position="top">
+                  <button
+                    type="button"
+                    onClick={() => openLightbox(7)}
+                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800 text-white font-bold text-xs flex items-center justify-center hover:bg-slate-700 hover:scale-110 shadow-xs transition-all cursor-pointer"
+                  >
+                    +2
+                  </button>
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2: MEDIUM GRID GALLERY (md:col-span-12 lg:col-span-4) */}
+        {/* ======================================================== */}
+        <div className="md:col-span-12 lg:col-span-4">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Gallery .gallery-md</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Grid thumbnail ukuran medium dengan akumulasi tile.</p>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-5 gap-2.5">
+                {galleryImages.map((img, idx) => (
+                  <Tooltip key={img.id} content={img.title} position="top">
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(idx)}
+                      className={`aspect-square rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-105 hover:shadow-md transition-all cursor-pointer`}
+                    >
+                      <ImageIcon className="w-5 h-5 text-slate-600 opacity-70" />
+                    </button>
+                  </Tooltip>
+                ))}
+
+                {/* +2 Overflow Tile in Grid */}
+                <Tooltip content="Lihat 2 gambar lainnya" position="top">
+                  <button
+                    type="button"
+                    onClick={() => openLightbox(7)}
+                    className="aspect-square rounded-xl bg-slate-800 text-white font-bold text-xs flex items-center justify-center hover:bg-slate-700 hover:scale-105 shadow-xs transition-all cursor-pointer"
+                  >
+                    +2
+                  </button>
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 3: FULL WIDTH LANDSCAPE BANNERS (md:col-span-12 lg:col-span-4) */}
+        {/* ======================================================== */}
+        <div className="md:col-span-12 lg:col-span-4">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Gallery .gallery-fw</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Strip banner lanskap bertingkat.</p>
+            </div>
+            <div className="p-6 space-y-3.5">
+              {/* Banner 1 */}
+              <Tooltip content="Image 1: Design Tokens" position="top">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(0)}
+                  className="w-full h-24 rounded-2xl bg-gradient-to-r from-amber-100/70 via-orange-100/60 to-amber-200/50 border border-amber-200/70 flex items-center justify-center hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden"
+                >
+                  <div className="flex items-center gap-2 text-amber-700">
+                    <ImageIcon className="w-8 h-8 opacity-75" />
+                  </div>
+                </button>
+              </Tooltip>
+
+              {/* Banner 2 */}
+              <Tooltip content="Image 2: Analytics Flow" position="top">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(1)}
+                  className="w-full h-24 rounded-2xl bg-gradient-to-r from-rose-100/70 via-pink-100/60 to-rose-200/50 border border-rose-200/70 flex items-center justify-center hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden"
+                >
+                  <div className="flex items-center gap-2 text-rose-700">
+                    <ImageIcon className="w-8 h-8 opacity-75" />
+                  </div>
+                </button>
+              </Tooltip>
+
+              {/* Banner 3 with +2 Overlay */}
+              <Tooltip content="Lihat 2 banner lainnya" position="top">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(2)}
+                  className="w-full h-24 rounded-2xl bg-slate-800 text-white border border-slate-700 flex items-center justify-center hover:bg-slate-700 hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden shadow-xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <ImageIcon className="w-8 h-8 opacity-40" />
+                    <span className="font-extrabold text-base tracking-wide text-white drop-shadow-xs">+2</span>
+                  </div>
+                </button>
+              </Tooltip>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 5: INTERACTIVE PORTFOLIO GALLERY WITH FILTER TABS */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              Categorized Portfolio Showcase
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Filter kategori aset dan klik gambar apa pun untuk membuka pratinjau Lightbox interaktif.
+            </p>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            {portfolioCategories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setPortfolioCategory(cat)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  portfolioCategory === cat
+                    ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
+                    : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPortfolio.map((img) => (
+              <div
+                key={img.id}
+                onClick={() => openLightbox(img.id - 1)}
+                className="group relative rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer bg-white flex flex-col"
+              >
+                {/* Image Banner */}
+                <div
+                  className={`relative aspect-[16/10] bg-gradient-to-br ${img.gradient} flex items-center justify-center p-6 overflow-hidden`}
+                >
+                  <div
+                    className={`w-14 h-14 rounded-2xl ${img.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xs`}
+                  >
+                    <ImageIcon className="w-7 h-7" />
+                  </div>
+
+                  {/* Hover Overlay with Zoom Icon */}
+                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-[2px]">
+                    <span className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                      <ZoomIn className="w-5 h-5" />
+                    </span>
+                  </div>
+
+                  {/* Category Badge */}
+                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-xs text-[10px] font-bold text-slate-700 shadow-xs">
+                    {img.category}
+                  </span>
+                </div>
+
+                {/* Card Meta */}
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-[#1351b8] transition-colors leading-snug">
+                      {img.title}
+                    </h5>
+                    <p className="text-xs text-slate-500 line-clamp-1 mt-1 font-normal">
+                      {img.caption}
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                    <span>Klik untuk perbesar</span>
+                    <span className="font-semibold text-[#1351b8] group-hover:underline">Buka Lightbox →</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* FULL-FEATURED LIGHTBOX MODAL */}
+      {/* ======================================================== */}
+      {isLightboxOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 select-none animate-in fade-in duration-200">
+          {/* Top Control Bar */}
+          <div className="flex items-center justify-between text-white pb-3 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+              <div>
+                <h4 className="text-sm sm:text-base font-bold text-white drop-shadow-xs">
+                  {galleryImages[activeImageIndex].title}
+                </h4>
+                <span className="text-xs text-slate-300">
+                  {galleryImages[activeImageIndex].category}
+                </span>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center gap-2">
+              <Tooltip content="Perkecil Zoom" position="bottom" variant="dark">
+                <button
+                  type="button"
+                  onClick={() => setLightboxZoom((prev) => Math.max(0.75, prev - 0.25))}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                >
+                  <ZoomOut className="w-4 h-4" />
+                </button>
+              </Tooltip>
+
+              <span className="text-xs font-mono font-semibold px-2 py-1 rounded bg-white/10 text-slate-200">
+                {Math.round(lightboxZoom * 100)}%
+              </span>
+
+              <Tooltip content="Perbesar Zoom" position="bottom" variant="dark">
+                <button
+                  type="button"
+                  onClick={() => setLightboxZoom((prev) => Math.min(2.0, prev + 0.25))}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                >
+                  <ZoomIn className="w-4 h-4" />
+                </button>
+              </Tooltip>
+
+              <div className="w-[1px] h-5 bg-white/20 mx-1" />
+
+              <Tooltip content="Tutup Lightbox (Esc)" position="bottom" variant="dark">
+                <button
+                  type="button"
+                  onClick={() => setIsLightboxOpen(false)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-rose-600 text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </Tooltip>
+            </div>
+          </div>
+
+          {/* Center Stage with Prev / Next Buttons */}
+          <div className="flex-1 flex items-center justify-between gap-4 py-4 relative overflow-hidden">
+            {/* Prev Button */}
+            <button
+              type="button"
+              onClick={prevImage}
+              title="Gambar Sebelumnya (ArrowLeft)"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/25 text-white backdrop-blur-sm flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 z-10"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            {/* Active Image Showcase Box */}
+            <div className="flex-1 flex items-center justify-center max-h-[65vh] overflow-hidden">
+              <div
+                style={{ transform: `scale(${lightboxZoom})` }}
+                className={`max-w-2xl w-full aspect-[16/10] bg-gradient-to-br ${galleryImages[activeImageIndex].gradient} rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center justify-center p-8 transition-transform duration-200 relative overflow-hidden`}
+              >
+                <div
+                  className={`w-20 h-20 rounded-3xl ${galleryImages[activeImageIndex].iconBg} border flex items-center justify-center shadow-lg mb-4`}
+                >
+                  <ImageIcon className="w-10 h-10" />
+                </div>
+                <h5 className="text-base sm:text-lg font-bold text-slate-800 text-center drop-shadow-xs">
+                  {galleryImages[activeImageIndex].title}
+                </h5>
+                <p className="text-xs sm:text-sm text-slate-600 text-center max-w-md mt-1 font-normal">
+                  {galleryImages[activeImageIndex].caption}
+                </p>
+                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-4 px-3 py-1 bg-white/60 rounded-full">
+                  PLACEHOLDER IMAGE • VELORA UI
+                </span>
+              </div>
+            </div>
+
+            {/* Next Button */}
+            <button
+              type="button"
+              onClick={nextImage}
+              title="Gambar Selanjutnya (ArrowRight)"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/25 text-white backdrop-blur-sm flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 z-10"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Bottom Bar: Thumbnail Carousel & Counter */}
+          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-white">
+            <span className="text-xs text-slate-300 font-medium">
+              Gunakan tombol panah keyboard (← / →) untuk navigasi cepat
+            </span>
+
+            {/* Clickable Thumbnail Carousel */}
+            <div className="flex items-center gap-1.5 overflow-x-auto max-w-md py-1">
+              {galleryImages.map((img, idx) => (
+                <button
+                  key={img.id}
+                  type="button"
+                  onClick={() => openLightbox(idx)}
+                  className={`w-8 h-8 rounded-lg bg-gradient-to-br ${img.gradient} border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                    activeImageIndex === idx
+                      ? 'border-[#1351b8] ring-2 ring-blue-400 scale-110 shadow-xs'
+                      : 'border-white/30 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <ImageIcon className="w-3.5 h-3.5 text-slate-700" />
+                </button>
+              ))}
+            </div>
+
+            <div className="text-xs font-mono font-bold text-slate-300">
+              {activeImageIndex + 1} / {galleryImages.length}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -11919,6 +12450,10 @@ export function App() {
       title: 'Chat Box',
       breadcrumbs: ['Dashboard', 'Components', 'Chat Box'],
     },
+    gallery: {
+      title: 'Gallery',
+      breadcrumbs: ['Dashboard', 'Components', 'Gallery'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -11964,6 +12499,8 @@ export function App() {
         return <AvatarView />;
       case 'chat-box':
         return <ChatBoxView />;
+      case 'gallery':
+        return <GalleryView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
