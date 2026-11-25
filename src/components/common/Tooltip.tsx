@@ -15,6 +15,7 @@ export interface TooltipProps {
   tooltipClassName?: string;
   children: React.ReactNode;
   interactive?: boolean;
+  block?: boolean;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
@@ -29,6 +30,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   tooltipClassName = '',
   children,
   interactive = false,
+  block = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -142,7 +144,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative inline-flex items-center ${className}`}
+      className={`relative ${block ? 'flex w-full' : 'inline-flex items-center'} ${className}`}
       onMouseEnter={showTooltip}
       onMouseLeave={hideTooltip}
       onFocus={showTooltip}

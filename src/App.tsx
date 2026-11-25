@@ -11746,6 +11746,10 @@ interface GalleryImage {
   title: string;
   category: string;
   gradient: string;
+  solidGradient: string;
+  tileBg: string;
+  tileBorder: string;
+  tileText: string;
   iconBg: string;
   caption: string;
 }
@@ -11756,29 +11760,41 @@ function GalleryView() {
   const [lightboxZoom, setLightboxZoom] = useState(1);
   const [portfolioCategory, setPortfolioCategory] = useState<string>('Semua');
 
-  // Master gallery images dataset (9 items matching ShizueFI 9-image set)
+  // Master gallery images dataset (10 items matching ShizueFI & Stisla gallery grid)
   const galleryImages: GalleryImage[] = [
     {
       id: 1,
       title: 'Image 1: Design Tokens & Colors',
       category: 'Design System',
-      gradient: 'from-blue-400/20 via-sky-300/20 to-blue-500/25',
-      iconBg: 'bg-blue-500/10 text-blue-600 border-blue-200',
+      gradient: 'from-sky-400/20 via-blue-300/20 to-sky-500/25',
+      solidGradient: 'from-sky-100 via-blue-50 to-sky-200',
+      tileBg: 'bg-sky-100 hover:bg-sky-200/90',
+      tileBorder: 'border-sky-300/80',
+      tileText: 'text-sky-600',
+      iconBg: 'bg-sky-500/10 text-sky-600 border-sky-200',
       caption: 'Palet warna dan token desain antarmuka enterprise.',
     },
     {
       id: 2,
       title: 'Image 2: Dashboard Analytics Flow',
       category: 'Dashboard UI',
-      gradient: 'from-emerald-400/20 via-teal-300/20 to-emerald-500/25',
-      iconBg: 'bg-emerald-500/10 text-emerald-600 border-emerald-200',
+      gradient: 'from-orange-400/20 via-amber-300/20 to-orange-500/25',
+      solidGradient: 'from-orange-100 via-amber-50 to-orange-200',
+      tileBg: 'bg-orange-100 hover:bg-orange-200/90',
+      tileBorder: 'border-orange-300/80',
+      tileText: 'text-orange-600',
+      iconBg: 'bg-orange-500/10 text-orange-600 border-orange-200',
       caption: 'Alur visualisasi data grafik metrik waktu nyata.',
     },
     {
       id: 3,
       title: 'Image 3: Mobile Banking Application',
       category: 'Mobile App',
-      gradient: 'from-cyan-400/20 via-sky-300/20 to-blue-400/25',
+      gradient: 'from-cyan-400/20 via-teal-300/20 to-cyan-500/25',
+      solidGradient: 'from-cyan-100 via-sky-50 to-cyan-200',
+      tileBg: 'bg-cyan-100 hover:bg-cyan-200/90',
+      tileBorder: 'border-cyan-300/80',
+      tileText: 'text-cyan-600',
       iconBg: 'bg-cyan-500/10 text-cyan-600 border-cyan-200',
       caption: 'Pratinjau antarmuka transaksi perbankan digital di smartphone.',
     },
@@ -11786,31 +11802,47 @@ function GalleryView() {
       id: 4,
       title: 'Image 4: Payroll & Kasbon Approval',
       category: 'Dashboard UI',
-      gradient: 'from-amber-400/20 via-orange-300/20 to-amber-500/25',
-      iconBg: 'bg-amber-500/10 text-amber-600 border-amber-200',
+      gradient: 'from-rose-400/20 via-pink-300/20 to-rose-500/25',
+      solidGradient: 'from-rose-100 via-pink-50 to-rose-200',
+      tileBg: 'bg-rose-100 hover:bg-rose-200/90',
+      tileBorder: 'border-rose-300/80',
+      tileText: 'text-rose-600',
+      iconBg: 'bg-rose-500/10 text-rose-600 border-rose-200',
       caption: 'Modul persetujuan berjenjang kasbon dan penggajian karyawan.',
     },
     {
       id: 5,
       title: 'Image 5: Security Architecture & SSO',
       category: 'Brand Identity',
-      gradient: 'from-rose-400/20 via-red-300/20 to-rose-500/25',
-      iconBg: 'bg-rose-500/10 text-rose-600 border-rose-200',
+      gradient: 'from-purple-400/20 via-indigo-300/20 to-purple-500/25',
+      solidGradient: 'from-purple-100 via-indigo-50 to-purple-200',
+      tileBg: 'bg-purple-100 hover:bg-purple-200/90',
+      tileBorder: 'border-purple-300/80',
+      tileText: 'text-purple-600',
+      iconBg: 'bg-purple-500/10 text-purple-600 border-purple-200',
       caption: 'Diagram keamanan terpusat OAuth 2.0 dan Single Sign-On.',
     },
     {
       id: 6,
       title: 'Image 6: Cloud Sharding & Database',
       category: 'Design System',
-      gradient: 'from-indigo-400/20 via-purple-300/20 to-indigo-500/25',
-      iconBg: 'bg-indigo-500/10 text-indigo-600 border-indigo-200',
+      gradient: 'from-amber-400/20 via-yellow-300/20 to-amber-500/25',
+      solidGradient: 'from-amber-100 via-yellow-50 to-amber-200',
+      tileBg: 'bg-amber-100 hover:bg-amber-200/90',
+      tileBorder: 'border-amber-300/80',
+      tileText: 'text-amber-600',
+      iconBg: 'bg-amber-500/10 text-amber-600 border-amber-200',
       caption: 'Infrastruktur sharding database dengan replikasi multi-master.',
     },
     {
       id: 7,
       title: 'Image 7: CI/CD Pipeline Automation',
       category: 'Brand Identity',
-      gradient: 'from-lime-400/20 via-emerald-300/20 to-teal-400/25',
+      gradient: 'from-emerald-400/20 via-green-300/20 to-emerald-500/25',
+      solidGradient: 'from-emerald-100 via-green-50 to-emerald-200',
+      tileBg: 'bg-emerald-100 hover:bg-emerald-200/90',
+      tileBorder: 'border-emerald-300/80',
+      tileText: 'text-emerald-600',
       iconBg: 'bg-emerald-500/10 text-emerald-600 border-emerald-200',
       caption: 'Workflow otomatisasi deployment tanpa downtime.',
     },
@@ -11818,17 +11850,37 @@ function GalleryView() {
       id: 8,
       title: 'Image 8: Placeholder Lightbox Preview',
       category: 'Mobile App',
-      gradient: 'from-teal-400/20 via-cyan-300/20 to-blue-400/25',
-      iconBg: 'bg-teal-500/10 text-teal-600 border-teal-200',
+      gradient: 'from-blue-400/20 via-sky-300/20 to-blue-500/25',
+      solidGradient: 'from-blue-100 via-sky-50 to-blue-200',
+      tileBg: 'bg-blue-100 hover:bg-blue-200/90',
+      tileBorder: 'border-blue-300/80',
+      tileText: 'text-blue-600',
+      iconBg: 'bg-blue-500/10 text-blue-600 border-blue-200',
       caption: 'Tampilan lightbox resolusi tinggi dengan navigasi keyboard.',
     },
     {
       id: 9,
       title: 'Image 9: Design System Components v2',
       category: 'Design System',
-      gradient: 'from-purple-400/20 via-indigo-300/20 to-purple-500/25',
-      iconBg: 'bg-purple-500/10 text-purple-600 border-purple-200',
+      gradient: 'from-orange-400/20 via-amber-300/20 to-orange-500/25',
+      solidGradient: 'from-orange-100 via-amber-50 to-orange-200',
+      tileBg: 'bg-orange-100 hover:bg-orange-200/90',
+      tileBorder: 'border-orange-300/80',
+      tileText: 'text-orange-600',
+      iconBg: 'bg-orange-500/10 text-orange-600 border-orange-200',
       caption: 'Koleksi komponen UI modern berbasis React 19 dan Tailwind v4.',
+    },
+    {
+      id: 10,
+      title: 'Image 10: Performance Monitoring & SRE',
+      category: 'Dashboard UI',
+      gradient: 'from-rose-400/20 via-red-300/20 to-rose-500/25',
+      solidGradient: 'from-rose-100 via-red-50 to-rose-200',
+      tileBg: 'bg-rose-100 hover:bg-rose-200/90',
+      tileBorder: 'border-rose-300/80',
+      tileText: 'text-rose-600',
+      iconBg: 'bg-rose-500/10 text-rose-600 border-rose-200',
+      caption: 'Dashboard monitoring kesehatan server dan latensi microservices.',
     },
   ];
 
@@ -11901,15 +11953,15 @@ function GalleryView() {
               <p className="text-xs text-slate-500 mt-0.5">Baris thumbnail ringkas ukuran kecil.</p>
             </div>
             <div className="p-6">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 {galleryImages.slice(0, 8).map((img, idx) => (
                   <Tooltip key={img.id} content={`Image ${idx + 1}`} position="top">
                     <button
                       type="button"
                       onClick={() => openLightbox(idx)}
-                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer`}
+                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${img.tileBg} border ${img.tileBorder} ${img.tileText} flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer shadow-2xs`}
                     >
-                      <ImageIcon className="w-4 h-4 text-slate-600 opacity-70" />
+                      <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </Tooltip>
                 ))}
@@ -11921,30 +11973,30 @@ function GalleryView() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
             <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
               <h4 className="text-base font-bold text-[#1351b8]">Gallery</h4>
-              <p className="text-xs text-slate-500 mt-0.5">Baris thumbnail dengan penanda sisa gambar (+2).</p>
+              <p className="text-xs text-slate-500 mt-0.5">Baris thumbnail dengan penanda sisa gambar (+3).</p>
             </div>
             <div className="p-6">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 {galleryImages.slice(0, 7).map((img, idx) => (
                   <Tooltip key={img.id} content={`Image ${idx + 1}`} position="top">
                     <button
                       type="button"
                       onClick={() => openLightbox(idx)}
-                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer`}
+                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${img.tileBg} border ${img.tileBorder} ${img.tileText} flex items-center justify-center hover:scale-110 hover:shadow-md transition-all cursor-pointer shadow-2xs`}
                     >
-                      <ImageIcon className="w-4 h-4 text-slate-600 opacity-70" />
+                      <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </Tooltip>
                 ))}
 
-                {/* +2 Overflow Tile */}
-                <Tooltip content="Lihat 2 gambar lainnya" position="top">
+                {/* +3 Overflow Tile */}
+                <Tooltip content="Lihat 3 gambar lainnya" position="top">
                   <button
                     type="button"
                     onClick={() => openLightbox(7)}
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800 text-white font-bold text-xs flex items-center justify-center hover:bg-slate-700 hover:scale-110 shadow-xs transition-all cursor-pointer"
                   >
-                    +2
+                    +3
                   </button>
                 </Tooltip>
               </div>
@@ -11962,25 +12014,25 @@ function GalleryView() {
               <p className="text-xs text-slate-500 mt-0.5">Grid thumbnail ukuran medium dengan akumulasi tile.</p>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-5 gap-2.5">
+              <div className="grid grid-cols-5 gap-2.5 sm:gap-3">
                 {galleryImages.map((img, idx) => (
-                  <Tooltip key={img.id} content={img.title} position="top">
+                  <Tooltip key={img.id} content={img.title} position="top" block={true} className="w-full aspect-square">
                     <button
                       type="button"
                       onClick={() => openLightbox(idx)}
-                      className={`aspect-square rounded-xl bg-gradient-to-br ${img.gradient} border border-slate-200/80 flex items-center justify-center hover:scale-105 hover:shadow-md transition-all cursor-pointer`}
+                      className={`w-full h-full rounded-xl sm:rounded-2xl ${img.tileBg} border ${img.tileBorder} ${img.tileText} flex items-center justify-center hover:scale-105 hover:shadow-md transition-all cursor-pointer shadow-2xs`}
                     >
-                      <ImageIcon className="w-5 h-5 text-slate-600 opacity-70" />
+                      <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
                   </Tooltip>
                 ))}
 
                 {/* +2 Overflow Tile in Grid */}
-                <Tooltip content="Lihat 2 gambar lainnya" position="top">
+                <Tooltip content="Lihat 2 gambar lainnya" position="top" block={true} className="w-full aspect-square">
                   <button
                     type="button"
-                    onClick={() => openLightbox(7)}
-                    className="aspect-square rounded-xl bg-slate-800 text-white font-bold text-xs flex items-center justify-center hover:bg-slate-700 hover:scale-105 shadow-xs transition-all cursor-pointer"
+                    onClick={() => openLightbox(8)}
+                    className="w-full h-full rounded-xl sm:rounded-2xl bg-slate-800 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center hover:bg-slate-700 hover:scale-105 shadow-xs transition-all cursor-pointer"
                   >
                     +2
                   </button>
@@ -11999,43 +12051,77 @@ function GalleryView() {
               <h4 className="text-base font-bold text-[#1351b8]">Gallery .gallery-fw</h4>
               <p className="text-xs text-slate-500 mt-0.5">Strip banner lanskap bertingkat.</p>
             </div>
-            <div className="p-6 space-y-3.5">
+            <div className="p-6 space-y-4">
               {/* Banner 1 */}
-              <Tooltip content="Image 1: Design Tokens" position="top">
+              <Tooltip content="Image 1: Design Tokens & Colors" position="top" block={true} className="w-full block">
                 <button
                   type="button"
                   onClick={() => openLightbox(0)}
-                  className="w-full h-24 rounded-2xl bg-gradient-to-r from-amber-100/70 via-orange-100/60 to-amber-200/50 border border-amber-200/70 flex items-center justify-center hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden"
+                  className="w-full h-22 sm:h-24 rounded-2xl bg-gradient-to-r from-amber-100 via-orange-100 to-amber-200/90 border border-amber-200/80 flex items-center justify-between px-5 sm:px-6 hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer relative overflow-hidden group shadow-2xs text-left"
                 >
-                  <div className="flex items-center gap-2 text-amber-700">
-                    <ImageIcon className="w-8 h-8 opacity-75" />
+                  <div className="flex items-center gap-3 z-10">
+                    <div className="w-9 h-9 rounded-xl bg-white/90 shadow-xs flex items-center justify-center text-amber-600 shrink-0">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h6 className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-amber-800 transition-colors">
+                        Image 1: Design Tokens
+                      </h6>
+                      <p className="text-[11px] text-slate-600 font-medium">Palet warna & token desain</p>
+                    </div>
+                  </div>
+                  <div className="text-amber-600/30 group-hover:text-amber-600/60 transition-colors shrink-0">
+                    <ImageIcon className="w-10 h-10 sm:w-12 sm:h-12 transform group-hover:scale-110 transition-transform duration-300" />
                   </div>
                 </button>
               </Tooltip>
 
               {/* Banner 2 */}
-              <Tooltip content="Image 2: Analytics Flow" position="top">
+              <Tooltip content="Image 4: Payroll & Kasbon Approval" position="top" block={true} className="w-full block">
                 <button
                   type="button"
-                  onClick={() => openLightbox(1)}
-                  className="w-full h-24 rounded-2xl bg-gradient-to-r from-rose-100/70 via-pink-100/60 to-rose-200/50 border border-rose-200/70 flex items-center justify-center hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden"
+                  onClick={() => openLightbox(3)}
+                  className="w-full h-22 sm:h-24 rounded-2xl bg-gradient-to-r from-rose-100 via-pink-100 to-rose-200/90 border border-rose-200/80 flex items-center justify-between px-5 sm:px-6 hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer relative overflow-hidden group shadow-2xs text-left"
                 >
-                  <div className="flex items-center gap-2 text-rose-700">
-                    <ImageIcon className="w-8 h-8 opacity-75" />
+                  <div className="flex items-center gap-3 z-10">
+                    <div className="w-9 h-9 rounded-xl bg-white/90 shadow-xs flex items-center justify-center text-rose-600 shrink-0">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h6 className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-rose-800 transition-colors">
+                        Image 4: Payroll & Kasbon
+                      </h6>
+                      <p className="text-[11px] text-slate-600 font-medium">Modul persetujuan berjenjang</p>
+                    </div>
+                  </div>
+                  <div className="text-rose-600/30 group-hover:text-rose-600/60 transition-colors shrink-0">
+                    <ImageIcon className="w-10 h-10 sm:w-12 sm:h-12 transform group-hover:scale-110 transition-transform duration-300" />
                   </div>
                 </button>
               </Tooltip>
 
               {/* Banner 3 with +2 Overlay */}
-              <Tooltip content="Lihat 2 banner lainnya" position="top">
+              <Tooltip content="Lihat 2 banner lainnya" position="top" block={true} className="w-full block">
                 <button
                   type="button"
-                  onClick={() => openLightbox(2)}
-                  className="w-full h-24 rounded-2xl bg-slate-800 text-white border border-slate-700 flex items-center justify-center hover:bg-slate-700 hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden shadow-xs"
+                  onClick={() => openLightbox(4)}
+                  className="w-full h-22 sm:h-24 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-between px-5 sm:px-6 hover:bg-slate-700 hover:scale-[1.01] transition-all cursor-pointer relative overflow-hidden group shadow-2xs text-left text-white"
                 >
-                  <div className="flex items-center gap-2">
-                    <ImageIcon className="w-8 h-8 opacity-40" />
-                    <span className="font-extrabold text-base tracking-wide text-white drop-shadow-xs">+2</span>
+                  <div className="flex items-center gap-3 z-10">
+                    <div className="w-9 h-9 rounded-xl bg-white/10 shadow-xs flex items-center justify-center text-white shrink-0">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h6 className="text-xs sm:text-sm font-bold text-white">
+                        Security & Cloud Sharding
+                      </h6>
+                      <p className="text-[11px] text-slate-300 font-medium">Infrastruktur & modul lainnya</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 z-10 shrink-0">
+                    <span className="font-extrabold text-xs sm:text-sm text-white px-3 py-1 rounded-lg bg-white/15 border border-white/20 shadow-xs">
+                      +2
+                    </span>
                   </div>
                 </button>
               </Tooltip>
@@ -12205,22 +12291,34 @@ function GalleryView() {
             <div className="flex-1 flex items-center justify-center max-h-[65vh] overflow-hidden">
               <div
                 style={{ transform: `scale(${lightboxZoom})` }}
-                className={`max-w-2xl w-full aspect-[16/10] bg-gradient-to-br ${galleryImages[activeImageIndex].gradient} rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center justify-center p-8 transition-transform duration-200 relative overflow-hidden`}
+                className={`max-w-2xl w-full aspect-[16/10] bg-gradient-to-br ${galleryImages[activeImageIndex].solidGradient} rounded-3xl border-2 border-white/60 shadow-2xl flex flex-col items-center justify-center p-6 sm:p-10 transition-transform duration-200 relative overflow-hidden text-center`}
               >
+                {/* Decorative background blurs */}
+                <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/35 blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-white/35 blur-2xl pointer-events-none" />
+
                 <div
-                  className={`w-20 h-20 rounded-3xl ${galleryImages[activeImageIndex].iconBg} border flex items-center justify-center shadow-lg mb-4`}
+                  className={`w-20 h-20 sm:w-22 sm:h-22 rounded-3xl bg-white shadow-xl border border-white flex items-center justify-center mb-4 sm:mb-5 ${galleryImages[activeImageIndex].tileText} relative z-10`}
                 >
-                  <ImageIcon className="w-10 h-10" />
+                  <ImageIcon className="w-10 h-10 sm:w-11 sm:h-11" />
                 </div>
-                <h5 className="text-base sm:text-lg font-bold text-slate-800 text-center drop-shadow-xs">
+
+                <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-snug drop-shadow-xs max-w-lg relative z-10 px-2">
                   {galleryImages[activeImageIndex].title}
-                </h5>
-                <p className="text-xs sm:text-sm text-slate-600 text-center max-w-md mt-1 font-normal">
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-700 font-semibold max-w-md mt-2 leading-relaxed relative z-10 px-2">
                   {galleryImages[activeImageIndex].caption}
                 </p>
-                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-4 px-3 py-1 bg-white/60 rounded-full">
-                  PLACEHOLDER IMAGE • VELORA UI
-                </span>
+
+                <div className="flex items-center gap-2 mt-4 sm:mt-5 relative z-10">
+                  <span className="px-3.5 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold shadow-md">
+                    {galleryImages[activeImageIndex].category}
+                  </span>
+                  <span className="px-3.5 py-1 rounded-full bg-white/95 text-slate-800 text-[11px] font-bold shadow-xs border border-slate-200">
+                    PLACEHOLDER IMAGE • VELORA UI
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -12248,13 +12346,13 @@ function GalleryView() {
                   key={img.id}
                   type="button"
                   onClick={() => openLightbox(idx)}
-                  className={`w-8 h-8 rounded-lg bg-gradient-to-br ${img.gradient} border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                  className={`w-8 h-8 rounded-lg ${img.tileBg} border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
                     activeImageIndex === idx
                       ? 'border-[#1351b8] ring-2 ring-blue-400 scale-110 shadow-xs'
-                      : 'border-white/30 opacity-60 hover:opacity-100'
+                      : 'border-white/30 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <ImageIcon className="w-3.5 h-3.5 text-slate-700" />
+                  <ImageIcon className={`w-3.5 h-3.5 ${img.tileText}`} />
                 </button>
               ))}
             </div>
