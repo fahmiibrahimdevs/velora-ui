@@ -14059,6 +14059,484 @@ function StatisticView() {
   );
 }
 
+function TabView() {
+  const [tabDefault, setTabDefault] = useState<'home' | 'profile' | 'contact'>('home');
+  const [tabBordered, setTabBordered] = useState<'home' | 'profile' | 'contact'>('home');
+  const [tabPills, setTabPills] = useState<'home' | 'profile' | 'contact'>('profile');
+  const [tabTwoCol, setTabTwoCol] = useState<'home' | 'profile' | 'contact'>('home');
+  const [tabIcon, setTabIcon] = useState<'home' | 'profile' | 'contact'>('home');
+  const [tabIconCentered, setTabIconCentered] = useState<'home' | 'profile' | 'contact'>('contact');
+
+  // Enterprise Interactive Tab State
+  const [enterpriseTab, setEnterpriseTab] = useState<'profile' | 'security' | 'notifications' | 'logs'>('profile');
+  const [emailNotification, setEmailNotification] = useState(true);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+
+  // Standard Stisla Tab Copy Contents
+  const tabContent = {
+    home: {
+      title: 'Home Content',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    },
+    profile: {
+      title: 'Profile Content',
+      text: 'Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui.',
+    },
+    contact: {
+      title: 'Contact Content',
+      text: 'Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor.',
+    },
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Tabs</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          The tab component for dividing parts of content.
+        </p>
+      </div>
+
+      {/* Main Grid: 3 Rows of 2-Column Cards matching Stisla exact layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* CARD 1: DEFAULT TAB */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">Default Tab</h4>
+
+            {/* Tab Navigation Strip */}
+            <div className="border-b border-slate-200 flex items-center gap-1">
+              {(['home', 'profile', 'contact'] as const).map((tab) => {
+                const isActive = tabDefault === tab;
+                const label = tab.charAt(0).toUpperCase() + tab.slice(1);
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setTabDefault(tab)}
+                    className={`px-4 py-2 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                      isActive
+                        ? 'border border-slate-200 border-b-white bg-white rounded-t-lg -mb-px text-slate-800 shadow-2xs'
+                        : 'text-[#175cd3] hover:text-[#0f3ba0] border-transparent'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tab Body Content */}
+            <div className="pt-4 text-xs sm:text-sm text-slate-600 leading-relaxed min-h-[110px]">
+              {tabContent[tabDefault].text}
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 2: BORDERED TAB */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">Bordered Tab</h4>
+
+            {/* Tab Navigation Strip */}
+            <div className="border-b border-slate-200 flex items-center gap-1">
+              {(['home', 'profile', 'contact'] as const).map((tab) => {
+                const isActive = tabBordered === tab;
+                const label = tab.charAt(0).toUpperCase() + tab.slice(1);
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setTabBordered(tab)}
+                    className={`px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                      isActive
+                        ? 'border border-slate-200 border-b-white bg-white rounded-t-xl -mb-px text-slate-800 shadow-2xs'
+                        : 'text-[#175cd3] hover:text-[#0f3ba0] border-transparent'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tab Body Content */}
+            <div className="pt-4 text-xs sm:text-sm text-slate-600 leading-relaxed min-h-[110px]">
+              {tabContent[tabBordered].text}
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 3: TAB .NAV-PILLS */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">Tab .nav-pills</h4>
+
+            {/* Pill Navigation Strip */}
+            <div className="flex items-center gap-2 mb-4">
+              {(['home', 'profile', 'contact'] as const).map((tab) => {
+                const isActive = tabPills === tab;
+                const label = tab.charAt(0).toUpperCase() + tab.slice(1);
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setTabPills(tab)}
+                    className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-[#175cd3] text-white shadow-xs'
+                        : 'text-[#175cd3] hover:bg-blue-50/70'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tab Body Content */}
+            <div className="text-xs sm:text-sm text-slate-600 leading-relaxed min-h-[110px]">
+              {tabContent[tabPills].text}
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 4: 2 COLUMN (VERTICAL TABS) */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">2 Column</h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+              {/* Left Column: Vertical Tab List (md:col-span-4) */}
+              <div className="md:col-span-4 flex flex-col gap-1.5">
+                {(['home', 'profile', 'contact'] as const).map((tab) => {
+                  const isActive = tabTwoCol === tab;
+                  const label = tab.charAt(0).toUpperCase() + tab.slice(1);
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setTabTwoCol(tab)}
+                      className={`w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#175cd3] text-white shadow-xs'
+                          : 'text-[#175cd3] hover:bg-blue-50/70'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right Column: Tab Content (md:col-span-8) */}
+              <div className="md:col-span-8 text-xs sm:text-sm text-slate-600 leading-relaxed min-h-[110px]">
+                {tabContent[tabTwoCol].text}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 5: ICON TAB */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">Icon Tab</h4>
+
+            {/* Tab Navigation Strip with Icons */}
+            <div className="border-b border-slate-200 flex items-center gap-1">
+              {[
+                { id: 'home', label: 'Home', icon: Home },
+                { id: 'profile', label: 'Profile', icon: User },
+                { id: 'contact', label: 'Contact', icon: Phone },
+              ].map((item) => {
+                const isActive = tabIcon === item.id;
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setTabIcon(item.id as any)}
+                    className={`px-4 py-2 text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                      isActive
+                        ? 'border border-slate-200 border-b-white bg-white rounded-t-lg -mb-px text-slate-800 shadow-2xs'
+                        : 'text-[#175cd3] hover:text-[#0f3ba0] border-transparent'
+                    }`}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tab Body Content */}
+            <div className="pt-4 text-xs sm:text-sm text-slate-600 leading-relaxed min-h-[110px]">
+              {tabContent[tabIcon].text}
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 6: ICON TAB BORDERED + CENTERED */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-4">
+              Icon Tab Bordered + Centered .justify-content-center
+            </h4>
+
+            {/* Centered Tab Navigation Strip with Top Icons */}
+            <div className="flex justify-center items-end gap-1 mb-0">
+              {[
+                { id: 'home', label: 'Home', icon: Home },
+                { id: 'profile', label: 'Profile', icon: User },
+                { id: 'contact', label: 'Contact', icon: Mail },
+              ].map((item) => {
+                const isActive = tabIconCentered === item.id;
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setTabIconCentered(item.id as any)}
+                    className={`flex flex-col items-center px-6 py-2.5 text-xs font-semibold cursor-pointer transition-all ${
+                      isActive
+                        ? 'border border-slate-200 border-b-white bg-white rounded-t-xl -mb-px text-[#1351b8] font-bold shadow-2xs relative z-10'
+                        : 'text-slate-600 hover:text-slate-900 border-transparent'
+                    }`}
+                  >
+                    <IconComponent className={`w-4 h-4 mb-1 ${isActive ? 'text-[#175cd3]' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Bordered Box Content below Centered Tabs */}
+            <div className="border border-slate-200 rounded-xl p-5 text-xs sm:text-sm text-slate-600 leading-relaxed bg-white min-h-[110px]">
+              {tabContent[tabIconCentered].text}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 4: MODERN ENTERPRISE TAB SYSTEM (REAL-WORLD VALUE)*/}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6 sm:p-7 relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <h4 className="text-base font-bold text-slate-800">
+                Interactive Enterprise Settings Tab (Modernized Tab System)
+              </h4>
+            </div>
+            <p className="text-xs text-slate-500">
+              Contoh implementasi tab modern untuk pengaturan sistem enterprise dengan badge notifikasi, form input, dan audit trail live.
+            </p>
+          </div>
+
+          {/* Quick Tab Switcher Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/80">
+            {[
+              { id: 'profile', label: 'Profil Akun', icon: User, badge: null },
+              { id: 'security', label: 'Keamanan & Sandi', icon: Lock, badge: 'Aman' },
+              { id: 'notifications', label: 'Notifikasi', icon: Mail, badge: '3 Baru' },
+              { id: 'logs', label: 'Log Aktivitas', icon: Activity, badge: 'Live' },
+            ].map((tab) => {
+              const IconComp = tab.icon;
+              const isActive = enterpriseTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setEnterpriseTab(tab.id as any)}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-white text-[#1351b8] shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <IconComp className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-md font-bold ${
+                        tab.badge === 'Live'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : tab.badge === 'Aman'
+                          ? 'bg-blue-100 text-[#1351b8]'
+                          : 'bg-amber-100 text-amber-700'
+                      }`}
+                    >
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tab Panels */}
+        <div className="pt-6">
+          {enterpriseTab === 'profile' && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-4 flex flex-col items-center p-6 bg-slate-50/70 rounded-2xl border border-slate-100 text-center">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#175cd3] to-[#0f3ba0] text-white flex items-center justify-center font-bold text-2xl shadow-md shadow-blue-500/20 mb-3">
+                  FI
+                </div>
+                <h5 className="text-sm font-bold text-slate-800">Fahmi Ibrahim</h5>
+                <p className="text-xs text-slate-500">Lead Enterprise UI Architect</p>
+                <span className="mt-2 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                  Status: Aktif & Terverifikasi
+                </span>
+              </div>
+              <div className="md:col-span-8 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      readOnly
+                      value="Fahmi Ibrahim"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Email Resmi</label>
+                    <input
+                      type="email"
+                      readOnly
+                      value="fahmi@velora-ui.test"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Singkat / Bio</label>
+                  <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    Pengembang utama sistem antarmuka Velora UI. Mengembangkan desain berbasis standar eksekutif, kontras tinggi, dan modern responsiveness.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {enterpriseTab === 'security' && (
+            <div className="space-y-4 max-w-2xl">
+              <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                <div>
+                  <h6 className="text-xs font-bold text-slate-800">Autentikasi Dua Faktor (2FA)</h6>
+                  <p className="text-[11px] text-slate-500">Tingkatkan keamanan akun dengan verifikasi OTP melalui Authenticator.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTwoFactorEnabled(!twoFactorEnabled);
+                    showToast(twoFactorEnabled ? '2FA telah dinonaktifkan.' : '2FA berhasil diaktifkan!', 'success');
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    twoFactorEnabled
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                  }`}
+                >
+                  {twoFactorEnabled ? 'Aktif' : 'Aktifkan'}
+                </button>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                <div>
+                  <h6 className="text-xs font-bold text-slate-800">Sandi & Kredensial Terakhir</h6>
+                  <p className="text-[11px] text-slate-500">Kata sandi terakhir diperbarui 14 hari yang lalu.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => showToast('Form ganti kata sandi dibuka.', 'info')}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[#1351b8] bg-blue-50 hover:bg-blue-100 transition-all cursor-pointer"
+                >
+                  Ganti Sandi
+                </button>
+              </div>
+            </div>
+          )}
+
+          {enterpriseTab === 'notifications' && (
+            <div className="space-y-3 max-w-2xl">
+              <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/60">
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Notifikasi Email Transaksi</span>
+                  <span className="text-[11px] text-slate-500">Terima ringkasan transaksi permohonan kasbon baru.</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={emailNotification}
+                  onChange={(e) => {
+                    setEmailNotification(e.target.checked);
+                    showToast('Pengaturan notifikasi disimpan.', 'success');
+                  }}
+                  className="w-4 h-4 text-[#175cd3] rounded cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/60">
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Pemberitahuan Sistem & Keamanan</span>
+                  <span className="text-[11px] text-slate-500">Peringatan otomatis saat ada sesi login baru dari perangkat berbeda.</span>
+                </div>
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  className="w-4 h-4 text-[#175cd3] rounded cursor-pointer"
+                />
+              </div>
+            </div>
+          )}
+
+          {enterpriseTab === 'logs' && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 font-bold">
+                    <th className="py-2.5 px-3">Waktu</th>
+                    <th className="py-2.5 px-3">Aktivitas</th>
+                    <th className="py-2.5 px-3">IP Address</th>
+                    <th className="py-2.5 px-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tr>
+                    <td className="py-2.5 px-3 font-medium text-slate-500">Baru saja</td>
+                    <td className="py-2.5 px-3 font-bold text-slate-900">Pergantian Tab Komponen</td>
+                    <td className="py-2.5 px-3 font-mono text-[11px]">192.168.1.42</td>
+                    <td className="py-2.5 px-3"><span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Sukses</span></td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-medium text-slate-500">10 Menit lalu</td>
+                    <td className="py-2.5 px-3 font-bold text-slate-900">Login via SSO Google</td>
+                    <td className="py-2.5 px-3 font-mono text-[11px]">182.253.12.98</td>
+                    <td className="py-2.5 px-3"><span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Sukses</span></td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-medium text-slate-500">1 Jam lalu</td>
+                    <td className="py-2.5 px-3 font-bold text-slate-900">Ekspor Laporan Statistik Kasbon</td>
+                    <td className="py-2.5 px-3 font-mono text-[11px]">192.168.1.42</td>
+                    <td className="py-2.5 px-3"><span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Selesai</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -14252,6 +14730,10 @@ export function App() {
       title: 'Statistic',
       breadcrumbs: ['Dashboard', 'Components', 'Statistic'],
     },
+    tab: {
+      title: 'Tab',
+      breadcrumbs: ['Dashboard', 'Components', 'Tab'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -14303,6 +14785,8 @@ export function App() {
         return <MultipleUploadView />;
       case 'statistic':
         return <StatisticView />;
+      case 'tab':
+        return <TabView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
