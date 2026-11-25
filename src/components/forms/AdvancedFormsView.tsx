@@ -1,0 +1,1582 @@
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  Phone,
+  Lock,
+  Calendar,
+  Clock,
+  Check,
+  X,
+  ChevronDown,
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  Pipette,
+  Smartphone,
+  Tablet,
+  Monitor,
+  Laptop,
+  Sun,
+  Moon,
+  CloudRain,
+  Cloud,
+  Image as ImageIcon,
+  Search,
+} from 'lucide-react';
+import { showToast } from '../../lib/swal';
+
+export function AdvancedFormsView() {
+  // =========================================================================
+  // LEFT COLUMN STATES
+  // =========================================================================
+
+  // Input Text Card
+  const [defaultText, setDefaultText] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [purchaseCode, setPurchaseCode] = useState('ASDF-GHIJ-KLMN-OPQR');
+  const [invoice, setInvoice] = useState('');
+  const [dateMask, setDateMask] = useState('');
+  const [creditCard, setCreditCard] = useState('');
+  const [tags, setTags] = useState<string[]>(['First', 'Second']);
+  const [tagInput, setTagInput] = useState('');
+
+  // Password strength calculation
+  const getPasswordStrength = (pass: string) => {
+    if (!pass) return 0;
+    let score = 0;
+    if (pass.length >= 6) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+    return score; // 0 to 4
+  };
+  const pwStrength = getPasswordStrength(password);
+
+  // Left Toggle Switches Card
+  const [leftToggles, setLeftToggles] = useState({
+    opt1: false,
+    opt2: true, // checked by default in screenshot 3
+    opt3: false,
+  });
+  const [leftSingleToggle, setLeftSingleToggle] = useState(false);
+
+  // Image Check Card (6 pastel cards)
+  const [selectedImages, setSelectedImages] = useState<number[]>([2, 4]); // Cards 2 and 4 selected in screenshots
+
+  const imageCardData = [
+    { id: 1, name: 'Blue Pastel', bg: 'bg-[#eff4fe]', border: 'border-slate-200', iconColor: 'text-[#818cf8]' },
+    { id: 2, name: 'Green Pastel', bg: 'bg-[#ecfdf5]', border: 'border-emerald-400', iconColor: 'text-[#34d399]' },
+    { id: 3, name: 'Cyan Pastel', bg: 'bg-[#ecfeff]', border: 'border-slate-200', iconColor: 'text-[#22d3ee]' },
+    { id: 4, name: 'Orange Pastel', bg: 'bg-[#fff7ed]', border: 'border-amber-400', iconColor: 'text-[#fb923c]' },
+    { id: 5, name: 'Pink Pastel', bg: 'bg-[#fff1f2]', border: 'border-slate-200', iconColor: 'text-[#f43f5e]' },
+    { id: 6, name: 'Purple Pastel', bg: 'bg-[#faf5ff]', border: 'border-slate-200', iconColor: 'text-[#c084fc]' },
+  ];
+
+  const toggleImageCheck = (id: number) => {
+    setSelectedImages((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Color Card
+  const [simpleColor, setSimpleColor] = useState('');
+  const [pickerColor, setPickerColor] = useState('#175cd3');
+  const [selectedPalette, setSelectedPalette] = useState('#175cd3');
+
+  const colorPalette = [
+    '#175cd3', // primary blue
+    '#94a3b8', // slate gray
+    '#f97316', // orange
+    '#ef4444', // red
+    '#0ea5e9', // cyan
+    '#10b981', // green
+  ];
+
+  // =========================================================================
+  // RIGHT COLUMN STATES
+  // =========================================================================
+
+  // Select Card
+  const [defaultSelect, setDefaultSelect] = useState('Option 1');
+
+  // Select2 Single
+  const [isSelect2Open, setIsSelect2Open] = useState(false);
+  const [select2Search, setSelect2Search] = useState('');
+  const [select2Value, setSelect2Value] = useState('Option 1');
+  const select2Options = ['Option 1', 'Option 2', 'Option 3'];
+
+  // Select2 Multiple
+  const [isSelect2MultiOpen, setIsSelect2MultiOpen] = useState(false);
+  const [select2MultiValues, setSelect2MultiValues] = useState<string[]>(['Option 1', 'Option 4']);
+  const select2MultiOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+  // jQuery Selectric
+  const [selectricVal, setSelectricVal] = useState('Option 2');
+  const [selectricMultiVal, setSelectricMultiVal] = useState('Option 1');
+
+  // Select Group Button
+  const [sizeGroup, setSizeGroup] = useState('S');
+  const [iconInputGroup, setIconInputGroup] = useState('tablet');
+  const [radioIconGroup, setRadioIconGroup] = useState('sun');
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(['HTML']);
+
+  const skillsList = ['HTML', 'CSS', 'PHP', 'JavaScript', 'Ruby', 'C++'];
+
+  const toggleSkill = (skill: string) => {
+    setSelectedSkills((prev) =>
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
+    );
+  };
+
+  // Right Toggle Switches Card
+  const [rightToggles, setRightToggles] = useState({
+    opt1: false,
+    opt2: false,
+    opt3: false,
+  });
+  const [rightSingleToggle, setRightSingleToggle] = useState(false);
+
+  // =========================================================================
+  // DATE & TIME PICKER STATES & POPOVERS
+  // =========================================================================
+
+  // 1. Date Range Picker With Button (Preset popover)
+  const [isRangePresetOpen, setIsRangePresetOpen] = useState(false);
+  const [selectedRangePreset, setSelectedRangePreset] = useState('Last 30 Days');
+  const rangePresets = [
+    'Today',
+    'Yesterday',
+    'Last 7 Days',
+    'Last 30 Days',
+    'This Month',
+    'Last Month',
+    'Custom Range',
+  ];
+
+  // 2. Date Picker (Single Month Calendar)
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [datePickerVal, setDatePickerVal] = useState('2026-11-29');
+  const [tempDateDay, setTempDateDay] = useState(29);
+
+  // 3. Date Time Picker (Calendar + Time Selects)
+  const [isDateTimePickerOpen, setIsDateTimePickerOpen] = useState(false);
+  const [dateTimePickerVal, setDateTimePickerVal] = useState('2026-11-25 15:17');
+  const [dateTimeDay, setDateTimeDay] = useState(25);
+  const [dateTimeHour, setDateTimeHour] = useState('15');
+  const [dateTimeMinute, setDateTimeMinute] = useState('17');
+
+  // 4. Date Range Picker (Dual-Month Calendar)
+  const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false);
+  const [dateRangeVal, setDateRangeVal] = useState('2026-11-16 - 2026-12-31');
+
+  // 5. Time Picker (Spinner popover)
+  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+  const [timePickerVal, setTimePickerVal] = useState('1:15 PM');
+  const [timeHour, setTimeHour] = useState(1);
+  const [timeMinute, setTimeMinute] = useState(15);
+  const [timeAmPm, setTimeAmPm] = useState<'AM' | 'PM'>('AM');
+
+  // Handle outside clicks to close popovers
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.popover-container')) {
+        setIsSelect2Open(false);
+        setIsSelect2MultiOpen(false);
+        setIsRangePresetOpen(false);
+        setIsDatePickerOpen(false);
+        setIsDateTimePickerOpen(false);
+        setIsDateRangePickerOpen(false);
+        setIsTimePickerOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Tag helper
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const val = tagInput.trim();
+      if (val && !tags.includes(val)) {
+        setTags([...tags, val]);
+        setTagInput('');
+      }
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((t) => t !== tagToRemove));
+  };
+
+  return (
+    <div ref={containerRef} className="space-y-6 animate-in fade-in duration-300">
+      {/* ========================================================================= */}
+      {/* SUB-HEADER BANNER (Matching Stisla Screenshot 0) */}
+      {/* ========================================================================= */}
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full mt-2 shrink-0" />
+        <div>
+          <h2 className="text-xl font-bold text-slate-800 tracking-tight">Advanced Forms</h2>
+          <p className="text-sm text-slate-500 mt-0.5">
+            We provide advanced input fields, such as date picker, color picker, and so on.
+          </p>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 2-COLUMN GRID CONTAINER */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================================= */}
+        {/* LEFT COLUMN */}
+        {/* ======================================================================= */}
+        <div className="space-y-6">
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 1: INPUT TEXT */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-6 tracking-tight">Input Text</h3>
+
+            <div className="space-y-5">
+              {/* Default Input Text */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Default Input Text
+                </label>
+                <input
+                  type="text"
+                  value={defaultText}
+                  onChange={(e) => setDefaultText(e.target.value)}
+                  placeholder=""
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all"
+                />
+              </div>
+
+              {/* Phone Number (US Format) */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Phone Number (US Format)
+                </label>
+                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all">
+                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="(999) 999-9999"
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Password Strength */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Password Strength
+                </label>
+                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all">
+                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder=""
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+                {/* Strength Meter Bar */}
+                {password && (
+                  <div className="mt-2 space-y-1">
+                    <div className="flex gap-1.5 h-1.5">
+                      {[1, 2, 3, 4].map((step) => {
+                        let barColor = 'bg-slate-200';
+                        if (pwStrength >= step) {
+                          if (pwStrength <= 1) barColor = 'bg-rose-500';
+                          else if (pwStrength <= 2) barColor = 'bg-amber-500';
+                          else if (pwStrength === 3) barColor = 'bg-blue-500';
+                          else barColor = 'bg-emerald-500';
+                        }
+                        return <div key={step} className={`flex-1 rounded-full ${barColor} transition-all duration-300`} />;
+                      })}
+                    </div>
+                    <span className="text-[11px] font-medium text-slate-500">
+                      {pwStrength <= 1 && <span className="text-rose-500">Weak</span>}
+                      {pwStrength === 2 && <span className="text-amber-500">Fair</span>}
+                      {pwStrength === 3 && <span className="text-blue-500">Good</span>}
+                      {pwStrength >= 4 && <span className="text-emerald-500">Strong</span>}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Currency */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Currency
+                </label>
+                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all">
+                  <div className="px-4 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 font-semibold text-sm flex items-center justify-center shrink-0">
+                    $
+                  </div>
+                  <input
+                    type="text"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    placeholder=""
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Purchase Code */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Purchase Code
+                </label>
+                <input
+                  type="text"
+                  value={purchaseCode}
+                  onChange={(e) => setPurchaseCode(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all uppercase tracking-wider"
+                />
+              </div>
+
+              {/* Invoice */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Invoice
+                </label>
+                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all">
+                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-600 font-semibold text-xs tracking-wider flex items-center justify-center shrink-0">
+                    INV
+                  </div>
+                  <input
+                    type="text"
+                    value={invoice}
+                    onChange={(e) => setInvoice(e.target.value)}
+                    placeholder=""
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Date */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Date
+                </label>
+                <input
+                  type="text"
+                  value={dateMask}
+                  onChange={(e) => setDateMask(e.target.value)}
+                  placeholder="YYYY/MM/DD"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all"
+                />
+              </div>
+
+              {/* Credit Card */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Credit Card
+                </label>
+                <input
+                  type="text"
+                  value={creditCard}
+                  onChange={(e) => setCreditCard(e.target.value)}
+                  placeholder=""
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all tracking-wider"
+                />
+              </div>
+
+              {/* Tags */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Tags
+                </label>
+                <div className="w-full min-h-[44px] p-2 bg-white border border-slate-200 rounded-xl flex flex-wrap items-center gap-1.5 focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleAddTag}
+                    placeholder={tags.length === 0 ? 'Type tag and press enter...' : ''}
+                    className="flex-1 min-w-[120px] bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none px-1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 2: TOGGLE SWITCHES */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Toggle Switches</h3>
+
+            <div className="space-y-6">
+              {/* Toggle switches list */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-3">
+                  Toggle switches
+                </label>
+                <div className="space-y-3">
+                  {[
+                    { key: 'opt1', label: 'Option 1' },
+                    { key: 'opt2', label: 'Option 2' },
+                    { key: 'opt3', label: 'Option 3' },
+                  ].map((item) => {
+                    const isChecked = leftToggles[item.key as keyof typeof leftToggles];
+                    return (
+                      <label key={item.key} className="flex items-center gap-3 cursor-pointer select-none">
+                        <div
+                          onClick={() =>
+                            setLeftToggles((prev) => ({
+                              ...prev,
+                              [item.key]: !prev[item.key as keyof typeof leftToggles],
+                            }))
+                          }
+                          className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
+                            isChecked ? 'bg-[#175cd3]' : 'bg-slate-200'
+                          }`}
+                        >
+                          <div
+                            className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
+                              isChecked ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-700 font-medium">{item.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Toggle switch single */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-3">
+                  Toggle switch single
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <div
+                    onClick={() => setLeftSingleToggle(!leftSingleToggle)}
+                    className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
+                      leftSingleToggle ? 'bg-[#175cd3]' : 'bg-slate-200'
+                    }`}
+                  >
+                    <div
+                      className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
+                        leftSingleToggle ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </div>
+                  <span className="text-xs text-slate-600 font-normal">I agree with terms and conditions</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 3: IMAGE CHECK */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Image Check</h3>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-3">
+                Image Check
+              </label>
+
+              {/* 3 x 2 Grid of Pastel Cards matching Screenshot 3 & 4 */}
+              <div className="grid grid-cols-3 gap-4">
+                {imageCardData.map((card) => {
+                  const isChecked = selectedImages.includes(card.id);
+                  return (
+                    <div
+                      key={card.id}
+                      onClick={() => toggleImageCheck(card.id)}
+                      className={`relative aspect-[4/3] rounded-xl border-2 cursor-pointer transition-all flex flex-col items-center justify-center p-3 select-none ${card.bg} ${
+                        isChecked ? 'border-[#175cd3] shadow-sm ring-2 ring-[#175cd3]/10' : 'border-slate-200/80 hover:border-slate-300'
+                      }`}
+                    >
+                      {/* Checkbox badge in top-left corner */}
+                      <div className="absolute top-2.5 left-2.5">
+                        <div
+                          className={`w-4 h-4 rounded flex items-center justify-center transition-colors ${
+                            isChecked ? 'bg-[#175cd3] text-white' : 'border border-slate-300 bg-white'
+                          }`}
+                        >
+                          {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
+                      </div>
+
+                      {/* Center Placeholder Graphic */}
+                      <div className="flex flex-col items-center justify-center">
+                        <div className={`p-2.5 rounded-xl bg-white/70 backdrop-blur-xs ${card.iconColor} shadow-xs mb-1`}>
+                          <ImageIcon className="w-7 h-7" />
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">
+                          Placeholder
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 4: COLOR */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Color</h3>
+
+            <div className="space-y-5">
+              {/* Simple */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Simple
+                </label>
+                <input
+                  type="text"
+                  value={simpleColor}
+                  onChange={(e) => setSimpleColor(e.target.value)}
+                  placeholder=""
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all"
+                />
+              </div>
+
+              {/* Pick Your Color */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Pick Your Color
+                </label>
+                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/10 transition-all relative">
+                  <input
+                    type="text"
+                    value={pickerColor}
+                    onChange={(e) => setPickerColor(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 focus:outline-none"
+                  />
+                  <label className="px-3.5 py-2.5 bg-slate-50 border-l border-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center shrink-0 cursor-pointer">
+                    <Pipette className="w-4 h-4" />
+                    <input
+                      type="color"
+                      value={pickerColor}
+                      onChange={(e) => setPickerColor(e.target.value)}
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Color Input (Palette swatches) */}
+              <div className="form-group">
+                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                  Color Input
+                </label>
+                <div className="flex items-center gap-2.5">
+                  {colorPalette.map((color) => {
+                    const isSelected = selectedPalette === color;
+                    return (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => {
+                          setSelectedPalette(color);
+                          setPickerColor(color);
+                        }}
+                        style={{ backgroundColor: color }}
+                        className={`w-7 h-7 rounded-md cursor-pointer transition-transform hover:scale-105 relative ${
+                          isSelected ? 'ring-2 ring-offset-2 ring-[#175cd3]' : ''
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================================= */}
+        {/* RIGHT COLUMN */}
+        {/* ======================================================================= */}
+        <div className="space-y-6">
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 5: SELECT */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Select</h3>
+
+            <div className="space-y-7">
+              {/* Sub-section: Default */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-1.5 bg-[#175cd3] rounded-full" />
+                  <h4 className="text-sm font-bold text-slate-800">Default</h4>
+                </div>
+                <div className="form-group">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Default Select
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={defaultSelect}
+                      onChange={(e) => setDefaultSelect(e.target.value)}
+                      className="w-full appearance-none px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all pr-10 cursor-pointer"
+                    >
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                      <option>Option 3</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Sub-section: Select 2 */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-1.5 bg-[#175cd3] rounded-full" />
+                  <h4 className="text-sm font-bold text-slate-800">Select 2</h4>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Select2 Single with Search (Matching Screenshot 1) */}
+                  <div className="form-group relative popover-container">
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Select2
+                    </label>
+                    <div
+                      onClick={() => setIsSelect2Open(!isSelect2Open)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 flex items-center justify-between cursor-pointer focus:border-[#175cd3] transition-all"
+                    >
+                      <span>{select2Value}</span>
+                      {isSelect2Open ? (
+                        <ChevronUp className="w-4 h-4 text-slate-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                      )}
+                    </div>
+
+                    {/* Popover Dropdown matching Screenshot 1 */}
+                    {isSelect2Open && (
+                      <div className="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden animate-in fade-in duration-150">
+                        {/* Search Input */}
+                        <div className="p-2 border-b border-slate-100">
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={select2Search}
+                              onChange={(e) => setSelect2Search(e.target.value)}
+                              placeholder="Search..."
+                              autoFocus
+                              className="w-full pl-3 pr-8 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                            />
+                            <Search className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2" />
+                          </div>
+                        </div>
+                        {/* Option List */}
+                        <div className="max-h-48 overflow-y-auto py-1">
+                          {select2Options
+                            .filter((opt) => opt.toLowerCase().includes(select2Search.toLowerCase()))
+                            .map((opt) => {
+                              const isSelected = opt === select2Value;
+                              return (
+                                <div
+                                  key={opt}
+                                  onClick={() => {
+                                    setSelect2Value(opt);
+                                    setIsSelect2Open(false);
+                                  }}
+                                  className={`px-3.5 py-2 text-xs font-medium cursor-pointer transition-colors ${
+                                    isSelected
+                                      ? 'bg-[#175cd3] text-white font-semibold'
+                                      : 'text-slate-700 hover:bg-slate-50'
+                                  }`}
+                                >
+                                  {opt}
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Select2 Multiple with Tag Chips (Matching Screenshot 2) */}
+                  <div className="form-group relative popover-container">
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Select2 Multiple
+                    </label>
+                    <div
+                      onClick={() => setIsSelect2MultiOpen(!isSelect2MultiOpen)}
+                      className="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm flex flex-wrap items-center gap-1.5 cursor-pointer focus:border-[#175cd3] transition-all"
+                    >
+                      {select2MultiValues.length === 0 && (
+                        <span className="text-slate-400 text-xs">Select options...</span>
+                      )}
+                      {select2MultiValues.map((val) => (
+                        <span
+                          key={val}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#175cd3] text-white text-xs font-medium rounded-md shadow-xs"
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelect2MultiValues(select2MultiValues.filter((v) => v !== val));
+                            }}
+                            className="hover:text-red-200 cursor-pointer"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                          {val}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Popover Dropdown matching Screenshot 2 */}
+                    {isSelect2MultiOpen && (
+                      <div className="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1 animate-in fade-in duration-150">
+                        {select2MultiOptions.map((opt) => {
+                          const isSelected = select2MultiValues.includes(opt);
+                          return (
+                            <div
+                              key={opt}
+                              onClick={() => {
+                                if (isSelected) {
+                                  setSelect2MultiValues(select2MultiValues.filter((v) => v !== opt));
+                                } else {
+                                  setSelect2MultiValues([...select2MultiValues, opt]);
+                                }
+                              }}
+                              className={`px-3.5 py-2 text-xs font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                                isSelected
+                                  ? 'bg-[#175cd3] text-white font-semibold'
+                                  : 'text-slate-700 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span>{opt}</span>
+                              {isSelected && <Check className="w-3.5 h-3.5" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sub-section: jQuery Selectric */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-1.5 bg-[#175cd3] rounded-full" />
+                  <h4 className="text-sm font-bold text-slate-800">jQuery Selectric</h4>
+                </div>
+
+                <div className="space-y-4">
+                  {/* jQuery Selectric Single */}
+                  <div className="form-group">
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      jQuery Selectric
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={selectricVal}
+                        onChange={(e) => setSelectricVal(e.target.value)}
+                        className="w-full appearance-none px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all pr-10 cursor-pointer"
+                      >
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* jQuery Selectric Multiple */}
+                  <div className="form-group">
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      jQuery Selectric Multiple
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={selectricMultiVal}
+                        onChange={(e) => setSelectricMultiVal(e.target.value)}
+                        className="w-full appearance-none px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10 transition-all pr-10 cursor-pointer"
+                      >
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sub-section: Select Group Button */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-1.5 bg-[#175cd3] rounded-full" />
+                  <h4 className="text-sm font-bold text-slate-800">Select Group Button</h4>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Size: S, M, L, XL */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Size
+                    </label>
+                    <div className="grid grid-cols-4 rounded-xl border border-slate-200 overflow-hidden divide-x divide-slate-200">
+                      {['S', 'M', 'L', 'XL'].map((size) => {
+                        const isActive = sizeGroup === size;
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setSizeGroup(size)}
+                            className={`py-2 text-xs font-semibold transition-colors cursor-pointer text-center ${
+                              isActive
+                                ? 'bg-[#175cd3] text-white shadow-xs'
+                                : 'bg-white text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Icons input: Smartphone, Tablet, Monitor, Laptop */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Icons input
+                    </label>
+                    <div className="grid grid-cols-4 rounded-xl border border-slate-200 overflow-hidden divide-x divide-slate-200">
+                      {[
+                        { key: 'phone', icon: Smartphone },
+                        { key: 'tablet', icon: Tablet },
+                        { key: 'monitor', icon: Monitor },
+                        { key: 'laptop', icon: Laptop },
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const isActive = iconInputGroup === item.key;
+                        return (
+                          <button
+                            key={item.key}
+                            type="button"
+                            onClick={() => setIconInputGroup(item.key)}
+                            className={`py-2.5 flex items-center justify-center transition-colors cursor-pointer ${
+                              isActive
+                                ? 'bg-[#175cd3] text-white shadow-xs'
+                                : 'bg-white text-slate-600 hover:bg-slate-50'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Icon input (Circular radio buttons): Sun, Moon, Cloud-Rain, Cloud */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                      Icon input
+                    </label>
+                    <div className="flex items-center gap-3">
+                      {[
+                        { key: 'sun', icon: Sun },
+                        { key: 'moon', icon: Moon },
+                        { key: 'rain', icon: CloudRain },
+                        { key: 'cloud', icon: Cloud },
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const isActive = radioIconGroup === item.key;
+                        return (
+                          <button
+                            key={item.key}
+                            type="button"
+                            onClick={() => setRadioIconGroup(item.key)}
+                            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                              isActive
+                                ? 'bg-[#175cd3] text-white shadow-sm ring-2 ring-[#175cd3]/20'
+                                : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Your skills: HTML, CSS, PHP, JavaScript, Ruby, C++ */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-2">
+                      Your skills
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {skillsList.map((skill) => {
+                        const isActive = selectedSkills.includes(skill);
+                        return (
+                          <button
+                            key={skill}
+                            type="button"
+                            onClick={() => toggleSkill(skill)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                              isActive
+                                ? 'bg-[#175cd3] text-white shadow-xs'
+                                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            {skill}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 6: TOGGLE SWITCHES (Right Side Variant) */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Toggle Switches</h3>
+
+            <div className="space-y-6">
+              {/* Toggle switches list */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-3">
+                  Toggle switches
+                </label>
+                <div className="space-y-3">
+                  {[
+                    { key: 'opt1', label: 'Option 1' },
+                    { key: 'opt2', label: 'Option 2' },
+                    { key: 'opt3', label: 'Option 3' },
+                  ].map((item) => {
+                    const isChecked = rightToggles[item.key as keyof typeof rightToggles];
+                    return (
+                      <label key={item.key} className="flex items-center gap-3 cursor-pointer select-none">
+                        <div
+                          onClick={() =>
+                            setRightToggles((prev) => ({
+                              ...prev,
+                              [item.key]: !prev[item.key as keyof typeof rightToggles],
+                            }))
+                          }
+                          className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
+                            isChecked ? 'bg-[#175cd3]' : 'bg-slate-200'
+                          }`}
+                        >
+                          <div
+                            className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
+                              isChecked ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-700 font-medium">{item.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Toggle switch single */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-3">
+                  Toggle switch single
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <div
+                    onClick={() => setRightSingleToggle(!rightSingleToggle)}
+                    className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-200 ease-in-out cursor-pointer ${
+                      rightSingleToggle ? 'bg-[#175cd3]' : 'bg-slate-200'
+                    }`}
+                  >
+                    <div
+                      className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
+                        rightSingleToggle ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </div>
+                  <span className="text-xs text-slate-600 font-normal">I agree with terms and conditions</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------------------- */}
+          {/* CARD 7: DATE & TIME PICKER (Full Interactive Suite) */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
+            <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Date & Time Picker</h3>
+
+            <div className="space-y-5">
+              {/* 1. Date Range Picker With Button (Matching Screenshot 4) */}
+              <div className="form-group relative popover-container">
+                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                  Date Range Picker With Button
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsRangePresetOpen(!isRangePresetOpen)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <Calendar className="w-4 h-4" />
+                  Choose Date
+                </button>
+
+                {/* Preset Popover Menu matching Screenshot 4 */}
+                {isRangePresetOpen && (
+                  <div className="absolute z-30 left-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in duration-150">
+                    {rangePresets.map((preset) => {
+                      const isSelected = preset === selectedRangePreset;
+                      return (
+                        <div
+                          key={preset}
+                          onClick={() => {
+                            setSelectedRangePreset(preset);
+                            setIsRangePresetOpen(false);
+                            showToast(`Rentang terpilih: ${preset}`, 'info');
+                          }}
+                          className={`px-4 py-2 text-xs font-medium cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'bg-[#175cd3] text-white font-semibold'
+                              : 'text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          {preset}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Date Picker (Matching Screenshot 5) */}
+              <div className="form-group relative popover-container">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Date Picker
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  value={datePickerVal}
+                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:border-[#175cd3] transition-all"
+                />
+
+                {/* Month Calendar Popover matching Screenshot 5 */}
+                {isDatePickerOpen && (
+                  <div className="absolute z-30 left-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 animate-in fade-in duration-150">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
+                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span>Nov 2026</span>
+                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Weekday headers */}
+                    <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-500 mb-2">
+                      <span>Su</span>
+                      <span>Mo</span>
+                      <span>Tu</span>
+                      <span>We</span>
+                      <span>Th</span>
+                      <span>Fr</span>
+                      <span>Sa</span>
+                    </div>
+
+                    {/* Day Grid */}
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                      {/* Prev Month Days */}
+                      {[25, 26, 27, 28, 29, 30, 31].map((d) => (
+                        <div key={`prev-${d}`} className="py-1 text-slate-300">
+                          {d}
+                        </div>
+                      ))}
+                      {/* Current Month Days 1..30 */}
+                      {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
+                        const isSelected = d === tempDateDay;
+                        return (
+                          <button
+                            key={`curr-${d}`}
+                            type="button"
+                            onClick={() => setTempDateDay(d)}
+                            className={`py-1 rounded-lg font-medium transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#175cd3] text-white font-bold'
+                                : 'text-slate-700 hover:bg-slate-100'
+                            }`}
+                          >
+                            {d}
+                          </button>
+                        );
+                      })}
+                      {/* Next Month Days */}
+                      {[1, 2, 3, 4, 5].map((d) => (
+                        <div key={`next-${d}`} className="py-1 text-slate-300">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsDatePickerOpen(false)}
+                        className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const formatted = `2026-11-${String(tempDateDay).padStart(2, '0')}`;
+                          setDatePickerVal(formatted);
+                          setIsDatePickerOpen(false);
+                        }}
+                        className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Date Time Picker (Matching Screenshot 6) */}
+              <div className="form-group relative popover-container">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Date Time Picker
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  value={dateTimePickerVal}
+                  onClick={() => setIsDateTimePickerOpen(!isDateTimePickerOpen)}
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:border-[#175cd3] transition-all"
+                />
+
+                {/* Calendar with Time Selects matching Screenshot 6 */}
+                {isDateTimePickerOpen && (
+                  <div className="absolute z-30 left-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 animate-in fade-in duration-150">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
+                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span>Nov 2026</span>
+                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Weekday headers */}
+                    <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-500 mb-2">
+                      <span>Su</span>
+                      <span>Mo</span>
+                      <span>Tu</span>
+                      <span>We</span>
+                      <span>Th</span>
+                      <span>Fr</span>
+                      <span>Sa</span>
+                    </div>
+
+                    {/* Day Grid */}
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                      {[25, 26, 27, 28, 29, 30, 31].map((d) => (
+                        <div key={`dt-prev-${d}`} className="py-1 text-slate-300">
+                          {d}
+                        </div>
+                      ))}
+                      {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
+                        const isSelected = d === dateTimeDay;
+                        return (
+                          <button
+                            key={`dt-curr-${d}`}
+                            type="button"
+                            onClick={() => setDateTimeDay(d)}
+                            className={`py-1 rounded-lg font-medium transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#175cd3] text-white font-bold'
+                                : 'text-slate-700 hover:bg-slate-100'
+                            }`}
+                          >
+                            {d}
+                          </button>
+                        );
+                      })}
+                      {[1, 2, 3, 4, 5].map((d) => (
+                        <div key={`dt-next-${d}`} className="py-1 text-slate-300">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Time Selectors Row: [15 v] : [17 v] */}
+                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-2">
+                      <select
+                        value={dateTimeHour}
+                        onChange={(e) => setDateTimeHour(e.target.value)}
+                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                      >
+                        {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
+                          <option key={h} value={h}>
+                            {h}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="text-slate-500 font-bold">:</span>
+                      <select
+                        value={dateTimeMinute}
+                        onChange={(e) => setDateTimeMinute(e.target.value)}
+                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                      >
+                        {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
+                          <option key={m} value={m}>
+                            {m}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsDateTimePickerOpen(false)}
+                        className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const formatted = `2026-11-${String(dateTimeDay).padStart(2, '0')} ${dateTimeHour}:${dateTimeMinute}`;
+                          setDateTimePickerVal(formatted);
+                          setIsDateTimePickerOpen(false);
+                        }}
+                        className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Date Range Picker (Matching Screenshot 7 - Dual Month) */}
+              <div className="form-group relative popover-container">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Date Range Picker
+                </label>
+                <div
+                  onClick={() => setIsDateRangePickerOpen(!isDateRangePickerOpen)}
+                  className="flex rounded-xl border border-slate-200 overflow-hidden cursor-pointer focus-within:border-[#175cd3] transition-all"
+                >
+                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    readOnly
+                    value={dateRangeVal}
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 cursor-pointer focus:outline-none"
+                  />
+                </div>
+
+                {/* Dual-Month Popover matching Screenshot 7 */}
+                {isDateRangePickerOpen && (
+                  <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-[560px] max-w-[calc(100vw-2rem)] animate-in fade-in duration-150">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {/* Left Calendar: Nov 2026 */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
+                          <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <span>Nov 2026</span>
+                          <span className="w-4" />
+                        </div>
+                        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-500 mb-2">
+                          <span>Su</span>
+                          <span>Mo</span>
+                          <span>Tu</span>
+                          <span>We</span>
+                          <span>Th</span>
+                          <span>Fr</span>
+                          <span>Sa</span>
+                        </div>
+                        <div className="grid grid-cols-7 gap-0.5 text-center text-xs">
+                          {[25, 26, 27, 28, 29, 30, 31].map((d) => (
+                            <div key={`range-n-prev-${d}`} className="py-1 text-slate-300">
+                              {d}
+                            </div>
+                          ))}
+                          {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
+                            const isStart = d === 16;
+                            const inRange = d > 16;
+                            return (
+                              <div
+                                key={`range-n-${d}`}
+                                className={`py-1 text-xs font-medium ${
+                                  isStart
+                                    ? 'bg-[#175cd3] text-white font-bold rounded-l-md'
+                                    : inRange
+                                    ? 'bg-[#e0f2fe] text-[#0369a1]'
+                                    : 'text-slate-700'
+                                }`}
+                              >
+                                {d}
+                              </div>
+                            );
+                          })}
+                          {[1, 2, 3, 4, 5].map((d) => (
+                            <div key={`range-n-next-${d}`} className="py-1 text-slate-300">
+                              {d}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Right Calendar: Dec 2026 */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
+                          <span className="w-4" />
+                          <span>Dec 2026</span>
+                          <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-500 mb-2">
+                          <span>Su</span>
+                          <span>Mo</span>
+                          <span>Tu</span>
+                          <span>We</span>
+                          <span>Th</span>
+                          <span>Fr</span>
+                          <span>Sa</span>
+                        </div>
+                        <div className="grid grid-cols-7 gap-0.5 text-center text-xs">
+                          {[29, 30].map((d) => (
+                            <div key={`range-d-prev-${d}`} className="py-1 text-slate-300">
+                              {d}
+                            </div>
+                          ))}
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
+                            const isEnd = d === 31;
+                            const inRange = d < 31;
+                            return (
+                              <div
+                                key={`range-d-${d}`}
+                                className={`py-1 text-xs font-medium ${
+                                  isEnd
+                                    ? 'bg-[#175cd3] text-white font-bold rounded-r-md'
+                                    : inRange
+                                    ? 'bg-[#e0f2fe] text-[#0369a1]'
+                                    : 'text-slate-700'
+                                }`}
+                              >
+                                {d}
+                              </div>
+                            );
+                          })}
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9].slice(0, 9).map((d) => (
+                            <div key={`range-d-next-${d}`} className="py-1 text-slate-300">
+                              {d}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-600">2026-11-16 - 2026-12-31</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsDateRangePickerOpen(false)}
+                          className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDateRangeVal('2026-11-16 - 2026-12-31');
+                            setIsDateRangePickerOpen(false);
+                          }}
+                          className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 5. Time Picker (Matching Screenshot 8 - Spinner popover) */}
+              <div className="form-group relative popover-container">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Time Picker
+                </label>
+                <div
+                  onClick={() => setIsTimePickerOpen(!isTimePickerOpen)}
+                  className="flex rounded-xl border border-slate-200 overflow-hidden cursor-pointer focus-within:border-[#175cd3] transition-all"
+                >
+                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    readOnly
+                    value={timePickerVal}
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 cursor-pointer focus:outline-none"
+                  />
+                </div>
+
+                {/* Spinner Popover matching Screenshot 8 */}
+                {isTimePickerOpen && (
+                  <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 w-56 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-center gap-3">
+                      {/* Hour Column */}
+                      <div className="flex flex-col items-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newH = timeHour >= 12 ? 1 : timeHour + 1;
+                            setTimeHour(newH);
+                            setTimePickerVal(`${newH}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                        <span className="w-10 py-1.5 text-center text-sm font-bold text-slate-800">
+                          {timeHour}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newH = timeHour <= 1 ? 12 : timeHour - 1;
+                            setTimeHour(newH);
+                            setTimePickerVal(`${newH}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <span className="text-slate-500 font-bold mb-0.5">:</span>
+
+                      {/* Minute Column (with active focus box) */}
+                      <div className="flex flex-col items-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newM = (timeMinute + 5) % 60;
+                            setTimeMinute(newM);
+                            setTimePickerVal(`${timeHour}:${String(newM).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                        <span className="w-10 py-1 text-center text-sm font-bold text-slate-800 border-2 border-[#175cd3] rounded-lg">
+                          {String(timeMinute).padStart(2, '0')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newM = timeMinute <= 0 ? 55 : timeMinute - 5;
+                            setTimeMinute(newM);
+                            setTimePickerVal(`${timeHour}:${String(newM).padStart(2, '0')} ${timeAmPm}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* AM / PM Column */}
+                      <div className="flex flex-col items-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newA = timeAmPm === 'AM' ? 'PM' : 'AM';
+                            setTimeAmPm(newA);
+                            setTimePickerVal(`${timeHour}:${String(timeMinute).padStart(2, '0')} ${newA}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                        <span className="w-10 py-1.5 text-center text-xs font-bold text-slate-800">
+                          {timeAmPm}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newA = timeAmPm === 'AM' ? 'PM' : 'AM';
+                            setTimeAmPm(newA);
+                            setTimePickerVal(`${timeHour}:${String(timeMinute).padStart(2, '0')} ${newA}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
