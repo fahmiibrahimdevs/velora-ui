@@ -100,6 +100,7 @@ const navSections: NavSection[] = [
         icon: Shapes,
         children: [
           { id: 'article', label: 'Article' },
+          { id: 'avatar', label: 'Avatar' },
           { id: 'chat-box', label: 'Chat Box' },
           { id: 'gallery', label: 'Gallery' },
           { id: 'multiple-upload', label: 'Multiple Upload' },

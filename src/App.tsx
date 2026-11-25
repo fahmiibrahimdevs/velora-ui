@@ -62,9 +62,13 @@ import {
   Bookmark,
   Flame,
   ArrowRight,
+  Crown,
+  ShieldCheck,
+  Camera,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
+import { Avatar, AvatarGroup, getInitials, type AvatarSize, type AvatarShape, type AvatarStatus } from './components/common/Avatar';
 
 type AlertType =
   | 'primary'
@@ -10408,6 +10412,641 @@ function ArticleView() {
   );
 }
 
+// Dedicated Avatar Showcase matching ShizueFI & Stisla with Master Gradients & Advanced Interactivity
+function AvatarView() {
+  const [sandboxSize, setSandboxSize] = useState<AvatarSize>('xl');
+  const [sandboxShape, setSandboxShape] = useState<AvatarShape>('circle');
+  const [sandboxStatus, setSandboxStatus] = useState<AvatarStatus | 'none'>('online');
+  const [sandboxName, setSandboxName] = useState('Fahmi Ibrahim');
+  const [sandboxBg, setSandboxBg] = useState('bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]');
+  const [sandboxSubIcon, setSandboxSubIcon] = useState<'none' | 'crown' | 'shield' | 'check'>('check');
+  const [shapeToggle, setShapeToggle] = useState<AvatarShape>('circle');
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const bgOptions = [
+    { label: 'Master Blue', bg: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]' },
+    { label: 'Emerald', bg: 'bg-gradient-to-r from-emerald-600 to-teal-700' },
+    { label: 'Amber', bg: 'bg-gradient-to-r from-amber-500 to-orange-600' },
+    { label: 'Rose', bg: 'bg-gradient-to-r from-rose-500 to-red-700' },
+    { label: 'Purple', bg: 'bg-gradient-to-r from-purple-600 to-indigo-700' },
+    { label: 'Dark Slate', bg: 'bg-slate-900' },
+  ];
+
+  const subIconMap: Record<string, React.ReactNode> = {
+    check: (
+      <span className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+        <Check className="w-2.5 h-2.5 stroke-[3]" />
+      </span>
+    ),
+    crown: (
+      <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+        <Crown className="w-2.5 h-2.5" />
+      </span>
+    ),
+    shield: (
+      <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+        <ShieldCheck className="w-2.5 h-2.5" />
+      </span>
+    ),
+  };
+
+  const generatedCode = `<Avatar
+  name="${sandboxName}"
+  size="${sandboxSize}"
+  shape="${sandboxShape}"${sandboxStatus !== 'none' ? `\n  status="${sandboxStatus}"` : ''}${
+    sandboxBg ? `\n  bg="${sandboxBg}"` : ''
+  }
+/>`;
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(generatedCode);
+    setCopiedCode(true);
+    showToast('Kode snippet Avatar berhasil disalin!', 'success');
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Avatar</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Avatars are user profile pictures. Thanks to Spectre.css and modernized for Velora UI with rich states, shapes, and group stacks.
+        </p>
+      </div>
+
+      {/* 2-Column Responsive Layout matching ShizueFI & Stisla */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* ======================================================== */}
+        {/* COLUMN 1 (LEFT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 1. Card: Avatar Sizes */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <h4 className="text-base font-bold text-[#1351b8]">Avatar</h4>
+                <p className="text-xs text-slate-500 mt-0.5">Proporsi ukuran avatar dari XL (64px) hingga XS (24px).</p>
+              </div>
+              {/* Shape Switcher */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+                {(['circle', 'rounded', 'square'] as AvatarShape[]).map((shp) => (
+                  <button
+                    key={shp}
+                    type="button"
+                    onClick={() => setShapeToggle(shp)}
+                    className={`px-2.5 py-1 rounded-lg capitalize transition-all cursor-pointer ${
+                      shapeToggle === shp ? 'bg-white text-[#1351b8] shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    {shp}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-end gap-5">
+                <Tooltip content="Avatar XL (64px)" position="top">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="xl"
+                      shape={shapeToggle}
+                      bg="bg-gradient-to-br from-blue-400 to-indigo-600"
+                    />
+                    <span className="text-[10px] font-mono font-semibold text-slate-400">XL (64px)</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Avatar LG (48px)" position="top">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="lg"
+                      shape={shapeToggle}
+                      bg="bg-gradient-to-br from-emerald-400 to-teal-600"
+                    />
+                    <span className="text-[10px] font-mono font-semibold text-slate-400">LG (48px)</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Avatar MD (40px)" position="top">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="md"
+                      shape={shapeToggle}
+                      bg="bg-gradient-to-br from-rose-400 to-red-600"
+                    />
+                    <span className="text-[10px] font-mono font-semibold text-slate-400">MD (40px)</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Avatar SM (32px)" position="top">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="sm"
+                      shape={shapeToggle}
+                      bg="bg-gradient-to-br from-sky-400 to-cyan-600"
+                    />
+                    <span className="text-[10px] font-mono font-semibold text-slate-400">SM (32px)</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Avatar XS (24px)" position="top">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="xs"
+                      shape={shapeToggle}
+                      bg="bg-gradient-to-br from-amber-400 to-orange-500"
+                    />
+                    <span className="text-[10px] font-mono font-semibold text-slate-400">XS (24px)</span>
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Card: Avatar Presence */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Avatar Presence</h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Indikator status kehadiran (Online, Busy/DND, Away, Offline) dengan border pemisah.
+              </p>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-end gap-5">
+                <Tooltip content="Status: Online (Aktif)" position="top" variant="success">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="xl"
+                      status="online"
+                      bg="bg-gradient-to-br from-blue-400 to-indigo-600"
+                    />
+                    <span className="text-[10px] font-semibold text-emerald-600 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Online
+                    </span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Status: Busy (Jangan Ganggu)" position="top" variant="danger">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="lg"
+                      status="busy"
+                      bg="bg-gradient-to-br from-emerald-400 to-teal-600"
+                    />
+                    <span className="text-[10px] font-semibold text-rose-600">Busy</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Status: Away (Sedang Keluar)" position="top" variant="warning">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="md"
+                      status="away"
+                      bg="bg-gradient-to-br from-sky-400 to-cyan-600"
+                    />
+                    <span className="text-[10px] font-semibold text-amber-600">Away</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Status: Away (Sedang Keluar)" position="top" variant="warning">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="sm"
+                      status="away"
+                      bg="bg-gradient-to-br from-amber-400 to-orange-500"
+                    />
+                    <span className="text-[10px] font-semibold text-amber-600">Away</span>
+                  </div>
+                </Tooltip>
+
+                <Tooltip content="Status: Offline (Tidak Aktif)" position="top" variant="dark">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar
+                      size="xs"
+                      status="offline"
+                      bg="bg-gradient-to-br from-slate-400 to-slate-600"
+                    />
+                    <span className="text-[10px] font-semibold text-slate-500">Offline</span>
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* COLUMN 2 (RIGHT) */}
+        {/* ======================================================== */}
+        <div className="space-y-6">
+          {/* 3. Card: Avatar Icon (Sub-Icon / Badges) */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Avatar Icon</h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Avatar dengan sub-icon di pojok kanan bawah untuk menandai peran, verifikasi, atau sub-status.
+              </p>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-end gap-5">
+                <Tooltip content="Terverifikasi Super Admin" position="top" variant="primary">
+                  <Avatar
+                    size="xl"
+                    bg="bg-gradient-to-br from-blue-400 to-indigo-600"
+                    subIcon={
+                      <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+                        <Check className="w-3 h-3 stroke-[3]" />
+                      </span>
+                    }
+                  />
+                </Tooltip>
+
+                <Tooltip content="Pemilik Proyek (Owner)" position="top" variant="warning">
+                  <Avatar
+                    size="lg"
+                    bg="bg-gradient-to-br from-emerald-400 to-teal-600"
+                    subIcon={
+                      <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+                        <Crown className="w-2.5 h-2.5" />
+                      </span>
+                    }
+                  />
+                </Tooltip>
+
+                <Tooltip content="Keamanan Terverifikasi" position="top" variant="success">
+                  <Avatar
+                    size="md"
+                    bg="bg-gradient-to-br from-sky-400 to-cyan-600"
+                    subIcon={
+                      <span className="w-3.5 h-3.5 rounded-full bg-emerald-600 text-white flex items-center justify-center ring-2 ring-white shadow-xs">
+                        <ShieldCheck className="w-2 h-2" />
+                      </span>
+                    }
+                  />
+                </Tooltip>
+
+                <Tooltip content="Pengguna Mobile" position="top">
+                  <Avatar
+                    size="sm"
+                    bg="bg-gradient-to-br from-amber-400 to-orange-500"
+                    subIcon={
+                      <span className="w-3 h-3 rounded-full bg-rose-500 text-white flex items-center justify-center ring-1.5 ring-white shadow-xs">
+                        <Camera className="w-1.5 h-1.5" />
+                      </span>
+                    }
+                  />
+                </Tooltip>
+
+                <Tooltip content="Anggota Tim" position="top">
+                  <Avatar
+                    size="xs"
+                    bg="bg-gradient-to-br from-purple-400 to-indigo-600"
+                    subIcon={
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 text-white flex items-center justify-center ring-1 ring-white shadow-xs">
+                        <Check className="w-1.5 h-1.5 stroke-[3]" />
+                      </span>
+                    }
+                  />
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Card: Avatar Initial */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+            <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl">
+              <h4 className="text-base font-bold text-[#1351b8]">Avatar Initial</h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Inisial nama pengguna otomatis dengan palet gradien tajam jika foto belum tersedia.
+              </p>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-wrap items-end gap-5">
+                <Tooltip content="Inisial: UM (Ukuran XL)" position="top">
+                  <Avatar
+                    size="xl"
+                    initials="UM"
+                    bg="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]"
+                  />
+                </Tooltip>
+
+                <Tooltip content="Inisial: UM (Ukuran LG)" position="top">
+                  <Avatar
+                    size="lg"
+                    initials="UM"
+                    bg="bg-gradient-to-r from-rose-500 to-red-700"
+                  />
+                </Tooltip>
+
+                <Tooltip content="Inisial: UM (Ukuran MD)" position="top">
+                  <Avatar
+                    size="md"
+                    initials="UM"
+                    bg="bg-gradient-to-r from-amber-500 to-orange-600"
+                  />
+                </Tooltip>
+
+                <Tooltip content="Inisial: UM (Ukuran SM)" position="top">
+                  <Avatar
+                    size="sm"
+                    initials="UM"
+                    bg="bg-gradient-to-r from-emerald-500 to-teal-700"
+                  />
+                </Tooltip>
+
+                <Tooltip content="Inisial: UM (Ukuran XS)" position="top">
+                  <Avatar
+                    size="xs"
+                    initials="UM"
+                    bg="bg-gradient-to-r from-sky-400 to-cyan-600"
+                  />
+                </Tooltip>
+              </div>
+
+              {/* Team Initials Example */}
+              <div className="mt-5 pt-4 border-t border-slate-100">
+                <span className="text-xs font-semibold text-slate-700 block mb-3">
+                  Inisial Nama Anggota Tim Inti:
+                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Tooltip content="Fahmi Ibrahim (Lead Designer)" position="top">
+                    <Avatar name="Fahmi Ibrahim" size="md" bg="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]" />
+                  </Tooltip>
+                  <Tooltip content="Irwansyah Putra (Lead UI/UX)" position="top">
+                    <Avatar name="Irwansyah Putra" size="md" bg="bg-gradient-to-r from-blue-600 to-indigo-700" />
+                  </Tooltip>
+                  <Tooltip content="Hasan Basri (Senior Frontend)" position="top">
+                    <Avatar name="Hasan Basri" size="md" bg="bg-gradient-to-r from-emerald-600 to-teal-700" />
+                  </Tooltip>
+                  <Tooltip content="Siti Nurhaliza (QA Automation)" position="top">
+                    <Avatar name="Siti Nurhaliza" size="md" bg="bg-gradient-to-r from-purple-600 to-indigo-700" />
+                  </Tooltip>
+                  <Tooltip content="Rizal Fakhri (UX Researcher)" position="top">
+                    <Avatar name="Rizal Fakhri" size="md" bg="bg-gradient-to-r from-amber-500 to-orange-600" />
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 5: AVATAR GROUPS & OVERLAPPING STACK */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex items-center justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8]">Avatar Groups & Overlapping Stacks</h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Tumpukan avatar bertingkat (*stack*) dengan indikator counter sisa anggota untuk kolaborasi proyek.
+            </p>
+          </div>
+          <Users className="w-4 h-4 text-[#1351b8]" />
+        </div>
+        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Stack 1: Tim Pengembang Proyek */}
+          <div className="p-4 bg-slate-50/70 border border-slate-100 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800">Tim Inti Proyek</span>
+              <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                6 Anggota
+              </span>
+            </div>
+            <AvatarGroup max={4} size="md">
+              <Avatar name="Fahmi Ibrahim" bg="bg-blue-600" />
+              <Avatar name="Irwansyah Putra" bg="bg-indigo-600" />
+              <Avatar name="Hasan Basri" bg="bg-emerald-600" />
+              <Avatar name="Siti Nurhaliza" bg="bg-purple-600" />
+              <Avatar name="Rizal Fakhri" bg="bg-amber-600" />
+              <Avatar name="Dewi Anggraeni" bg="bg-rose-600" />
+            </AvatarGroup>
+            <p className="text-[11px] text-slate-500">Maksimal 4 avatar ditampilkan, selebihnya diakumulasi (+2).</p>
+          </div>
+
+          {/* Stack 2: Reviewer Pull Request (Large) */}
+          <div className="p-4 bg-slate-50/70 border border-slate-100 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800">Reviewer Pull Request</span>
+              <span className="text-[10px] font-semibold text-[#1351b8] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                Ukuran LG
+              </span>
+            </div>
+            <AvatarGroup max={3} size="lg" spacing="-space-x-3">
+              <Avatar name="Irwansyah Putra" bg="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]" />
+              <Avatar name="Hasan Basri" bg="bg-gradient-to-r from-emerald-600 to-teal-700" />
+              <Avatar name="Siti Nurhaliza" bg="bg-gradient-to-r from-purple-600 to-indigo-700" />
+              <Avatar name="Fahmi Ibrahim" bg="bg-gradient-to-r from-amber-500 to-orange-600" />
+            </AvatarGroup>
+            <p className="text-[11px] text-slate-500">Tampilan stack berukuran 48px untuk area review penting.</p>
+          </div>
+
+          {/* Stack 3: Peserta Online (Small) */}
+          <div className="p-4 bg-slate-50/70 border border-slate-100 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800">Peserta Rapat Online</span>
+              <span className="text-[10px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                Live Session
+              </span>
+            </div>
+            <AvatarGroup max={5} size="sm" spacing="-space-x-2">
+              <Avatar name="Fahmi Ibrahim" bg="bg-blue-600" status="online" />
+              <Avatar name="Hasan Basri" bg="bg-emerald-600" status="online" />
+              <Avatar name="Irwansyah Putra" bg="bg-indigo-600" status="online" />
+              <Avatar name="Siti Nurhaliza" bg="bg-purple-600" status="away" />
+              <Avatar name="Rizal Fakhri" bg="bg-amber-600" status="online" />
+              <Avatar name="Dewi Anggraeni" bg="bg-rose-600" status="offline" />
+              <Avatar name="Budi Santoso" bg="bg-slate-700" status="online" />
+            </AvatarGroup>
+            <p className="text-[11px] text-slate-500">Stack kompak berukuran 32px dengan status indikator aktif.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 6: INTERACTIVE AVATAR PLAYGROUND & CODE GENERATOR */}
+      {/* ======================================================== */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
+        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-[#1351b8]" />
+              Interactive Avatar Playground & Code Generator
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Sesuaikan ukuran, bentuk, status kehadiran, dan tema warna avatar secara langsung.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={copyCode}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer active:scale-95 self-start sm:self-auto"
+          >
+            {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copiedCode ? 'Tersalin ke Clipboard!' : 'Salin Kode React'}</span>
+          </button>
+        </div>
+
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Controls Form (7 cols) */}
+          <div className="lg:col-span-7 space-y-4.5">
+            {/* Size Selector */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Ukuran Avatar (Size):</label>
+              <div className="flex flex-wrap gap-1.5">
+                {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as AvatarSize[]).map((sz) => (
+                  <button
+                    key={sz}
+                    type="button"
+                    onClick={() => setSandboxSize(sz)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer uppercase ${
+                      sandboxSize === sz
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {sz}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Shape Selector */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Bentuk Avatar (Shape):</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['circle', 'rounded', 'square'] as AvatarShape[]).map((shp) => (
+                  <button
+                    key={shp}
+                    type="button"
+                    onClick={() => setSandboxShape(shp)}
+                    className={`py-2 px-3 text-xs font-semibold rounded-xl border transition-all cursor-pointer capitalize text-center ${
+                      sandboxShape === shp
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {shp}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Status Selector */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Status Kehadiran (Presence):</label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {(['none', 'online', 'busy', 'away', 'offline'] as const).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={() => setSandboxStatus(st)}
+                    className={`py-1.5 px-2.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer capitalize text-center ${
+                      sandboxStatus === st
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {st}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sub-Icon Selector */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Sub-Badge Icon (Sudut Kanan Bawah):</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {(['none', 'check', 'crown', 'shield'] as const).map((icn) => (
+                  <button
+                    key={icn}
+                    type="button"
+                    onClick={() => setSandboxSubIcon(icn)}
+                    className={`py-1.5 px-2.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer capitalize text-center ${
+                      sandboxSubIcon === icn
+                        ? 'bg-blue-50 border-[#1351b8] text-[#1351b8] shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {icn}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Background Gradient Palette */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">Warna Latar (Background Theme):</label>
+              <div className="flex flex-wrap gap-2">
+                {bgOptions.map((opt) => (
+                  <button
+                    key={opt.label}
+                    type="button"
+                    onClick={() => setSandboxBg(opt.bg)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                      sandboxBg === opt.bg
+                        ? 'border-[#1351b8] ring-2 ring-blue-500/20 text-[#1351b8] bg-blue-50'
+                        : 'border-slate-200 text-slate-700 bg-white hover:bg-slate-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Name Input */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Nama Pengguna (Untuk Inisial):</label>
+              <input
+                type="text"
+                value={sandboxName}
+                onChange={(e) => setSandboxName(e.target.value)}
+                placeholder="Masukkan nama pengguna..."
+                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1351b8]"
+              />
+            </div>
+          </div>
+
+          {/* Real-time Rendered Result (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/70 border border-slate-200 rounded-2xl p-8 flex flex-col items-center justify-center min-h-[180px] text-center relative">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 absolute top-3 left-4">
+                Live Rendered Avatar
+              </span>
+              <Avatar
+                name={sandboxName}
+                size={sandboxSize}
+                shape={sandboxShape}
+                status={sandboxStatus === 'none' ? undefined : sandboxStatus}
+                subIcon={sandboxSubIcon !== 'none' ? subIconMap[sandboxSubIcon] : undefined}
+                bg={sandboxBg}
+              />
+              <span className="text-xs font-bold text-slate-800 mt-3">{sandboxName || 'Nama Pengguna'}</span>
+              <span className="text-[11px] text-slate-500">
+                Inisial: <b className="text-[#1351b8]">{getInitials(sandboxName) || 'USER'}</b>
+              </span>
+            </div>
+
+            {/* Code Output */}
+            <div className="bg-slate-900 rounded-2xl p-4 text-xs font-mono text-slate-300 border border-slate-800 shadow-inner overflow-x-auto">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 text-[11px] text-slate-400">
+                <span>React JSX</span>
+                <span className="text-slate-500">Avatar.tsx</span>
+              </div>
+              <pre className="text-emerald-400 leading-relaxed overflow-x-auto">{generatedCode}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -10581,6 +11220,10 @@ export function App() {
       title: 'Article',
       breadcrumbs: ['Dashboard', 'Components', 'Article'],
     },
+    avatar: {
+      title: 'Avatar',
+      breadcrumbs: ['Dashboard', 'Components', 'Avatar'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -10622,6 +11265,8 @@ export function App() {
         return <TypographyView />;
       case 'article':
         return <ArticleView />;
+      case 'avatar':
+        return <AvatarView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
