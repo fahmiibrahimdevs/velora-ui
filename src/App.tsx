@@ -4398,15 +4398,15 @@ function KelasView() {
 
         {/* Table Content */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+          <table className="w-full min-w-[850px] text-left border-collapse text-xs sm:text-sm table-auto">
             <thead>
-              <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80 text-[11px] uppercase tracking-wider">
-                <th className="py-3 px-4">No</th>
+              <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80 text-[11px] uppercase tracking-wider whitespace-nowrap">
+                <th className="py-3 px-4 w-12 text-center">No</th>
                 <th className="py-3 px-4">Kode Rombel</th>
-                <th className="py-3 px-4">Nama Kelas</th>
+                <th className="py-3 px-4 min-w-[150px]">Nama Kelas</th>
                 <th className="py-3 px-4">Tingkat</th>
-                <th className="py-3 px-4">Jurusan / Konsentrasi</th>
-                <th className="py-3 px-4">Wali Kelas</th>
+                <th className="py-3 px-4 min-w-[160px]">Jurusan / Konsentrasi</th>
+                <th className="py-3 px-4 min-w-[160px]">Wali Kelas</th>
                 <th className="py-3 px-4 text-center">Jumlah Siswa</th>
                 <th className="py-3 px-4 text-center">Status CBT</th>
                 <th className="py-3 px-4 text-right">Aksi</th>
@@ -4671,15 +4671,15 @@ function MataPelajaranView() {
 
         {/* Table Content */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+          <table className="w-full min-w-[850px] text-left border-collapse text-xs sm:text-sm table-auto">
             <thead>
-              <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80 text-[11px] uppercase tracking-wider">
-                <th className="py-3 px-4">No</th>
+              <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80 text-[11px] uppercase tracking-wider whitespace-nowrap">
+                <th className="py-3 px-4 w-12 text-center">No</th>
                 <th className="py-3 px-4">Kode</th>
-                <th className="py-3 px-4">Nama Mata Pelajaran</th>
+                <th className="py-3 px-4 min-w-[180px]">Nama Mata Pelajaran</th>
                 <th className="py-3 px-4">Kelompok</th>
                 <th className="py-3 px-4">Alokasi Tingkat</th>
-                <th className="py-3 px-4">Guru Koordinator</th>
+                <th className="py-3 px-4 min-w-[160px]">Guru Koordinator</th>
                 <th className="py-3 px-4 text-center">Bank Soal</th>
                 <th className="py-3 px-4 text-center">Status</th>
                 <th className="py-3 px-4 text-right">Aksi</th>
@@ -7168,15 +7168,15 @@ function TableView() {
             <span className="text-xs font-medium text-slate-500">Default Bordered</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full min-w-[580px] text-left border-collapse table-auto">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
                   <th className="py-3 px-4 text-center w-12">#</th>
-                  <th className="py-3 px-4">Nama Tugas</th>
-                  <th className="py-3 px-4">Progres</th>
-                  <th className="py-3 px-4">Batas Waktu</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-center">Aksi</th>
+                  <th className="py-3 px-4 min-w-[180px]">Nama Tugas</th>
+                  <th className="py-3 px-4 min-w-[130px]">Progres</th>
+                  <th className="py-3 px-4 min-w-[110px]">Batas Waktu</th>
+                  <th className="py-3 px-4 min-w-[90px]">Status</th>
+                  <th className="py-3 px-4 text-center min-w-[80px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
@@ -7302,14 +7302,14 @@ function TableView() {
             <span className="text-xs font-medium text-slate-500">Zebra Striping</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full min-w-[620px] text-left border-collapse table-auto">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-100/90 text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                  <th className="py-3 px-4">Karyawan</th>
-                  <th className="py-3 px-4">Departemen</th>
-                  <th className="py-3 px-4">Posisi</th>
-                  <th className="py-3 px-4">Masa Kerja</th>
-                  <th className="py-3 px-4 text-center">Status</th>
+                <tr className="border-b border-slate-200 bg-slate-100/90 text-[11px] font-bold uppercase tracking-wider text-slate-700 whitespace-nowrap">
+                  <th className="py-3 px-4 min-w-[200px]">Karyawan</th>
+                  <th className="py-3 px-4 min-w-[130px]">Departemen</th>
+                  <th className="py-3 px-4 min-w-[140px]">Posisi</th>
+                  <th className="py-3 px-4 min-w-[100px]">Masa Kerja</th>
+                  <th className="py-3 px-4 text-center min-w-[90px]">Status</th>
                 </tr>
               </thead>
               <tbody className="text-xs text-slate-700 divide-y divide-slate-200/60">
@@ -7470,14 +7470,14 @@ function TableView() {
             <span className="text-xs font-medium text-slate-500">Semantic Row States</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full min-w-[520px] text-left border-collapse table-auto">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                  <th className="py-3 px-4">Node ID</th>
-                  <th className="py-3 px-4">Region</th>
-                  <th className="py-3 px-4">Uptime</th>
-                  <th className="py-3 px-4">Latensi</th>
-                  <th className="py-3 px-4 text-center">Kondisi</th>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
+                  <th className="py-3 px-4 min-w-[120px]">Node ID</th>
+                  <th className="py-3 px-4 min-w-[170px]">Region</th>
+                  <th className="py-3 px-4 min-w-[90px]">Uptime</th>
+                  <th className="py-3 px-4 min-w-[90px]">Latensi</th>
+                  <th className="py-3 px-4 text-center min-w-[95px]">Kondisi</th>
                 </tr>
               </thead>
               <tbody className="text-xs divide-y divide-slate-100">
@@ -7560,14 +7560,14 @@ function TableView() {
             <span className="text-xs font-medium text-slate-500">Inversed Table Header</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full min-w-[520px] text-left border-collapse table-auto">
               <thead>
-                <tr className="bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider">
-                  <th className="py-3 px-4">Layanan</th>
-                  <th className="py-3 px-4">Versi</th>
-                  <th className="py-3 px-4">Throughput</th>
-                  <th className="py-3 px-4">Error Rate</th>
-                  <th className="py-3 px-4 text-center">Status</th>
+                <tr className="bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                  <th className="py-3 px-4 min-w-[160px]">Layanan</th>
+                  <th className="py-3 px-4 min-w-[90px]">Versi</th>
+                  <th className="py-3 px-4 min-w-[120px]">Throughput</th>
+                  <th className="py-3 px-4 min-w-[100px]">Error Rate</th>
+                  <th className="py-3 px-4 text-center min-w-[90px]">Status</th>
                 </tr>
               </thead>
               <tbody className="text-xs text-slate-700 divide-y divide-slate-100">
@@ -7671,7 +7671,7 @@ function TableView() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs table-auto">
+          <table className="w-full min-w-[850px] text-left border-collapse text-xs table-auto">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-600">
                 <th className="py-3 pl-6 pr-4 whitespace-nowrap">No. Invoice</th>
@@ -8060,9 +8060,9 @@ function TableView() {
         )}
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[760px] text-left border-collapse table-auto">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600">
+              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
                 <th className="py-3 px-4 w-10 text-center">
                   <input
                     type="checkbox"
@@ -8071,12 +8071,12 @@ function TableView() {
                     className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
                   />
                 </th>
-                <th className="py-3 px-4">Nama Proyek</th>
-                <th className="py-3 px-4">Tim Pengembang</th>
-                <th className="py-3 px-4">Batas Waktu</th>
-                <th className="py-3 px-4">Progres</th>
-                <th className="py-3 px-4 text-center">Prioritas</th>
-                <th className="py-3 px-4 text-center">Aksi</th>
+                <th className="py-3 px-4 min-w-[220px]">Nama Proyek</th>
+                <th className="py-3 px-4 min-w-[140px]">Tim Pengembang</th>
+                <th className="py-3 px-4 min-w-[120px]">Batas Waktu</th>
+                <th className="py-3 px-4 min-w-[140px]">Progres</th>
+                <th className="py-3 px-4 text-center min-w-[90px]">Prioritas</th>
+                <th className="py-3 px-4 text-center min-w-[80px]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
@@ -8127,7 +8127,7 @@ function TableView() {
                         <div className="font-semibold text-slate-800">{project.name}</div>
                         <div className="text-[11px] text-slate-500">{project.category}</div>
                       </td>
-                      <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-3.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center -space-x-2">
                           {project.members.map((member, mIdx) => (
                             <div
@@ -8143,13 +8143,13 @@ function TableView() {
                           </span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600">
+                      <td className="py-3.5 px-4 text-slate-600 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
                           <Clock className="w-3.5 h-3.5 text-slate-400" />
                           <span>{project.deadline}</span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
                           <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
                             <div
@@ -8168,7 +8168,7 @@ function TableView() {
                           </span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-center">
+                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             project.priority === 'High'
@@ -8182,7 +8182,7 @@ function TableView() {
                         </span>
                       </td>
                       <td
-                        className="py-3.5 px-4 text-center"
+                        className="py-3.5 px-4 text-center whitespace-nowrap"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="inline-flex items-center gap-1.5">
