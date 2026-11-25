@@ -89,6 +89,7 @@ import {
   Folder,
   PieChart,
   Layers,
+  Wrench,
 } from 'lucide-react';
 import { TablePagination, ShowEntriesSelector } from './components/common/TablePagination';
 import { Tooltip, type TooltipPosition, type TooltipVariant } from './components/common/Tooltip';
@@ -14537,6 +14538,730 @@ function TabView() {
   );
 }
 
+// Dedicated User Component matching ShizueFI & Stisla with Master Gradients & Interactive Features
+interface UserItem {
+  id: string;
+  name: string;
+  role: string;
+  avatarBg: string;
+  avatarColor: string;
+}
+
+interface CommentItem {
+  id: number;
+  name: string;
+  time: string;
+  status: 'Approved' | 'Pending';
+  body: string;
+  avatarBg: string;
+  avatarColor: string;
+}
+
+function UserView() {
+  // Social Icons SVGs
+  const SocialFacebook = () => (
+    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  );
+
+  const SocialTwitter = () => (
+    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.936 9.936 0 0024 4.59z" />
+    </svg>
+  );
+
+  const SocialGithub = () => (
+    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+    </svg>
+  );
+
+  const SocialInstagram = () => (
+    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+    </svg>
+  );
+
+  // Follow State Map
+  const [followingMap, setFollowingMap] = useState<Record<string, boolean>>({
+    'hasan-top': false,
+    'hasan': false,
+    'kusnaedi': false,
+    'bagus': true,
+    'wildan': false,
+    'deden': false,
+  });
+
+  const toggleFollow = (id: string, name: string) => {
+    setFollowingMap((prev) => {
+      const nextState = !prev[id];
+      showToast(nextState ? `Anda sekarang mengikuti ${name}` : `Berhenti mengikuti ${name}`, 'info');
+      return { ...prev, [id]: nextState };
+    });
+  };
+
+  // Carousel Slide State (0 or 1)
+  const [carouselSlide, setCarouselSlide] = useState(0);
+
+  // All Users in Carousel
+  const allCarouselUsers: UserItem[] = [
+    { id: 'hasan', name: 'Hasan Basri', role: 'WEB DEVELOPER', avatarBg: 'bg-blue-100', avatarColor: 'text-[#175cd3]' },
+    { id: 'kusnaedi', name: 'Kusnaedi', role: 'MOBILE DEVELOPER', avatarBg: 'bg-emerald-100', avatarColor: 'text-emerald-600' },
+    { id: 'bagus', name: 'Bagus Dwi Cahya', role: 'UI DESIGNER', avatarBg: 'bg-sky-100', avatarColor: 'text-sky-600' },
+    { id: 'wildan', name: 'Wildan Ahdian', role: 'PROJECT MANAGER', avatarBg: 'bg-amber-100', avatarColor: 'text-amber-600' },
+    { id: 'deden', name: 'Deden Febriansyah', role: 'IT SUPPORT', avatarBg: 'bg-blue-100', avatarColor: 'text-[#175cd3]' },
+  ];
+
+  const visibleUsers = carouselSlide === 0
+    ? allCarouselUsers.slice(0, 4)
+    : allCarouselUsers.slice(1, 5);
+
+  // Authors Grid Data (8 bubbles)
+  const authorsData = [
+    { name: 'Ahmad Fauzi', role: 'Senior Maintainer', icon: Wrench, bg: 'bg-blue-100', color: 'text-[#175cd3]' },
+    { name: 'Bambang Kusuma', role: 'DevOps Specialist', icon: Settings, bg: 'bg-emerald-100', color: 'text-emerald-600' },
+    { name: 'Citra Kirana', role: 'Technical Writer', icon: Edit3, bg: 'bg-sky-100', color: 'text-sky-600' },
+    { name: 'Dimas Anggara', role: 'Content Strategist', icon: Edit3, bg: 'bg-amber-100', color: 'text-amber-600' },
+    { name: 'Eka Ramadhani', role: 'Core Architect', icon: Wrench, bg: 'bg-rose-100', color: 'text-rose-600' },
+    { name: 'Fajar Nugroho', role: 'System Admin', icon: Settings, bg: 'bg-amber-100', color: 'text-amber-600' },
+    { name: 'Gita Pertiwi', role: 'UX Researcher', icon: Edit3, bg: 'bg-indigo-100', color: 'text-indigo-600' },
+    { name: 'Hendra Setiawan', role: 'Infrastructure Eng', icon: Settings, bg: 'bg-emerald-100', color: 'text-emerald-600' },
+  ];
+
+  // Comments State
+  const [comments, setComments] = useState<CommentItem[]>([
+    {
+      id: 1,
+      name: 'Rizal Fakhri',
+      time: 'Yesterday',
+      status: 'Approved',
+      body: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      avatarBg: 'bg-blue-100',
+      avatarColor: 'text-[#175cd3]',
+    },
+    {
+      id: 2,
+      name: 'Bambang Uciha',
+      time: 'Yesterday',
+      status: 'Pending',
+      body: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      avatarBg: 'bg-emerald-100',
+      avatarColor: 'text-emerald-600',
+    },
+    {
+      id: 3,
+      name: 'Ujang Maman',
+      time: 'Yesterday',
+      status: 'Approved',
+      body: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident',
+      avatarBg: 'bg-sky-100',
+      avatarColor: 'text-sky-600',
+    },
+  ]);
+
+  const handleDeleteComment = (id: number) => {
+    setComments((prev) => prev.filter((c) => c.id !== id));
+    showToast('Komentar berhasil dihapus.', 'info');
+  };
+
+  // User Progress Data
+  const userProgressData = [
+    { name: 'Rizal Fakhri', role: 'WEB DEVELOPER', pct: 30, bg: 'bg-blue-100', color: 'text-[#175cd3]', posts: '1,239', followers: '10K', following: '2,312' },
+    { name: 'Irwansyah Saputra', role: 'WEB DEVELOPER', pct: 67, bg: 'bg-rose-100', color: 'text-rose-600', posts: '4,872', followers: '43K', following: '1,290' },
+    { name: 'Hasan Basri', role: 'WEB DEVELOPER', pct: 45, bg: 'bg-amber-100', color: 'text-amber-600', posts: '1,821', followers: '14K', following: '2,891' },
+  ];
+
+  // Modal State
+  const [selectedUserModal, setSelectedUserModal] = useState<any | null>(null);
+  const [isViewAllOpen, setIsViewAllOpen] = useState(false);
+
+  return (
+    <div className="space-y-6">
+      {/* Page Title & Breadcrumb Header with Master Blue Pill Accent */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-800">Users</h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500">
+          Components relating to users, lists of users and so on.
+        </p>
+      </div>
+
+      {/* ======================================================== */}
+      {/* ROW 1: USER PROFILE CARDS (HORIZONTAL & VERTICAL STATS)  */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* CARD 1: HORIZONTAL PROFILE CARD (lg:col-span-7) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            {/* Avatar & Follow Button Column */}
+            <div className="flex flex-col items-center shrink-0">
+              <div className="w-24 h-24 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm">
+                <User className="w-12 h-12" />
+              </div>
+              <button
+                type="button"
+                onClick={() => toggleFollow('hasan-top', 'Hasan Basri')}
+                className={`w-28 mt-4 py-2 px-4 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+                  followingMap['hasan-top']
+                    ? 'bg-rose-500 hover:bg-rose-600 text-white'
+                    : 'bg-[#175cd3] hover:bg-[#1351b8] text-white'
+                }`}
+              >
+                {followingMap['hasan-top'] ? 'Following' : 'Follow'}
+              </button>
+            </div>
+
+            {/* Profile Bio & Information */}
+            <div className="flex-1 text-center sm:text-left">
+              <h4 className="text-base font-bold text-slate-800">Hasan Basri</h4>
+              <p className="text-xs text-slate-500 font-medium mb-3">Web Developer</p>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                commodo consequat.
+              </p>
+            </div>
+          </div>
+
+          {/* Card Footer: Social Media & View Posts link */}
+          <div className="pt-4 border-t border-slate-100 mt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-700">Follow Hasan On</span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Facebook"
+                >
+                  <SocialFacebook />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Twitter"
+                >
+                  <SocialTwitter />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="GitHub"
+                >
+                  <SocialGithub />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
+                  className="w-7 h-7 rounded-lg bg-[#c13584] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                  title="Instagram"
+                >
+                  <SocialInstagram />
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => showToast('Menampilkan semua publikasi artikel Hasan Basri', 'info')}
+              className="text-xs font-bold text-slate-700 hover:text-[#175cd3] flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <span>View Posts</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* CARD 2: VERTICAL PROFILE CARD WITH STATS (lg:col-span-5) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            {/* Stats Header Row */}
+            <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+              <div className="w-18 h-18 rounded-full bg-blue-100 text-[#175cd3] flex items-center justify-center shadow-sm shrink-0">
+                <User className="w-9 h-9" />
+              </div>
+
+              <div className="flex items-center gap-6 text-center">
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Posts</span>
+                  <span className="text-lg font-black text-slate-800 tracking-tight">187</span>
+                </div>
+                <div className="w-px h-8 bg-slate-200" />
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Followers</span>
+                  <span className="text-lg font-black text-slate-800 tracking-tight">6,8K</span>
+                </div>
+                <div className="w-px h-8 bg-slate-200" />
+                <div>
+                  <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Following</span>
+                  <span className="text-lg font-black text-slate-800 tracking-tight">2,1K</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Bio */}
+            <div className="pt-4 text-center">
+              <h4 className="text-sm sm:text-base font-bold text-slate-800">
+                Hasan Basri <span className="text-slate-400 font-normal">/</span> <span className="text-slate-500 font-medium text-xs sm:text-sm">Web Developer</span>
+              </h4>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5 mb-5">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+            </div>
+          </div>
+
+          {/* Social Links Row */}
+          <div className="pt-3 border-t border-slate-100 flex flex-col items-center justify-center gap-2">
+            <span className="text-xs font-semibold text-slate-700">Follow Hasan On</span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => showToast('Membuka Facebook Hasan Basri', 'info')}
+                className="w-7 h-7 rounded-lg bg-[#3b5998] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                title="Facebook"
+              >
+                <SocialFacebook />
+              </button>
+              <button
+                type="button"
+                onClick={() => showToast('Membuka Twitter Hasan Basri', 'info')}
+                className="w-7 h-7 rounded-lg bg-[#1da1f2] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                title="Twitter"
+              >
+                <SocialTwitter />
+              </button>
+              <button
+                type="button"
+                onClick={() => showToast('Membuka GitHub Hasan Basri', 'info')}
+                className="w-7 h-7 rounded-lg bg-[#24292e] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                title="GitHub"
+              >
+                <SocialGithub />
+              </button>
+              <button
+                type="button"
+                onClick={() => showToast('Membuka Instagram Hasan Basri', 'info')}
+                className="w-7 h-7 rounded-lg bg-[#c13584] text-white flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-2xs"
+                title="Instagram"
+              >
+                <SocialInstagram />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* ROW 2: USERS CAROUSEL & AUTHORS GRID (1 ROW 2 CARDS)     */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* CARD 3: USERS ROW / CAROUSEL (lg:col-span-7) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <h4 className="text-base font-bold text-[#1351b8]">Users</h4>
+              <button
+                type="button"
+                onClick={() => setIsViewAllOpen(true)}
+                className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-xs transition-all cursor-pointer flex items-center gap-1"
+              >
+                <span>View All</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Horizontal 4-user list */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              {visibleUsers.map((u) => {
+                const isFoll = followingMap[u.id] ?? false;
+                return (
+                  <div key={u.id} className="flex flex-col items-center p-3 rounded-xl hover:bg-slate-50/80 transition-all">
+                    <div className={`w-20 h-20 rounded-full ${u.avatarBg} ${u.avatarColor} flex items-center justify-center mb-3 shadow-xs`}>
+                      <User className="w-10 h-10" />
+                    </div>
+                    <h5 className="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">{u.name}</h5>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 mb-3 line-clamp-1">
+                      {u.role}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => toggleFollow(u.id, u.name)}
+                      className={`w-full max-w-[88px] py-1.5 px-3 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+                        isFoll
+                          ? 'bg-rose-500 hover:bg-rose-600 text-white'
+                          : 'bg-[#175cd3] hover:bg-[#1351b8] text-white'
+                      }`}
+                    >
+                      {isFoll ? 'Following' : 'Follow'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Carousel Pagination Dots */}
+          <div className="flex items-center justify-center gap-2 pt-4 border-t border-slate-100 mt-4">
+            <button
+              type="button"
+              onClick={() => setCarouselSlide(0)}
+              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                carouselSlide === 0 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
+              }`}
+              title="Slide 1"
+            />
+            <button
+              type="button"
+              onClick={() => setCarouselSlide(1)}
+              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                carouselSlide === 1 ? 'w-6 bg-[#175cd3]' : 'bg-slate-300 hover:bg-slate-400'
+              }`}
+              title="Slide 2"
+            />
+          </div>
+        </div>
+
+        {/* CARD 4: AUTHORS GRID (lg:col-span-5) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-xs p-6 flex flex-col justify-between">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8] mb-5">Authors</h4>
+
+            {/* 8 Author Avatar Bubbles in 4x2 Grid */}
+            <div className="grid grid-cols-4 gap-4 sm:gap-6 justify-items-center py-2">
+              {authorsData.map((author, idx) => {
+                const IconComponent = author.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="relative group cursor-pointer"
+                    onClick={() => {
+                      setSelectedUserModal({
+                        name: author.name,
+                        role: author.role,
+                        avatarBg: author.bg,
+                        avatarColor: author.color,
+                        posts: '320',
+                        followers: '4.2K',
+                        following: '890',
+                      });
+                    }}
+                  >
+                    {/* Main Avatar Bubble */}
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full ${author.bg} ${author.color} flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}>
+                      <User className="w-7 h-7 sm:w-8 sm:h-8" />
+                    </div>
+
+                    {/* Badge Icon in Bottom-Right Corner */}
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center">
+                      <IconComponent className="w-2.5 h-2.5 text-slate-700" />
+                    </div>
+
+                    {/* Tooltip on Hover */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-slate-900 text-white text-[10px] font-semibold py-1 px-2.5 rounded-lg whitespace-nowrap shadow-lg z-20">
+                      {author.name}
+                      <span className="block text-[9px] text-slate-400 font-normal">{author.role}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100 mt-2 text-center text-xs text-slate-500">
+            Klik bubble untuk melihat kartu profil dan otorisasi author.
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* ROW 3: COMMENTS (LEFT) & USER PROGRESS / DETAILS (RIGHT) */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* CARD 5: COMMENTS (lg:col-span-7) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+          <h4 className="text-base font-bold text-[#1351b8] mb-5">Comments</h4>
+
+          <div className="divide-y divide-slate-100">
+            {comments.map((comment) => (
+              <div key={comment.id} className="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+                <div className={`w-12 h-12 rounded-full ${comment.avatarBg} ${comment.avatarColor} flex items-center justify-center shrink-0 shadow-xs mt-1`}>
+                  <User className="w-6 h-6" />
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <h5 className="text-sm font-bold text-slate-800">{comment.name}</h5>
+                      <span className="text-[11px] text-slate-400 font-medium block">{comment.time}</span>
+                    </div>
+                    <span
+                      className={`text-xs font-semibold ${
+                        comment.status === 'Approved' ? 'text-[#175cd3]' : 'text-amber-500'
+                      }`}
+                    >
+                      {comment.status}
+                    </span>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2 mb-2.5">
+                    {comment.body}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                    <button
+                      type="button"
+                      onClick={() => showToast(`Membuka detail komentar dari ${comment.name}`, 'info')}
+                      className="hover:text-[#175cd3] transition-colors cursor-pointer"
+                    >
+                      View
+                    </button>
+                    <span>•</span>
+                    <button
+                      type="button"
+                      onClick={() => showToast(`Mengedit komentar ${comment.name}`, 'info')}
+                      className="hover:text-[#175cd3] transition-colors cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                    <span>•</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="hover:text-rose-600 transition-colors cursor-pointer"
+                    >
+                      Trash
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: USER PROGRESS (TOP) & USER DETAILS (BOTTOM) (lg:col-span-5) */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* CARD 6: USER PROGRESS */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-base font-bold text-[#1351b8] mb-5">User Progress</h4>
+
+            <div className="space-y-4">
+              {userProgressData.map((u, idx) => (
+                <div key={idx} className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs`}>
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-bold text-slate-800">{u.name}</h5>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        {u.role}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar & Percentage */}
+                  <div className="flex-1 max-w-[120px] sm:max-w-[150px]">
+                    <div className="flex items-center justify-end mb-1">
+                      <span className="text-[11px] font-bold text-slate-700">{u.pct}%</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                      <div
+                        style={{ width: `${u.pct}%` }}
+                        className="h-full bg-[#175cd3] rounded-full transition-all duration-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Detail Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedUserModal(u)}
+                    className="px-3.5 py-1 text-xs font-semibold text-slate-700 hover:text-[#175cd3] border border-slate-200 hover:border-[#175cd3] rounded-full transition-all cursor-pointer shadow-2xs"
+                  >
+                    Detail
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CARD 7: USER DETAILS */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-6">
+            <h4 className="text-base font-bold text-[#1351b8] mb-5">User Details</h4>
+
+            <div className="space-y-4">
+              {userProgressData.map((u, idx) => (
+                <div key={idx} className="flex items-center justify-between gap-4 pb-3.5 border-b border-slate-100 last:border-0 last:pb-0">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className={`w-10 h-10 rounded-full ${u.bg} ${u.color} flex items-center justify-center shadow-xs`}>
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-bold text-slate-800">{u.name}</h5>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        {u.role}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Stat Columns: Posts, Followers, Following */}
+                  <div className="flex items-center gap-4 sm:gap-6 text-center">
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.posts}</span>
+                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Posts</span>
+                    </div>
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.followers}</span>
+                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Followers</span>
+                    </div>
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 block">{u.following}</span>
+                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Following</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* MODAL: USER DETAIL MODAL                                 */}
+      {/* ======================================================== */}
+      {selectedUserModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative">
+            <button
+              type="button"
+              onClick={() => setSelectedUserModal(null)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex flex-col items-center text-center pt-2">
+              <div className={`w-20 h-20 rounded-full ${selectedUserModal.bg || selectedUserModal.avatarBg} ${selectedUserModal.color || selectedUserModal.avatarColor} flex items-center justify-center shadow-md mb-3`}>
+                <User className="w-10 h-10" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">{selectedUserModal.name}</h3>
+              <p className="text-xs text-[#175cd3] font-semibold">{selectedUserModal.role}</p>
+
+              <div className="grid grid-cols-3 gap-4 w-full py-4 my-4 border-y border-slate-100">
+                <div>
+                  <span className="text-xs text-slate-400 block font-medium">Posts</span>
+                  <span className="text-sm font-extrabold text-slate-800">{selectedUserModal.posts || '1,239'}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-slate-400 block font-medium">Followers</span>
+                  <span className="text-sm font-extrabold text-slate-800">{selectedUserModal.followers || '10K'}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-slate-400 block font-medium">Following</span>
+                  <span className="text-sm font-extrabold text-slate-800">{selectedUserModal.following || '2,312'}</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                Pengembang perangkat lunak profesional dengan spesialisasi arsitektur web modern, komponen responsif, dan optimasi performa antarmuka pengguna.
+              </p>
+
+              <div className="flex items-center gap-3 w-full">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast(`Kirim pesan ke ${selectedUserModal.name}`, 'info');
+                    setSelectedUserModal(null);
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-[#175cd3] hover:bg-[#1351b8] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                >
+                  Kirim Pesan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedUserModal(null)}
+                  className="py-2.5 px-5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-all cursor-pointer"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: VIEW ALL USERS DIRECTORY                          */}
+      {/* ======================================================== */}
+      {isViewAllOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 relative max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Direktori Lengkap Pengguna</h3>
+                <p className="text-xs text-slate-500">Daftar seluruh talenta dan pengembang sistem Velora UI.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsViewAllOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto py-4 space-y-3 flex-1">
+              {allCarouselUsers.map((u) => {
+                const isFoll = followingMap[u.id] ?? false;
+                return (
+                  <div key={u.id} className="flex items-center justify-between p-3 rounded-2xl border border-slate-100 hover:bg-slate-50/70 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-11 h-11 rounded-full ${u.avatarBg} ${u.avatarColor} flex items-center justify-center shadow-xs`}>
+                        <User className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800">{u.name}</h4>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{u.role}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => toggleFollow(u.id, u.name)}
+                      className={`py-1.5 px-4 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+                        isFoll
+                          ? 'bg-rose-500 hover:bg-rose-600 text-white'
+                          : 'bg-[#175cd3] hover:bg-[#1351b8] text-white'
+                      }`}
+                    >
+                      {isFoll ? 'Following' : 'Follow'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsViewAllOpen(false)}
+                className="py-2 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all cursor-pointer"
+              >
+                Tutup Direktori
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PlaceholderView({ title, icon: Icon, desc }: { title: string; icon: React.ElementType; desc: string }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
@@ -14734,6 +15459,10 @@ export function App() {
       title: 'Tab',
       breadcrumbs: ['Dashboard', 'Components', 'Tab'],
     },
+    user: {
+      title: 'User',
+      breadcrumbs: ['Dashboard', 'Components', 'User'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -14787,6 +15516,8 @@ export function App() {
         return <StatisticView />;
       case 'tab':
         return <TabView />;
+      case 'user':
+        return <UserView />;
       case 'datatables':
       case 'components-table':
         return <KelasView />;
