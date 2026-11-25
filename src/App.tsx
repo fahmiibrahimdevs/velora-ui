@@ -7870,20 +7870,6 @@ function TableView() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-            {/* Show Entries in Header Toolbar */}
-            <div className="hidden sm:flex items-center">
-              <ShowEntriesSelector
-                pageSize={projectPageSize}
-                onPageSizeChange={(sz) => {
-                  setProjectPageSize(sz);
-                  setProjectCurrentPage(1);
-                }}
-                options={[5, 10, 20]}
-                labelPrefix="Tampilkan"
-                labelSuffix="data"
-              />
-            </div>
-
             <div className="relative w-full sm:w-48">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
