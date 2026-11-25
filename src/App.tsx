@@ -6914,6 +6914,109 @@ function TableView() {
   const [selectedProjects, setSelectedProjects] = useState<number[]>([1, 3]);
   const [projectSearch, setProjectSearch] = useState('');
 
+  // Collapsible date groups state for Financial Ledger
+  const [expandedDateGroups, setExpandedDateGroups] = useState<Record<string, boolean>>({
+    '2026-11-24': true,
+    '2026-11-22': true,
+    '2026-11-19': true,
+  });
+
+  const toggleDateGroup = (dateKey: string) => {
+    setExpandedDateGroups((prev) => ({
+      ...prev,
+      [dateKey]: !prev[dateKey],
+    }));
+  };
+
+  const isAllDatesExpanded = Object.values(expandedDateGroups).every(Boolean);
+
+  const toggleAllDateGroups = () => {
+    const nextState = !isAllDatesExpanded;
+    setExpandedDateGroups({
+      '2026-11-24': nextState,
+      '2026-11-22': nextState,
+      '2026-11-19': nextState,
+    });
+  };
+
+  const financialLedgerData = [
+    {
+      dateKey: '2026-11-24',
+      dateLabel: 'Selasa, 24 November 2026',
+      subtotal: 'Rp 25.750.000',
+      items: [
+        {
+          invoice: 'INV-2026-081',
+          client: 'PT Teknologi Bangsa',
+          desc: 'Langganan Cloud ERP Enterprise (1 Tahun)',
+          payment: 'Transfer Bank BCA',
+          nominal: 'Rp 18.500.000',
+          status: 'Lunas',
+          statusType: 'success' as const,
+        },
+        {
+          invoice: 'INV-2026-082',
+          client: 'CV Maju Bersama',
+          desc: 'Setup Integrasi Modul Kasbon & Payroll',
+          payment: 'QRIS Mandiri',
+          nominal: 'Rp 7.250.000',
+          status: 'Lunas',
+          statusType: 'success' as const,
+        },
+      ],
+    },
+    {
+      dateKey: '2026-11-22',
+      dateLabel: 'Minggu, 22 November 2026',
+      subtotal: 'Rp 46.800.000',
+      items: [
+        {
+          invoice: 'INV-2026-083',
+          client: 'Studio Desain Kreatif',
+          desc: 'Kustomisasi Desain Dashboard & Pelatihan',
+          payment: 'Kartu Kredit Visa',
+          nominal: 'Rp 12.000.000',
+          status: 'Pending',
+          statusType: 'warning' as const,
+        },
+        {
+          invoice: 'INV-2026-084',
+          client: 'PT Sumber Berkah Utama',
+          desc: 'Lisensi Server On-Premise Multi-Cabang',
+          payment: 'Virtual Account BNI',
+          nominal: 'Rp 34.800.000',
+          status: 'Jatuh Tempo',
+          statusType: 'danger' as const,
+        },
+      ],
+    },
+    {
+      dateKey: '2026-11-19',
+      dateLabel: 'Kamis, 19 November 2026',
+      subtotal: 'Rp 25.000.000',
+      items: [
+        {
+          invoice: 'INV-2026-085',
+          client: 'Global Logistik Nusantara Tbk',
+          desc: 'Maintenance Berkala & Security Hardening',
+          payment: 'Transfer Bank BNI',
+          nominal: 'Rp 9.400.000',
+          status: 'Lunas',
+          statusType: 'success' as const,
+        },
+        {
+          invoice: 'INV-2026-086',
+          client: 'PT Sentosa Abadi Makmur',
+          desc: 'Modul Presensi Geolocation & Face Match',
+          payment: 'Transfer Bank Mandiri',
+          nominal: 'Rp 15.600.000',
+          status: 'Lunas',
+          statusType: 'success' as const,
+        },
+      ],
+    },
+  ];
+
   const projectsData = [
     {
       id: 1,
@@ -7429,20 +7532,27 @@ function TableView() {
             <div className="flex items-center gap-2">
               <h4 className="text-base font-bold text-[#1351b8]">Compact & Bordered Financial Ledger</h4>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/50">
-                Grouped by Date
+                Collapsible Date Groups
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Jurnal pembukuan kas & piutang dengan baris pemisah kelompok tanggal transaksi (Date Header Groups).
+              Jurnal pembukuan kas & piutang dengan baris pemisah kelompok tanggal dropdown (Klik untuk buka/tutup).
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+            <button
+              onClick={toggleAllDateGroups}
+              className="px-2.5 py-1.5 text-xs font-semibold text-[#1351b8] bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200/60 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              {isAllDatesExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              <span>{isAllDatesExpanded ? 'Tutup Semua' : 'Buka Semua'}</span>
+            </button>
+            <span className="text-xs font-medium text-slate-500 bg-slate-50 px-2.5 py-1.5 rounded-xl border border-slate-200 whitespace-nowrap">
               Periode: 19 - 24 Nov 2026
             </span>
             <button
               onClick={() => showToast('Mengekspor rekap transaksi keuangan...', 'success')}
-              className="px-3 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
             >
               <Download className="w-3.5 h-3.5" /> Unduh Ledger CSV
             </button>
@@ -7450,202 +7560,112 @@ function TableView() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left border-collapse text-xs table-auto">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-600">
-                <th className="py-3 pl-6 pr-4 w-36">No. Invoice</th>
-                <th className="py-3 px-4">Nama Pelanggan</th>
-                <th className="py-3 px-4">Deskripsi Layanan</th>
-                <th className="py-3 px-4">Metode Bayar</th>
-                <th className="py-3 px-4 text-right w-36">Nominal (IDR)</th>
-                <th className="py-3 px-4 text-center w-28">Status</th>
-                <th className="py-3 pl-4 pr-6 text-center w-20">Aksi</th>
+                <th className="py-3 pl-6 pr-4 whitespace-nowrap">No. Invoice</th>
+                <th className="py-3 px-4 min-w-[180px]">Nama Pelanggan</th>
+                <th className="py-3 px-4 min-w-[240px]">Deskripsi Layanan</th>
+                <th className="py-3 px-4 whitespace-nowrap">Metode Bayar</th>
+                <th className="py-3 px-4 text-right whitespace-nowrap">Nominal (IDR)</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap min-w-[110px]">Status</th>
+                <th className="py-3 pl-4 pr-6 text-center whitespace-nowrap">Aksi</th>
               </tr>
             </thead>
             <tbody className="text-slate-700">
-              {/* === DATE GROUP 1: 24 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50/90 border-y border-slate-200/90">
-                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
-                      <span>Selasa, 24 November 2026</span>
-                      <span className="text-[10px] font-semibold bg-white px-2 py-0.5 rounded-full text-slate-600 border border-slate-200 shadow-2xs">
-                        2 Transaksi
-                      </span>
-                    </div>
-                    <span className="text-xs font-semibold text-slate-700">
-                      Subtotal: <span className="font-bold text-[#1351b8]">Rp 25.750.000</span>
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-081</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Teknologi Bangsa</td>
-                <td className="py-2.5 px-4 text-slate-600">Langganan Cloud ERP Enterprise (1 Tahun)</td>
-                <td className="py-2.5 px-4 text-slate-600">Transfer Bank BCA</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 18.500.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                    Lunas
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-081', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-082</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">CV Maju Bersama</td>
-                <td className="py-2.5 px-4 text-slate-600">Setup Integrasi Modul Kasbon & Payroll</td>
-                <td className="py-2.5 px-4 text-slate-600">QRIS Mandiri</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 7.250.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                    Lunas
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-082', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
+              {financialLedgerData.map((group) => {
+                const isExpanded = expandedDateGroups[group.dateKey] ?? true;
+                return (
+                  <React.Fragment key={group.dateKey}>
+                    {/* Collapsible Date Group Header */}
+                    <tr
+                      onClick={() => toggleDateGroup(group.dateKey)}
+                      className="bg-slate-50/90 border-y border-slate-200/90 hover:bg-slate-100/90 transition-colors cursor-pointer select-none group/header"
+                    >
+                      <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="w-5 h-5 rounded-md flex items-center justify-center text-slate-500 group-hover/header:text-[#1351b8] group-hover/header:bg-blue-100/60 transition-all">
+                              {isExpanded ? (
+                                <ChevronDown className="w-4 h-4 text-[#1351b8]" />
+                              ) : (
+                                <ChevronRight className="w-4 h-4 text-slate-400 group-hover/header:text-[#1351b8]" />
+                              )}
+                            </span>
+                            <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
+                            <span className="group-hover/header:text-[#1351b8] transition-colors">{group.dateLabel}</span>
+                            <span className="text-[10px] font-semibold bg-white px-2 py-0.5 rounded-full text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                              {group.items.length} Transaksi
+                            </span>
+                            {!isExpanded && (
+                              <span className="text-[11px] font-normal text-slate-400 italic">
+                                (Klik untuk menampilkan {group.items.length} rincian)
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs font-semibold text-slate-700 whitespace-nowrap">
+                            Subtotal: <span className="font-bold text-[#1351b8]">{group.subtotal}</span>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
 
-              {/* === DATE GROUP 2: 22 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50/90 border-y border-slate-200/90">
-                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
-                      <span>Minggu, 22 November 2026</span>
-                      <span className="text-[10px] font-semibold bg-white px-2 py-0.5 rounded-full text-slate-600 border border-slate-200 shadow-2xs">
-                        2 Transaksi
-                      </span>
-                    </div>
-                    <span className="text-xs font-semibold text-slate-700">
-                      Subtotal: <span className="font-bold text-[#1351b8]">Rp 46.800.000</span>
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-083</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">Studio Desain Kreatif</td>
-                <td className="py-2.5 px-4 text-slate-600">Kustomisasi Desain Dashboard & Pelatihan</td>
-                <td className="py-2.5 px-4 text-slate-600">Kartu Kredit Visa</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 12.000.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
-                    Pending
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-083', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-084</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Sumber Berkah Utama</td>
-                <td className="py-2.5 px-4 text-slate-600">Lisensi Server On-Premise Multi-Cabang</td>
-                <td className="py-2.5 px-4 text-slate-600">Virtual Account BNI</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 34.800.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60">
-                    Jatuh Tempo
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-084', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
-
-              {/* === DATE GROUP 3: 19 NOVEMBER 2026 === */}
-              <tr className="bg-slate-50/90 border-y border-slate-200/90">
-                <td colSpan={7} className="py-2.5 px-6 font-bold text-slate-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#1351b8]" />
-                      <span>Kamis, 19 November 2026</span>
-                      <span className="text-[10px] font-semibold bg-white px-2 py-0.5 rounded-full text-slate-600 border border-slate-200 shadow-2xs">
-                        2 Transaksi
-                      </span>
-                    </div>
-                    <span className="text-xs font-semibold text-slate-700">
-                      Subtotal: <span className="font-bold text-[#1351b8]">Rp 25.000.000</span>
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-085</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">Global Logistik Nusantara Tbk</td>
-                <td className="py-2.5 px-4 text-slate-600">Maintenance Berkala & Security Hardening</td>
-                <td className="py-2.5 px-4 text-slate-600">Transfer Bank BNI</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 9.400.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                    Lunas
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-085', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
-              <tr className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                <td className="py-2.5 pl-6 pr-4 font-mono font-medium text-blue-700">INV-2026-086</td>
-                <td className="py-2.5 px-4 font-semibold text-slate-800">PT Sentosa Abadi Makmur</td>
-                <td className="py-2.5 px-4 text-slate-600">Modul Presensi Geolocation & Face Match</td>
-                <td className="py-2.5 px-4 text-slate-600">Transfer Bank Mandiri</td>
-                <td className="py-2.5 px-4 text-right font-semibold text-slate-800">Rp 15.600.000</td>
-                <td className="py-2.5 px-4 text-center">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                    Lunas
-                  </span>
-                </td>
-                <td className="py-2.5 pl-4 pr-6 text-center">
-                  <button
-                    onClick={() => showToast('Detail invoice INV-2026-086', 'info')}
-                    className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
-                  >
-                    Detail
-                  </button>
-                </td>
-              </tr>
+                    {/* Indented Child Rows when Expanded */}
+                    {isExpanded &&
+                      group.items.map((item, idx) => (
+                        <tr
+                          key={idx}
+                          className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors"
+                        >
+                          {/* Indented first column matching tree-grid / Bill of Material */}
+                          <td className="py-2.5 pl-12 pr-4 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-300 font-mono text-xs select-none">└─</span>
+                              <span className="font-mono font-medium text-blue-700">{item.invoice}</span>
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-4 font-semibold text-slate-800">{item.client}</td>
+                          <td className="py-2.5 px-4 text-slate-600">{item.desc}</td>
+                          <td className="py-2.5 px-4 text-slate-600 whitespace-nowrap">{item.payment}</td>
+                          <td className="py-2.5 px-4 text-right font-semibold text-slate-800 whitespace-nowrap">
+                            {item.nominal}
+                          </td>
+                          <td className="py-2.5 px-4 text-center whitespace-nowrap">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap ${
+                                item.statusType === 'success'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                                  : item.statusType === 'warning'
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                                  : 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                              }`}
+                            >
+                              {item.status}
+                            </span>
+                          </td>
+                          <td className="py-2.5 pl-4 pr-6 text-center whitespace-nowrap">
+                            <button
+                              onClick={() => showToast(`Detail invoice ${item.invoice}`, 'info')}
+                              className="text-[11px] font-medium text-[#1351b8] hover:underline cursor-pointer"
+                            >
+                              Detail
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </React.Fragment>
+                );
+              })}
             </tbody>
             <tfoot>
               <tr className="bg-slate-50/80 font-bold text-slate-800 border-t-2 border-slate-200">
-                <td colSpan={4} className="py-3 pl-6 pr-4 text-right font-bold text-slate-700">
+                <td colSpan={4} className="py-3 pl-6 pr-4 text-right font-bold text-slate-700 whitespace-nowrap">
                   Total Keseluruhan (6 Transaksi):
                 </td>
-                <td className="py-3 px-4 text-right text-[#1351b8] font-bold text-sm">
+                <td className="py-3 px-4 text-right text-[#1351b8] font-bold text-sm whitespace-nowrap">
                   Rp 97.550.000
                 </td>
-                <td colSpan={2} className="py-3 pl-4 pr-6 text-center text-xs font-semibold text-slate-600">
+                <td colSpan={2} className="py-3 pl-4 pr-6 text-center text-xs font-semibold text-slate-600 whitespace-nowrap">
                   4 Lunas • 1 Pending • 1 Jatuh Tempo
                 </td>
               </tr>
