@@ -10017,13 +10017,13 @@ function ArticleView() {
               >
                 {/* Image Header with Overlay Title Banner (Matching ShizueFI) */}
                 <div
-                  className={`relative aspect-[16/10] bg-gradient-to-br ${article.accentGradient} flex flex-col items-center justify-center p-4 overflow-hidden`}
+                  className={`relative h-44 sm:h-48 bg-gradient-to-br ${article.accentGradient} flex flex-col items-center justify-center p-4 overflow-hidden`}
                 >
                   {/* Decorative Tech Graphic */}
                   <div
-                    className={`w-14 h-14 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-6`}
+                    className={`w-12 h-12 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-5`}
                   >
-                    <BookOpen className="w-7 h-7" />
+                    <BookOpen className="w-6 h-6" />
                   </div>
 
                   {/* Overlaid Title Banner at Bottom of Image (Signature ShizueFI Style) */}
@@ -10038,12 +10038,12 @@ function ArticleView() {
                 </div>
 
                 {/* Card Body with centered button */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div className="p-4 sm:p-5 pt-3.5 sm:pt-4 flex-1 flex flex-col justify-between space-y-3.5">
                   <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal">
                     {article.desc}
                   </p>
 
-                  <div className="pt-2 text-center">
+                  <div className="pt-1 text-center">
                     <button
                       type="button"
                       onClick={() => setActiveArticleModal(article)}
@@ -10089,7 +10089,7 @@ function ArticleView() {
                 >
                   {/* Image Header with Top Badge */}
                   <div
-                    className={`relative aspect-[16/10] bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
+                    className={`relative h-40 sm:h-44 bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
                   >
                     {/* Top-Left Badge (Matching ShizueFI 🔥 Trending) */}
                     {article.badge && (
@@ -10124,20 +10124,20 @@ function ArticleView() {
                   </div>
 
                   {/* Card Body with Title Below Image & Right Arrow Link */}
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                    <div className="space-y-1.5">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
+                  <div className="p-4 sm:p-5 pt-3.5 sm:pt-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-1">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wide block">
                         {article.category} • {article.readTime}
                       </span>
                       <h4 className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-[#1351b8] transition-colors leading-snug">
                         {article.title}
                       </h4>
-                      <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal pt-1">
+                      <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed font-normal pt-0.5">
                         {article.desc}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-50 flex items-center justify-end">
+                    <div className="pt-2.5 border-t border-slate-50 flex items-center justify-end">
                       <button
                         type="button"
                         onClick={() => setActiveArticleModal(article)}
@@ -10184,28 +10184,28 @@ function ArticleView() {
                 >
                   {/* Image Header */}
                   <div
-                    className={`relative aspect-[16/9] bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
+                    className={`relative h-44 sm:h-48 bg-gradient-to-br ${article.accentGradient} flex items-center justify-center p-4 overflow-hidden`}
                   >
                     <div
-                      className={`w-14 h-14 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xs`}
+                      className={`w-12 h-12 rounded-2xl ${article.iconBg} border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xs`}
                     >
-                      <BookOpen className="w-7 h-7" />
+                      <BookOpen className="w-6 h-6" />
                     </div>
                   </div>
 
                   {/* Card Body with Author Footer */}
-                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
-                      <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                  <div className="p-4 sm:p-5 pt-3.5 sm:pt-4 flex-1 flex flex-col justify-between space-y-3.5">
+                    <div className="space-y-1">
+                      <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase block">
                         {article.date}
                       </span>
                       <h4
                         onClick={() => setActiveArticleModal(article)}
-                        className="text-base font-bold text-slate-800 line-clamp-2 hover:text-[#1351b8] cursor-pointer transition-colors leading-snug"
+                        className="text-sm sm:text-base font-bold text-slate-800 line-clamp-2 hover:text-[#1351b8] cursor-pointer transition-colors leading-snug"
                       >
                         {article.title}
                       </h4>
-                      <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed font-normal">
+                      <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed font-normal pt-0.5">
                         {article.desc}
                       </p>
                     </div>
