@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Phone,
   Lock,
@@ -24,7 +24,96 @@ import {
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
 
+type ActivePopover =
+  | null
+  | 'select2'
+  | 'select2-multi'
+  | 'range-preset'
+  | 'date-picker'
+  | 'datetime-picker'
+  | 'date-range'
+  | 'time-picker';
+
+const MONTH_NAMES = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+const FULL_MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+interface CalendarDay {
+  day: number;
+  dateStr: string;
+  isCurrentMonth: boolean;
+}
+
+function getCalendarGrid(year: number, month: number): CalendarDay[] {
+  const firstDay = new Date(year, month, 1).getDay(); // 0 = Sunday
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+  const prevDays: CalendarDay[] = [];
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const d = daysInPrevMonth - i;
+    const prevM = month === 0 ? 11 : month - 1;
+    const prevY = month === 0 ? year - 1 : year;
+    prevDays.push({
+      day: d,
+      dateStr: `${prevY}-${String(prevM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+      isCurrentMonth: false,
+    });
+  }
+
+  const currDays: CalendarDay[] = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    currDays.push({
+      day: d,
+      dateStr: `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+      isCurrentMonth: true,
+    });
+  }
+
+  const nextDaysCount = 42 - (prevDays.length + currDays.length);
+  const nextDays: CalendarDay[] = [];
+  for (let d = 1; d <= (nextDaysCount > 7 ? nextDaysCount - 7 : nextDaysCount); d++) {
+    const nextM = month === 11 ? 0 : month + 1;
+    const nextY = month === 11 ? year + 1 : year;
+    nextDays.push({
+      day: d,
+      dateStr: `${nextY}-${String(nextM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+      isCurrentMonth: false,
+    });
+  }
+
+  return [...prevDays, ...currDays, ...nextDays];
+}
+
 export function AdvancedFormsView() {
+  // =========================================================================
+  // UNIFIED POPOVER MANAGER (Only 1 popover open at any time + true outside click)
+  // =========================================================================
+  const [activePopover, setActivePopover] = useState<ActivePopover>(null);
+
+  const togglePopover = (name: ActivePopover) => {
+    setActivePopover((curr) => (curr === name ? null : name));
+  };
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (!activePopover) return;
+      const target = e.target as HTMLElement;
+      // If click was outside the active popover container, close it
+      if (!target.closest(`[data-popover-id="${activePopover}"]`)) {
+        setActivePopover(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [activePopover]);
+
   // =========================================================================
   // LEFT COLUMN STATES
   // =========================================================================
@@ -49,7 +138,7 @@ export function AdvancedFormsView() {
     if (/[A-Z]/.test(pass)) score++;
     if (/[0-9]/.test(pass)) score++;
     if (/[^A-Za-z0-9]/.test(pass)) score++;
-    return score; // 0 to 4
+    return score;
   };
   const pwStrength = getPasswordStrength(password);
 
@@ -62,15 +151,15 @@ export function AdvancedFormsView() {
   const [leftSingleToggle, setLeftSingleToggle] = useState(false);
 
   // Image Check Card (6 pastel cards)
-  const [selectedImages, setSelectedImages] = useState<number[]>([2, 4]); // Cards 2 and 4 selected in screenshots
+  const [selectedImages, setSelectedImages] = useState<number[]>([2, 4]);
 
   const imageCardData = [
-    { id: 1, name: 'Blue Pastel', bg: 'bg-[#eff4fe]', border: 'border-slate-200', iconColor: 'text-[#818cf8]' },
-    { id: 2, name: 'Green Pastel', bg: 'bg-[#ecfdf5]', border: 'border-emerald-400', iconColor: 'text-[#34d399]' },
-    { id: 3, name: 'Cyan Pastel', bg: 'bg-[#ecfeff]', border: 'border-slate-200', iconColor: 'text-[#22d3ee]' },
-    { id: 4, name: 'Orange Pastel', bg: 'bg-[#fff7ed]', border: 'border-amber-400', iconColor: 'text-[#fb923c]' },
-    { id: 5, name: 'Pink Pastel', bg: 'bg-[#fff1f2]', border: 'border-slate-200', iconColor: 'text-[#f43f5e]' },
-    { id: 6, name: 'Purple Pastel', bg: 'bg-[#faf5ff]', border: 'border-slate-200', iconColor: 'text-[#c084fc]' },
+    { id: 1, name: 'Blue Pastel', bg: 'bg-[#eff4fe]', iconColor: 'text-[#818cf8]' },
+    { id: 2, name: 'Green Pastel', bg: 'bg-[#ecfdf5]', iconColor: 'text-[#34d399]' },
+    { id: 3, name: 'Cyan Pastel', bg: 'bg-[#ecfeff]', iconColor: 'text-[#22d3ee]' },
+    { id: 4, name: 'Orange Pastel', bg: 'bg-[#fff7ed]', iconColor: 'text-[#fb923c]' },
+    { id: 5, name: 'Pink Pastel', bg: 'bg-[#fff1f2]', iconColor: 'text-[#f43f5e]' },
+    { id: 6, name: 'Purple Pastel', bg: 'bg-[#faf5ff]', iconColor: 'text-[#c084fc]' },
   ];
 
   const toggleImageCheck = (id: number) => {
@@ -85,12 +174,12 @@ export function AdvancedFormsView() {
   const [selectedPalette, setSelectedPalette] = useState('#175cd3');
 
   const colorPalette = [
-    '#175cd3', // primary blue
-    '#94a3b8', // slate gray
-    '#f97316', // orange
-    '#ef4444', // red
-    '#0ea5e9', // cyan
-    '#10b981', // green
+    '#175cd3',
+    '#94a3b8',
+    '#f97316',
+    '#ef4444',
+    '#0ea5e9',
+    '#10b981',
   ];
 
   // =========================================================================
@@ -101,13 +190,11 @@ export function AdvancedFormsView() {
   const [defaultSelect, setDefaultSelect] = useState('Option 1');
 
   // Select2 Single
-  const [isSelect2Open, setIsSelect2Open] = useState(false);
   const [select2Search, setSelect2Search] = useState('');
   const [select2Value, setSelect2Value] = useState('Option 1');
   const select2Options = ['Option 1', 'Option 2', 'Option 3'];
 
   // Select2 Multiple
-  const [isSelect2MultiOpen, setIsSelect2MultiOpen] = useState(false);
   const [select2MultiValues, setSelect2MultiValues] = useState<string[]>(['Option 1', 'Option 4']);
   const select2MultiOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
 
@@ -138,64 +225,129 @@ export function AdvancedFormsView() {
   const [rightSingleToggle, setRightSingleToggle] = useState(false);
 
   // =========================================================================
-  // DATE & TIME PICKER STATES & POPOVERS
+  // DATE & TIME PICKER SUITE (REAL INTERACTIVE LOGIC & EDITABLE INPUTS)
   // =========================================================================
 
   // 1. Date Range Picker With Button (Preset popover)
-  const [isRangePresetOpen, setIsRangePresetOpen] = useState(false);
   const [selectedRangePreset, setSelectedRangePreset] = useState('Last 30 Days');
   const rangePresets = [
-    'Today',
-    'Yesterday',
-    'Last 7 Days',
-    'Last 30 Days',
-    'This Month',
-    'Last Month',
-    'Custom Range',
+    { label: 'Today', range: '2026-11-25 - 2026-11-25' },
+    { label: 'Yesterday', range: '2026-11-24 - 2026-11-24' },
+    { label: 'Last 7 Days', range: '2026-11-19 - 2026-11-25' },
+    { label: 'Last 30 Days', range: '2026-10-27 - 2026-11-25' },
+    { label: 'This Month', range: '2026-11-01 - 2026-11-30' },
+    { label: 'Last Month', range: '2026-10-01 - 2026-10-31' },
+    { label: 'Custom Range', range: 'custom' },
   ];
 
-  // 2. Date Picker (Single Month Calendar)
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  // 2. Date Picker (Interactive Calendar + Direct Input)
   const [datePickerVal, setDatePickerVal] = useState('2026-11-29');
-  const [tempDateDay, setTempDateDay] = useState(29);
+  const [pickerYear, setPickerYear] = useState(2026);
+  const [pickerMonth, setPickerMonth] = useState(10); // 10 = Nov (0-indexed)
+  const [tempDateStr, setTempDateStr] = useState('2026-11-29');
 
-  // 3. Date Time Picker (Calendar + Time Selects)
-  const [isDateTimePickerOpen, setIsDateTimePickerOpen] = useState(false);
+  const handlePrevMonth = () => {
+    if (pickerMonth === 0) {
+      setPickerYear((y) => y - 1);
+      setPickerMonth(11);
+    } else {
+      setPickerMonth((m) => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (pickerMonth === 11) {
+      setPickerYear((y) => y + 1);
+      setPickerMonth(0);
+    } else {
+      setPickerMonth((m) => m + 1);
+    }
+  };
+
+  // 3. Date Time Picker (Interactive Calendar + Hour/Min selects + Direct Input)
   const [dateTimePickerVal, setDateTimePickerVal] = useState('2026-11-25 15:17');
-  const [dateTimeDay, setDateTimeDay] = useState(25);
-  const [dateTimeHour, setDateTimeHour] = useState('15');
-  const [dateTimeMinute, setDateTimeMinute] = useState('17');
+  const [dtYear, setDtYear] = useState(2026);
+  const [dtMonth, setDtMonth] = useState(10);
+  const [dtSelectedDate, setDtSelectedDate] = useState('2026-11-25');
+  const [dtHour, setDtHour] = useState('15');
+  const [dtMinute, setDtMinute] = useState('17');
 
-  // 4. Date Range Picker (Dual-Month Calendar)
-  const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false);
+  const handleDtPrevMonth = () => {
+    if (dtMonth === 0) {
+      setDtYear((y) => y - 1);
+      setDtMonth(11);
+    } else {
+      setDtMonth((m) => m - 1);
+    }
+  };
+
+  const handleDtNextMonth = () => {
+    if (dtMonth === 11) {
+      setDtYear((y) => y + 1);
+      setDtMonth(0);
+    } else {
+      setDtMonth((m) => m + 1);
+    }
+  };
+
+  // 4. Date Range Picker (Real Dual-Month Range Picking + Direct Input)
   const [dateRangeVal, setDateRangeVal] = useState('2026-11-16 - 2026-12-31');
+  const [rangeYear, setRangeYear] = useState(2026);
+  const [rangeMonth, setRangeMonth] = useState(10); // 10 = Nov
+  const [rangeStart, setRangeStart] = useState<string | null>('2026-11-16');
+  const [rangeEnd, setRangeEnd] = useState<string | null>('2026-12-31');
+  const [rangeHover, setRangeHover] = useState<string | null>(null);
 
-  // 5. Time Picker (Spinner popover)
-  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+  const handleRangePrev = () => {
+    if (rangeMonth === 0) {
+      setRangeYear((y) => y - 1);
+      setRangeMonth(11);
+    } else {
+      setRangeMonth((m) => m - 1);
+    }
+  };
+
+  const handleRangeNext = () => {
+    if (rangeMonth === 11) {
+      setRangeYear((y) => y + 1);
+      setRangeMonth(0);
+    } else {
+      setRangeMonth((m) => m + 1);
+    }
+  };
+
+  const handleDateRangeClick = (dateStr: string) => {
+    if (!rangeStart || (rangeStart && rangeEnd)) {
+      // Start new selection
+      setRangeStart(dateStr);
+      setRangeEnd(null);
+    } else if (rangeStart && !rangeEnd) {
+      // Pick end date
+      if (dateStr < rangeStart) {
+        setRangeEnd(rangeStart);
+        setRangeStart(dateStr);
+      } else {
+        setRangeEnd(dateStr);
+      }
+    }
+  };
+
+  // Right calendar in dual-month view
+  const nextMonthIdx = rangeMonth === 11 ? 0 : rangeMonth + 1;
+  const nextMonthYear = rangeMonth === 11 ? rangeYear + 1 : rangeYear;
+
+  // 5. Time Picker (Real spinner + Direct Input)
   const [timePickerVal, setTimePickerVal] = useState('1:15 PM');
   const [timeHour, setTimeHour] = useState(1);
   const [timeMinute, setTimeMinute] = useState(15);
-  const [timeAmPm, setTimeAmPm] = useState<'AM' | 'PM'>('AM');
+  const [timeAmPm, setTimeAmPm] = useState<'AM' | 'PM'>('PM');
 
-  // Handle outside clicks to close popovers
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      const target = e.target as HTMLElement;
-      if (!target.closest('.popover-container')) {
-        setIsSelect2Open(false);
-        setIsSelect2MultiOpen(false);
-        setIsRangePresetOpen(false);
-        setIsDatePickerOpen(false);
-        setIsDateTimePickerOpen(false);
-        setIsDateRangePickerOpen(false);
-        setIsTimePickerOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const updateTimeVal = (h: number, m: number, ap: 'AM' | 'PM') => {
+    setTimeHour(h);
+    setTimeMinute(m);
+    setTimeAmPm(ap);
+    setTimePickerVal(`${h}:${String(m).padStart(2, '0')} ${ap}`);
+  };
 
   // Tag helper
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -214,7 +366,7 @@ export function AdvancedFormsView() {
   };
 
   return (
-    <div ref={containerRef} className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* ========================================================================= */}
       {/* SUB-HEADER BANNER (Matching Stisla Screenshot 0) */}
       {/* ========================================================================= */}
@@ -309,10 +461,10 @@ export function AdvancedFormsView() {
                       })}
                     </div>
                     <span className="text-[11px] font-medium text-slate-500">
-                      {pwStrength <= 1 && <span className="text-rose-500">Weak</span>}
-                      {pwStrength === 2 && <span className="text-amber-500">Fair</span>}
-                      {pwStrength === 3 && <span className="text-blue-500">Good</span>}
-                      {pwStrength >= 4 && <span className="text-emerald-500">Strong</span>}
+                      {pwStrength <= 1 && <span className="text-rose-500 font-semibold">Weak</span>}
+                      {pwStrength === 2 && <span className="text-amber-500 font-semibold">Fair</span>}
+                      {pwStrength === 3 && <span className="text-blue-500 font-semibold">Good</span>}
+                      {pwStrength >= 4 && <span className="text-emerald-500 font-semibold">Strong</span>}
                     </span>
                   </div>
                 )}
@@ -511,7 +663,7 @@ export function AdvancedFormsView() {
                 Image Check
               </label>
 
-              {/* 3 x 2 Grid of Pastel Cards matching Screenshot 3 & 4 */}
+              {/* 3 x 2 Grid of Pastel Cards */}
               <div className="grid grid-cols-3 gap-4">
                 {imageCardData.map((card) => {
                   const isChecked = selectedImages.includes(card.id);
@@ -669,24 +821,28 @@ export function AdvancedFormsView() {
 
                 <div className="space-y-4">
                   {/* Select2 Single with Search (Matching Screenshot 1) */}
-                  <div className="form-group relative popover-container">
+                  <div className="form-group relative" data-popover-id="select2">
                     <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                       Select2
                     </label>
                     <div
-                      onClick={() => setIsSelect2Open(!isSelect2Open)}
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 flex items-center justify-between cursor-pointer focus:border-[#175cd3] transition-all"
+                      onClick={() => togglePopover('select2')}
+                      className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-sm text-slate-800 flex items-center justify-between cursor-pointer transition-all ${
+                        activePopover === 'select2'
+                          ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                          : 'border-slate-200 hover:border-slate-300'
+                      }`}
                     >
                       <span>{select2Value}</span>
-                      {isSelect2Open ? (
+                      {activePopover === 'select2' ? (
                         <ChevronUp className="w-4 h-4 text-slate-400" />
                       ) : (
                         <ChevronDown className="w-4 h-4 text-slate-400" />
                       )}
                     </div>
 
-                    {/* Popover Dropdown matching Screenshot 1 */}
-                    {isSelect2Open && (
+                    {/* Popover Dropdown */}
+                    {activePopover === 'select2' && (
                       <div className="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden animate-in fade-in duration-150">
                         {/* Search Input */}
                         <div className="p-2 border-b border-slate-100">
@@ -713,7 +869,7 @@ export function AdvancedFormsView() {
                                   key={opt}
                                   onClick={() => {
                                     setSelect2Value(opt);
-                                    setIsSelect2Open(false);
+                                    setActivePopover(null);
                                   }}
                                   className={`px-3.5 py-2 text-xs font-medium cursor-pointer transition-colors ${
                                     isSelected
@@ -731,13 +887,17 @@ export function AdvancedFormsView() {
                   </div>
 
                   {/* Select2 Multiple with Tag Chips (Matching Screenshot 2) */}
-                  <div className="form-group relative popover-container">
+                  <div className="form-group relative" data-popover-id="select2-multi">
                     <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                       Select2 Multiple
                     </label>
                     <div
-                      onClick={() => setIsSelect2MultiOpen(!isSelect2MultiOpen)}
-                      className="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm flex flex-wrap items-center gap-1.5 cursor-pointer focus:border-[#175cd3] transition-all"
+                      onClick={() => togglePopover('select2-multi')}
+                      className={`w-full min-h-[44px] px-3 py-2 bg-white border rounded-xl text-sm flex flex-wrap items-center gap-1.5 cursor-pointer transition-all ${
+                        activePopover === 'select2-multi'
+                          ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                          : 'border-slate-200 hover:border-slate-300'
+                      }`}
                     >
                       {select2MultiValues.length === 0 && (
                         <span className="text-slate-400 text-xs">Select options...</span>
@@ -762,8 +922,8 @@ export function AdvancedFormsView() {
                       ))}
                     </div>
 
-                    {/* Popover Dropdown matching Screenshot 2 */}
-                    {isSelect2MultiOpen && (
+                    {/* Popover Dropdown */}
+                    {activePopover === 'select2-multi' && (
                       <div className="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1 animate-in fade-in duration-150">
                         {select2MultiOptions.map((opt) => {
                           const isSelected = select2MultiValues.includes(opt);
@@ -1040,38 +1200,48 @@ export function AdvancedFormsView() {
           </div>
 
           {/* --------------------------------------------------------------------- */}
-          {/* CARD 7: DATE & TIME PICKER (Full Interactive Suite) */}
+          {/* CARD 7: DATE & TIME PICKER (Real Interactive Selection + Direct Typing) */}
           {/* --------------------------------------------------------------------- */}
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
             <h3 className="text-base font-bold text-[#175cd3] mb-5 tracking-tight">Date & Time Picker</h3>
 
             <div className="space-y-5">
               {/* 1. Date Range Picker With Button (Matching Screenshot 4) */}
-              <div className="form-group relative popover-container">
+              <div className="form-group relative" data-popover-id="range-preset">
                 <label className="block text-xs font-semibold text-slate-700 mb-2">
                   Date Range Picker With Button
                 </label>
                 <button
                   type="button"
-                  onClick={() => setIsRangePresetOpen(!isRangePresetOpen)}
+                  onClick={() => togglePopover('range-preset')}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer"
                 >
                   <Calendar className="w-4 h-4" />
-                  Choose Date
+                  <span>Choose Date</span>
+                  {selectedRangePreset && (
+                    <span className="ml-1 px-1.5 py-0.5 bg-white/20 rounded text-[11px] font-normal">
+                      {selectedRangePreset}
+                    </span>
+                  )}
                 </button>
 
-                {/* Preset Popover Menu matching Screenshot 4 */}
-                {isRangePresetOpen && (
+                {/* Preset Popover Menu */}
+                {activePopover === 'range-preset' && (
                   <div className="absolute z-30 left-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in duration-150">
                     {rangePresets.map((preset) => {
-                      const isSelected = preset === selectedRangePreset;
+                      const isSelected = preset.label === selectedRangePreset;
                       return (
                         <div
-                          key={preset}
+                          key={preset.label}
                           onClick={() => {
-                            setSelectedRangePreset(preset);
-                            setIsRangePresetOpen(false);
-                            showToast(`Rentang terpilih: ${preset}`, 'info');
+                            setSelectedRangePreset(preset.label);
+                            if (preset.range === 'custom') {
+                              togglePopover('date-range');
+                            } else {
+                              setDateRangeVal(preset.range);
+                              setActivePopover(null);
+                              showToast(`Rentang tanggal: ${preset.range}`, 'success');
+                            }
                           }}
                           className={`px-4 py-2 text-xs font-medium cursor-pointer transition-colors ${
                             isSelected
@@ -1079,7 +1249,7 @@ export function AdvancedFormsView() {
                               : 'text-slate-700 hover:bg-slate-50'
                           }`}
                         >
-                          {preset}
+                          {preset.label}
                         </div>
                       );
                     })}
@@ -1087,29 +1257,56 @@ export function AdvancedFormsView() {
                 )}
               </div>
 
-              {/* 2. Date Picker (Matching Screenshot 5) */}
-              <div className="form-group relative popover-container">
+              {/* 2. Date Picker (Interactive Calendar + Direct Input) */}
+              <div className="form-group relative" data-popover-id="date-picker">
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Date Picker
                 </label>
-                <input
-                  type="text"
-                  readOnly
-                  value={datePickerVal}
-                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:border-[#175cd3] transition-all"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={datePickerVal}
+                    onChange={(e) => {
+                      setDatePickerVal(e.target.value);
+                      setTempDateStr(e.target.value);
+                    }}
+                    onClick={() => togglePopover('date-picker')}
+                    placeholder="YYYY-MM-DD"
+                    className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-sm text-slate-800 transition-all cursor-text focus:outline-none ${
+                      activePopover === 'date-picker'
+                        ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                        : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => togglePopover('date-picker')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <Calendar className="w-4 h-4" />
+                  </button>
+                </div>
 
-                {/* Month Calendar Popover matching Screenshot 5 */}
-                {isDatePickerOpen && (
+                {/* Month Calendar Popover */}
+                {activePopover === 'date-picker' && (
                   <div className="absolute z-30 left-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 animate-in fade-in duration-150">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
-                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                      <button
+                        type="button"
+                        onClick={handlePrevMonth}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                      >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
-                      <span>Nov 2026</span>
-                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                      <span>
+                        {FULL_MONTH_NAMES[pickerMonth]} {pickerYear}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleNextMonth}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                      >
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
@@ -1127,43 +1324,32 @@ export function AdvancedFormsView() {
 
                     {/* Day Grid */}
                     <div className="grid grid-cols-7 gap-1 text-center text-xs">
-                      {/* Prev Month Days */}
-                      {[25, 26, 27, 28, 29, 30, 31].map((d) => (
-                        <div key={`prev-${d}`} className="py-1 text-slate-300">
-                          {d}
-                        </div>
-                      ))}
-                      {/* Current Month Days 1..30 */}
-                      {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
-                        const isSelected = d === tempDateDay;
+                      {getCalendarGrid(pickerYear, pickerMonth).map((cell, idx) => {
+                        const isSelected = cell.dateStr === tempDateStr;
                         return (
                           <button
-                            key={`curr-${d}`}
+                            key={idx}
                             type="button"
-                            onClick={() => setTempDateDay(d)}
+                            onClick={() => setTempDateStr(cell.dateStr)}
                             className={`py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                               isSelected
-                                ? 'bg-[#175cd3] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-100'
+                                ? 'bg-[#175cd3] text-white font-bold shadow-xs'
+                                : cell.isCurrentMonth
+                                ? 'text-slate-700 hover:bg-slate-100'
+                                : 'text-slate-300 hover:bg-slate-50'
                             }`}
                           >
-                            {d}
+                            {cell.day}
                           </button>
                         );
                       })}
-                      {/* Next Month Days */}
-                      {[1, 2, 3, 4, 5].map((d) => (
-                        <div key={`next-${d}`} className="py-1 text-slate-300">
-                          {d}
-                        </div>
-                      ))}
                     </div>
 
                     {/* Footer Actions */}
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
                       <button
                         type="button"
-                        onClick={() => setIsDatePickerOpen(false)}
+                        onClick={() => setActivePopover(null)}
                         className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
                       >
                         Cancel
@@ -1171,9 +1357,8 @@ export function AdvancedFormsView() {
                       <button
                         type="button"
                         onClick={() => {
-                          const formatted = `2026-11-${String(tempDateDay).padStart(2, '0')}`;
-                          setDatePickerVal(formatted);
-                          setIsDatePickerOpen(false);
+                          setDatePickerVal(tempDateStr);
+                          setActivePopover(null);
                         }}
                         className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
                       >
@@ -1184,29 +1369,53 @@ export function AdvancedFormsView() {
                 )}
               </div>
 
-              {/* 3. Date Time Picker (Matching Screenshot 6) */}
-              <div className="form-group relative popover-container">
+              {/* 3. Date Time Picker (Interactive Calendar + Hour/Min selects + Direct Input) */}
+              <div className="form-group relative" data-popover-id="datetime-picker">
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Date Time Picker
                 </label>
-                <input
-                  type="text"
-                  readOnly
-                  value={dateTimePickerVal}
-                  onClick={() => setIsDateTimePickerOpen(!isDateTimePickerOpen)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 cursor-pointer focus:outline-none focus:border-[#175cd3] transition-all"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={dateTimePickerVal}
+                    onChange={(e) => setDateTimePickerVal(e.target.value)}
+                    onClick={() => togglePopover('datetime-picker')}
+                    placeholder="YYYY-MM-DD HH:mm"
+                    className={`w-full px-3.5 py-2.5 bg-white border rounded-xl text-sm text-slate-800 transition-all cursor-text focus:outline-none ${
+                      activePopover === 'datetime-picker'
+                        ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                        : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => togglePopover('datetime-picker')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <Calendar className="w-4 h-4" />
+                  </button>
+                </div>
 
-                {/* Calendar with Time Selects matching Screenshot 6 */}
-                {isDateTimePickerOpen && (
+                {/* Calendar with Time Selects */}
+                {activePopover === 'datetime-picker' && (
                   <div className="absolute z-30 left-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 animate-in fade-in duration-150">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
-                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                      <button
+                        type="button"
+                        onClick={handleDtPrevMonth}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                      >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
-                      <span>Nov 2026</span>
-                      <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                      <span>
+                        {FULL_MONTH_NAMES[dtMonth]} {dtYear}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleDtNextMonth}
+                        className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                      >
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
@@ -1224,67 +1433,61 @@ export function AdvancedFormsView() {
 
                     {/* Day Grid */}
                     <div className="grid grid-cols-7 gap-1 text-center text-xs">
-                      {[25, 26, 27, 28, 29, 30, 31].map((d) => (
-                        <div key={`dt-prev-${d}`} className="py-1 text-slate-300">
-                          {d}
-                        </div>
-                      ))}
-                      {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
-                        const isSelected = d === dateTimeDay;
+                      {getCalendarGrid(dtYear, dtMonth).map((cell, idx) => {
+                        const isSelected = cell.dateStr === dtSelectedDate;
                         return (
                           <button
-                            key={`dt-curr-${d}`}
+                            key={idx}
                             type="button"
-                            onClick={() => setDateTimeDay(d)}
+                            onClick={() => setDtSelectedDate(cell.dateStr)}
                             className={`py-1 rounded-lg font-medium transition-colors cursor-pointer ${
                               isSelected
-                                ? 'bg-[#175cd3] text-white font-bold'
-                                : 'text-slate-700 hover:bg-slate-100'
+                                ? 'bg-[#175cd3] text-white font-bold shadow-xs'
+                                : cell.isCurrentMonth
+                                ? 'text-slate-700 hover:bg-slate-100'
+                                : 'text-slate-300 hover:bg-slate-50'
                             }`}
                           >
-                            {d}
+                            {cell.day}
                           </button>
                         );
                       })}
-                      {[1, 2, 3, 4, 5].map((d) => (
-                        <div key={`dt-next-${d}`} className="py-1 text-slate-300">
-                          {d}
-                        </div>
-                      ))}
                     </div>
 
                     {/* Time Selectors Row: [15 v] : [17 v] */}
                     <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-2">
-                      <select
-                        value={dateTimeHour}
-                        onChange={(e) => setDateTimeHour(e.target.value)}
-                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                      >
-                        {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
-                          <option key={h} value={h}>
-                            {h}
-                          </option>
-                        ))}
-                      </select>
-                      <span className="text-slate-500 font-bold">:</span>
-                      <select
-                        value={dateTimeMinute}
-                        onChange={(e) => setDateTimeMinute(e.target.value)}
-                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                      >
-                        {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
-                          <option key={m} value={m}>
-                            {m}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="flex items-center gap-1.5">
+                        <select
+                          value={dtHour}
+                          onChange={(e) => setDtHour(e.target.value)}
+                          className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3] cursor-pointer"
+                        >
+                          {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => (
+                            <option key={h} value={h}>
+                              {h}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="text-slate-500 font-bold">:</span>
+                        <select
+                          value={dtMinute}
+                          onChange={(e) => setDtMinute(e.target.value)}
+                          className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3] cursor-pointer"
+                        >
+                          {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map((m) => (
+                            <option key={m} value={m}>
+                              {m}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
                     {/* Footer Actions */}
                     <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
                       <button
                         type="button"
-                        onClick={() => setIsDateTimePickerOpen(false)}
+                        onClick={() => setActivePopover(null)}
                         className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
                       >
                         Cancel
@@ -1292,9 +1495,9 @@ export function AdvancedFormsView() {
                       <button
                         type="button"
                         onClick={() => {
-                          const formatted = `2026-11-${String(dateTimeDay).padStart(2, '0')} ${dateTimeHour}:${dateTimeMinute}`;
+                          const formatted = `${dtSelectedDate} ${dtHour}:${dtMinute}`;
                           setDateTimePickerVal(formatted);
-                          setIsDateTimePickerOpen(false);
+                          setActivePopover(null);
                         }}
                         className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
                       >
@@ -1305,37 +1508,52 @@ export function AdvancedFormsView() {
                 )}
               </div>
 
-              {/* 4. Date Range Picker (Matching Screenshot 7 - Dual Month) */}
-              <div className="form-group relative popover-container">
+              {/* 4. Date Range Picker (Real Dual-Month Range Picking + Direct Input) */}
+              <div className="form-group relative" data-popover-id="date-range">
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Date Range Picker
                 </label>
                 <div
-                  onClick={() => setIsDateRangePickerOpen(!isDateRangePickerOpen)}
-                  className="flex rounded-xl border border-slate-200 overflow-hidden cursor-pointer focus-within:border-[#175cd3] transition-all"
+                  className={`flex rounded-xl border overflow-hidden transition-all ${
+                    activePopover === 'date-range'
+                      ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                      : 'border-slate-200 hover:border-slate-300'
+                  }`}
                 >
-                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => togglePopover('date-range')}
+                    className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center shrink-0 cursor-pointer"
+                  >
                     <Calendar className="w-4 h-4" />
-                  </div>
+                  </button>
                   <input
                     type="text"
-                    readOnly
                     value={dateRangeVal}
-                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 cursor-pointer focus:outline-none"
+                    onChange={(e) => setDateRangeVal(e.target.value)}
+                    onClick={() => togglePopover('date-range')}
+                    placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 focus:outline-none"
                   />
                 </div>
 
-                {/* Dual-Month Popover matching Screenshot 7 */}
-                {isDateRangePickerOpen && (
+                {/* Dual-Month Popover with Full Range Selection */}
+                {activePopover === 'date-range' && (
                   <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-[560px] max-w-[calc(100vw-2rem)] animate-in fade-in duration-150">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* Left Calendar: Nov 2026 */}
+                      {/* Left Month Calendar */}
                       <div>
                         <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
-                          <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                          <button
+                            type="button"
+                            onClick={handleRangePrev}
+                            className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                          >
                             <ChevronLeft className="w-4 h-4" />
                           </button>
-                          <span>Nov 2026</span>
+                          <span>
+                            {MONTH_NAMES[rangeMonth]} {rangeYear}
+                          </span>
                           <span className="w-4" />
                         </div>
                         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-500 mb-2">
@@ -1348,43 +1566,58 @@ export function AdvancedFormsView() {
                           <span>Sa</span>
                         </div>
                         <div className="grid grid-cols-7 gap-0.5 text-center text-xs">
-                          {[25, 26, 27, 28, 29, 30, 31].map((d) => (
-                            <div key={`range-n-prev-${d}`} className="py-1 text-slate-300">
-                              {d}
-                            </div>
-                          ))}
-                          {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => {
-                            const isStart = d === 16;
-                            const inRange = d > 16;
+                          {getCalendarGrid(rangeYear, rangeMonth).map((cell, idx) => {
+                            const isStart = cell.dateStr === rangeStart;
+                            const isEnd = cell.dateStr === rangeEnd;
+                            const effectiveEnd = rangeEnd || rangeHover;
+                            const inRange =
+                              rangeStart &&
+                              effectiveEnd &&
+                              cell.dateStr > rangeStart &&
+                              cell.dateStr < effectiveEnd;
+
+                            let bgClass = cell.isCurrentMonth ? 'text-slate-700' : 'text-slate-300';
+                            if (isStart && isEnd) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-md';
+                            } else if (isStart) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-l-md';
+                            } else if (isEnd) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-r-md';
+                            } else if (inRange) {
+                              bgClass = 'bg-[#e0f2fe] text-[#0369a1] font-medium';
+                            }
+
                             return (
-                              <div
-                                key={`range-n-${d}`}
-                                className={`py-1 text-xs font-medium ${
-                                  isStart
-                                    ? 'bg-[#175cd3] text-white font-bold rounded-l-md'
-                                    : inRange
-                                    ? 'bg-[#e0f2fe] text-[#0369a1]'
-                                    : 'text-slate-700'
-                                }`}
+                              <button
+                                key={`m1-${idx}`}
+                                type="button"
+                                onClick={() => handleDateRangeClick(cell.dateStr)}
+                                onMouseEnter={() => {
+                                  if (rangeStart && !rangeEnd) {
+                                    setRangeHover(cell.dateStr);
+                                  }
+                                }}
+                                className={`py-1 text-xs cursor-pointer transition-colors ${bgClass}`}
                               >
-                                {d}
-                              </div>
+                                {cell.day}
+                              </button>
                             );
                           })}
-                          {[1, 2, 3, 4, 5].map((d) => (
-                            <div key={`range-n-next-${d}`} className="py-1 text-slate-300">
-                              {d}
-                            </div>
-                          ))}
                         </div>
                       </div>
 
-                      {/* Right Calendar: Dec 2026 */}
+                      {/* Right Month Calendar */}
                       <div>
                         <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-800">
                           <span className="w-4" />
-                          <span>Dec 2026</span>
-                          <button type="button" className="p-1 hover:bg-slate-100 rounded-lg text-slate-600">
+                          <span>
+                            {MONTH_NAMES[nextMonthIdx]} {nextMonthYear}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleRangeNext}
+                            className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 cursor-pointer"
+                          >
                             <ChevronRight className="w-4 h-4" />
                           </button>
                         </div>
@@ -1398,45 +1631,59 @@ export function AdvancedFormsView() {
                           <span>Sa</span>
                         </div>
                         <div className="grid grid-cols-7 gap-0.5 text-center text-xs">
-                          {[29, 30].map((d) => (
-                            <div key={`range-d-prev-${d}`} className="py-1 text-slate-300">
-                              {d}
-                            </div>
-                          ))}
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
-                            const isEnd = d === 31;
-                            const inRange = d < 31;
+                          {getCalendarGrid(nextMonthYear, nextMonthIdx).map((cell, idx) => {
+                            const isStart = cell.dateStr === rangeStart;
+                            const isEnd = cell.dateStr === rangeEnd;
+                            const effectiveEnd = rangeEnd || rangeHover;
+                            const inRange =
+                              rangeStart &&
+                              effectiveEnd &&
+                              cell.dateStr > rangeStart &&
+                              cell.dateStr < effectiveEnd;
+
+                            let bgClass = cell.isCurrentMonth ? 'text-slate-700' : 'text-slate-300';
+                            if (isStart && isEnd) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-md';
+                            } else if (isStart) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-l-md';
+                            } else if (isEnd) {
+                              bgClass = 'bg-[#175cd3] text-white font-bold rounded-r-md';
+                            } else if (inRange) {
+                              bgClass = 'bg-[#e0f2fe] text-[#0369a1] font-medium';
+                            }
+
                             return (
-                              <div
-                                key={`range-d-${d}`}
-                                className={`py-1 text-xs font-medium ${
-                                  isEnd
-                                    ? 'bg-[#175cd3] text-white font-bold rounded-r-md'
-                                    : inRange
-                                    ? 'bg-[#e0f2fe] text-[#0369a1]'
-                                    : 'text-slate-700'
-                                }`}
+                              <button
+                                key={`m2-${idx}`}
+                                type="button"
+                                onClick={() => handleDateRangeClick(cell.dateStr)}
+                                onMouseEnter={() => {
+                                  if (rangeStart && !rangeEnd) {
+                                    setRangeHover(cell.dateStr);
+                                  }
+                                }}
+                                className={`py-1 text-xs cursor-pointer transition-colors ${bgClass}`}
                               >
-                                {d}
-                              </div>
+                                {cell.day}
+                              </button>
                             );
                           })}
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9].slice(0, 9).map((d) => (
-                            <div key={`range-d-next-${d}`} className="py-1 text-slate-300">
-                              {d}
-                            </div>
-                          ))}
                         </div>
                       </div>
                     </div>
 
                     {/* Footer Actions */}
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-600">2026-11-16 - 2026-12-31</span>
+                      <span className="text-xs font-semibold text-slate-700">
+                        {rangeStart ? rangeStart : 'Start Date'} - {rangeEnd ? rangeEnd : (rangeHover ? rangeHover : 'End Date')}
+                      </span>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => setIsDateRangePickerOpen(false)}
+                          onClick={() => {
+                            setRangeHover(null);
+                            setActivePopover(null);
+                          }}
                           className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
                         >
                           Cancel
@@ -1444,8 +1691,13 @@ export function AdvancedFormsView() {
                         <button
                           type="button"
                           onClick={() => {
-                            setDateRangeVal('2026-11-16 - 2026-12-31');
-                            setIsDateRangePickerOpen(false);
+                            if (rangeStart) {
+                              const finalEnd = rangeEnd || rangeStart;
+                              const result = `${rangeStart} - ${finalEnd}`;
+                              setDateRangeVal(result);
+                            }
+                            setRangeHover(null);
+                            setActivePopover(null);
                           }}
                           className="px-4 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
                         >
@@ -1457,28 +1709,37 @@ export function AdvancedFormsView() {
                 )}
               </div>
 
-              {/* 5. Time Picker (Matching Screenshot 8 - Spinner popover) */}
-              <div className="form-group relative popover-container">
+              {/* 5. Time Picker (Real spinner + Direct Input) */}
+              <div className="form-group relative" data-popover-id="time-picker">
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Time Picker
                 </label>
                 <div
-                  onClick={() => setIsTimePickerOpen(!isTimePickerOpen)}
-                  className="flex rounded-xl border border-slate-200 overflow-hidden cursor-pointer focus-within:border-[#175cd3] transition-all"
+                  className={`flex rounded-xl border overflow-hidden transition-all ${
+                    activePopover === 'time-picker'
+                      ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
+                      : 'border-slate-200 hover:border-slate-300'
+                  }`}
                 >
-                  <div className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => togglePopover('time-picker')}
+                    className="px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center shrink-0 cursor-pointer"
+                  >
                     <Clock className="w-4 h-4" />
-                  </div>
+                  </button>
                   <input
                     type="text"
-                    readOnly
                     value={timePickerVal}
-                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 cursor-pointer focus:outline-none"
+                    onChange={(e) => setTimePickerVal(e.target.value)}
+                    onClick={() => togglePopover('time-picker')}
+                    placeholder="HH:MM AM/PM"
+                    className="w-full px-3.5 py-2.5 bg-white text-sm text-slate-800 focus:outline-none"
                   />
                 </div>
 
-                {/* Spinner Popover matching Screenshot 8 */}
-                {isTimePickerOpen && (
+                {/* Spinner Popover */}
+                {activePopover === 'time-picker' && (
                   <div className="absolute z-30 left-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 w-56 animate-in fade-in duration-150">
                     <div className="flex items-center justify-center gap-3">
                       {/* Hour Column */}
@@ -1487,8 +1748,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newH = timeHour >= 12 ? 1 : timeHour + 1;
-                            setTimeHour(newH);
-                            setTimePickerVal(`${newH}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                            updateTimeVal(newH, timeMinute, timeAmPm);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
@@ -1501,8 +1761,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newH = timeHour <= 1 ? 12 : timeHour - 1;
-                            setTimeHour(newH);
-                            setTimePickerVal(`${newH}:${String(timeMinute).padStart(2, '0')} ${timeAmPm}`);
+                            updateTimeVal(newH, timeMinute, timeAmPm);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
@@ -1518,8 +1777,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newM = (timeMinute + 5) % 60;
-                            setTimeMinute(newM);
-                            setTimePickerVal(`${timeHour}:${String(newM).padStart(2, '0')} ${timeAmPm}`);
+                            updateTimeVal(timeHour, newM, timeAmPm);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
@@ -1532,8 +1790,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newM = timeMinute <= 0 ? 55 : timeMinute - 5;
-                            setTimeMinute(newM);
-                            setTimePickerVal(`${timeHour}:${String(newM).padStart(2, '0')} ${timeAmPm}`);
+                            updateTimeVal(timeHour, newM, timeAmPm);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
@@ -1547,8 +1804,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newA = timeAmPm === 'AM' ? 'PM' : 'AM';
-                            setTimeAmPm(newA);
-                            setTimePickerVal(`${timeHour}:${String(timeMinute).padStart(2, '0')} ${newA}`);
+                            updateTimeVal(timeHour, timeMinute, newA);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
@@ -1561,8 +1817,7 @@ export function AdvancedFormsView() {
                           type="button"
                           onClick={() => {
                             const newA = timeAmPm === 'AM' ? 'PM' : 'AM';
-                            setTimeAmPm(newA);
-                            setTimePickerVal(`${timeHour}:${String(timeMinute).padStart(2, '0')} ${newA}`);
+                            updateTimeVal(timeHour, timeMinute, newA);
                           }}
                           className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded cursor-pointer"
                         >
