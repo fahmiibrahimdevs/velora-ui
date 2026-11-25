@@ -7801,22 +7801,22 @@ function TableView() {
 
       {/* Row 4: Advanced Interactive Table with Selection & Bulk Actions */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-xs">
-        <div className="px-6 py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative rounded-t-2xl">
+        <div className="px-4 py-4 sm:px-6 sm:py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 relative rounded-t-2xl">
           <div>
             <h4 className="text-base font-bold text-[#1351b8]">Interactive Table with Row Selection</h4>
             <p className="text-xs text-slate-500 mt-0.5">
               Pilih satu atau lebih baris dengan checkbox untuk melakukan tindakan massal.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-48">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={projectSearch}
                 onChange={(e) => setProjectSearch(e.target.value)}
                 placeholder="Cari proyek..."
-                className="pl-8.5 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 w-48 transition-all"
+                className="w-full pl-8.5 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 transition-all"
               />
               {projectSearch && (
                 <button
@@ -7829,160 +7829,171 @@ function TableView() {
               )}
             </div>
 
-            {/* Filter Dropdown Popover Container */}
-            <div className="relative" ref={filterDropdownRef}>
-              <button
-                type="button"
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs ${
-                  activeFilterCount > 0 || isFilterOpen
-                    ? 'bg-blue-50/90 border border-blue-300 text-[#1351b8] ring-2 ring-blue-500/15'
-                    : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                <Filter className={`w-3.5 h-3.5 ${activeFilterCount > 0 ? 'text-[#1351b8]' : 'text-slate-500'}`} />
-                <span>Filter</span>
-                {activeFilterCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-[#1351b8] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
-                    {activeFilterCount}
-                  </span>
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              {/* Filter Dropdown Popover Container */}
+              <div className="relative flex-1 sm:flex-none" ref={filterDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className={`w-full sm:w-auto px-3 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs ${
+                    activeFilterCount > 0 || isFilterOpen
+                      ? 'bg-blue-50/90 border border-blue-300 text-[#1351b8] ring-2 ring-blue-500/15'
+                      : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <Filter className={`w-3.5 h-3.5 ${activeFilterCount > 0 ? 'text-[#1351b8]' : 'text-slate-500'}`} />
+                  <span>Filter</span>
+                  {activeFilterCount > 0 && (
+                    <span className="w-4 h-4 rounded-full bg-[#1351b8] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                  <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isFilterOpen ? 'rotate-180 text-[#1351b8]' : ''}`} />
+                </button>
+
+                {/* Mobile backdrop */}
+                {isFilterOpen && (
+                  <div
+                    className="fixed inset-0 bg-slate-900/30 backdrop-blur-2xs z-40 sm:hidden"
+                    onClick={() => setIsFilterOpen(false)}
+                  />
                 )}
-                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isFilterOpen ? 'rotate-180 text-[#1351b8]' : ''}`} />
-              </button>
 
-              {/* Popover Floating Card */}
-              {isFilterOpen && (
-                <div className="absolute right-0 top-full mt-2 w-76 sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
-                  {/* Popover Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-blue-50 text-[#1351b8] flex items-center justify-center">
-                        <Filter className="w-3.5 h-3.5" />
+                {/* Popover Floating Card */}
+                {isFilterOpen && (
+                  <div className="fixed inset-x-4 top-28 max-w-sm mx-auto sm:mx-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-80 bg-white rounded-2xl shadow-2xl sm:shadow-xl border border-slate-200 p-4 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
+                    {/* Popover Header */}
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg bg-blue-50 text-[#1351b8] flex items-center justify-center">
+                          <Filter className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="font-bold text-slate-800 text-sm">Filter Proyek</span>
                       </div>
-                      <span className="font-bold text-slate-800 text-sm">Filter Proyek</span>
-                    </div>
-                    {activeFilterCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer transition-colors"
-                      >
-                        Reset Semua
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Section 1: Tingkat Prioritas */}
-                  <div className="py-3 border-b border-slate-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                        Tingkat Prioritas
-                      </span>
-                      {selectedPriorities.length > 0 && (
-                        <span className="text-[10px] font-semibold text-[#1351b8]">
-                          {selectedPriorities.length} dipilih
-                        </span>
+                      {activeFilterCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={resetFilters}
+                          className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer transition-colors"
+                        >
+                          Reset Semua
+                        </button>
                       )}
                     </div>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {[
-                        { label: 'High', color: 'bg-rose-500', text: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-300' },
-                        { label: 'Medium', color: 'bg-amber-500', text: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-300' },
-                        { label: 'Low', color: 'bg-blue-500', text: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-300' },
-                      ].map((item) => {
-                        const isSelected = selectedPriorities.includes(item.label);
-                        return (
-                          <button
-                            key={item.label}
-                            type="button"
-                            onClick={() => {
-                              setSelectedPriorities((prev) =>
-                                prev.includes(item.label)
-                                  ? prev.filter((p) => p !== item.label)
-                                  : [...prev, item.label]
-                              );
-                            }}
-                            className={`px-2 py-1.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                              isSelected
-                                ? `${item.bg} ${item.border} ${item.text} ring-2 ring-[#1351b8]/15 shadow-2xs`
-                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                            }`}
-                          >
-                            <span className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
-                            {item.label}
-                            {isSelected && <Check className="w-3 h-3 ml-0.5" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
 
-                  {/* Section 2: Status Progres */}
-                  <div className="py-3 border-b border-slate-100">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
-                      Status Progres
+                    {/* Section 1: Tingkat Prioritas */}
+                    <div className="py-3 border-b border-slate-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                          Tingkat Prioritas
+                        </span>
+                        {selectedPriorities.length > 0 && (
+                          <span className="text-[10px] font-semibold text-[#1351b8]">
+                            {selectedPriorities.length} dipilih
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {[
+                          { label: 'High', color: 'bg-rose-500', text: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-300' },
+                          { label: 'Medium', color: 'bg-amber-500', text: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-300' },
+                          { label: 'Low', color: 'bg-blue-500', text: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-300' },
+                        ].map((item) => {
+                          const isSelected = selectedPriorities.includes(item.label);
+                          return (
+                            <button
+                              key={item.label}
+                              type="button"
+                              onClick={() => {
+                                setSelectedPriorities((prev) =>
+                                  prev.includes(item.label)
+                                    ? prev.filter((p) => p !== item.label)
+                                    : [...prev, item.label]
+                                );
+                              }}
+                              className={`px-2 py-1.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                                isSelected
+                                  ? `${item.bg} ${item.border} ${item.text} ring-2 ring-[#1351b8]/15 shadow-2xs`
+                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                              }`}
+                            >
+                              <span className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
+                              {item.label}
+                              {isSelected && <Check className="w-3 h-3 ml-0.5" />}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      {[
-                        { key: 'all', label: 'Semua Status Progres' },
-                        { key: 'in_progress', label: 'Sedang Berjalan (< 100%)' },
-                        { key: 'completed', label: 'Selesai (100%)' },
-                      ].map((opt) => {
-                        const isSelected = selectedStatus === opt.key;
-                        return (
-                          <label
-                            key={opt.key}
-                            onClick={() => setSelectedStatus(opt.key as any)}
-                            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors ${
-                              isSelected ? 'bg-blue-50 text-[#1351b8] font-semibold' : 'text-slate-700 hover:bg-slate-50'
-                            }`}
-                          >
-                            <span className="text-xs">{opt.label}</span>
-                            <input
-                              type="radio"
-                              name="filterStatus"
-                              checked={isSelected}
-                              onChange={() => setSelectedStatus(opt.key as any)}
-                              className="w-3.5 h-3.5 text-[#1351b8] focus:ring-[#1351b8] border-slate-300 cursor-pointer"
-                            />
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
 
-                  {/* Popover Footer */}
-                  <div className="pt-3 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      {filteredProjects.length} data ditemukan
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsFilterOpen(false);
-                        showToast(`${filteredProjects.length} proyek sesuai filter`, 'info');
-                      }}
-                      className="px-3.5 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white font-semibold rounded-xl text-xs transition-all shadow-sm cursor-pointer"
-                    >
-                      Terapkan
-                    </button>
+                    {/* Section 2: Status Progres */}
+                    <div className="py-3 border-b border-slate-100">
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        Status Progres
+                      </div>
+                      <div className="space-y-1">
+                        {[
+                          { key: 'all', label: 'Semua Status Progres' },
+                          { key: 'in_progress', label: 'Sedang Berjalan (< 100%)' },
+                          { key: 'completed', label: 'Selesai (100%)' },
+                        ].map((opt) => {
+                          const isSelected = selectedStatus === opt.key;
+                          return (
+                            <label
+                              key={opt.key}
+                              onClick={() => setSelectedStatus(opt.key as any)}
+                              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors ${
+                                isSelected ? 'bg-blue-50 text-[#1351b8] font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span className="text-xs">{opt.label}</span>
+                              <input
+                                type="radio"
+                                name="filterStatus"
+                                checked={isSelected}
+                                onChange={() => setSelectedStatus(opt.key as any)}
+                                className="w-3.5 h-3.5 text-[#1351b8] focus:ring-[#1351b8] border-slate-300 cursor-pointer"
+                              />
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Popover Footer */}
+                    <div className="pt-3 flex items-center justify-between">
+                      <span className="text-[11px] text-slate-500 font-medium">
+                        {filteredProjects.length} data ditemukan
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsFilterOpen(false);
+                          showToast(`${filteredProjects.length} proyek sesuai filter`, 'info');
+                        }}
+                        className="px-3.5 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white font-semibold rounded-xl text-xs transition-all shadow-sm cursor-pointer"
+                      >
+                        Terapkan
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => showToast('Mengekspor proyek terpilih...', 'success')}
+                className="flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" /> <span>Ekspor</span>
+              </button>
             </div>
-
-            <button
-              onClick={() => showToast('Mengekspor proyek terpilih...', 'success')}
-              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5" /> Ekspor
-            </button>
           </div>
         </div>
 
         {/* Active Filter Chips Bar (Visible when any filter is active) */}
         {activeFilterCount > 0 && (
-          <div className="px-6 py-2 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+          <div className="px-4 sm:px-6 py-2 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center gap-2 text-xs">
             <span className="text-slate-500 font-medium text-[11px]">Filter Aktif:</span>
             {selectedPriorities.map((pri) => (
               <span
@@ -8014,7 +8025,7 @@ function TableView() {
             <button
               type="button"
               onClick={resetFilters}
-              className="text-[11px] text-[#1351b8] hover:underline font-semibold ml-auto cursor-pointer"
+              className="text-[11px] text-[#1351b8] hover:underline font-semibold sm:ml-auto cursor-pointer"
             >
               Hapus Semua Filter
             </button>
@@ -8023,7 +8034,7 @@ function TableView() {
 
         {/* Selected Banner */}
         {selectedProjects.length > 0 && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 px-6 py-2.5 flex items-center justify-between text-xs text-blue-900 transition-all">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2.5 text-xs text-blue-900 transition-all">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
               <span className="font-semibold">{selectedProjects.length} proyek terpilih</span>
