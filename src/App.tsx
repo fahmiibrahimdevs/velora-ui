@@ -13123,21 +13123,23 @@ function StatisticView() {
     { name: 'Operations & Logistics', value: 68, target: '68/100', color: 'bg-purple-500' },
   ];
 
-  // Full-width responsive SVG math for Line Chart (viewBox 0 0 1000 280)
+  // SVG Math for 1-row 2-card charts (viewBox 0 0 600 250)
+  const chartW = 600;
+  const chartH = 250;
+  const padLeft = 40;
+  const padRight = 20;
+  const padTop = 20;
+  const padBottom = 38;
+  const usableW = chartW - padLeft - padRight; // 540
+  const usableH = chartH - padTop - padBottom; // 192
+
   const maxLineVal = Math.max(...lineSeries1, ...lineSeries2) * 1.15;
-  const lineW = 1000;
-  const lineH = 280;
-  const padLeft = 55;
-  const padRight = 30;
-  const padTop = 25;
-  const padBottom = 45;
-  const usableW = lineW - padLeft - padRight; // 915
-  const usableH = lineH - padTop - padBottom; // 210
+  const maxBarVal = Math.max(...barData1, ...barData2) * 1.12;
 
   const getLinePoints = (series: number[]) => {
     return series.map((val, idx) => {
       const x = padLeft + (idx / (series.length - 1)) * usableW;
-      const y = lineH - padBottom - (val / maxLineVal) * usableH;
+      const y = chartH - padBottom - (val / maxLineVal) * usableH;
       return { x, y, val };
     });
   };
@@ -13159,7 +13161,7 @@ function StatisticView() {
 
   const path1 = makeSmoothPath(points1);
   const path2 = makeSmoothPath(points2);
-  const areaPath1 = `${path1} L ${points1[points1.length - 1].x},${lineH - padBottom} L ${points1[0].x},${lineH - padBottom} Z`;
+  const areaPath1 = `${path1} L ${points1[points1.length - 1].x},${chartH - padBottom} L ${points1[0].x},${chartH - padBottom} Z`;
 
   // Radar chart math (center: 150, 135, maxRadius: 85)
   const radarCx = 150;
@@ -13371,269 +13373,116 @@ function StatisticView() {
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION 2: FULL-WIDTH LINE & AREA CHART                  */}
+      {/* SECTION 2: 1 ROW 2 CARDS (LINE CHART & BAR CHART FIT)    */}
       {/* ======================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
-        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#175cd3]" />
-              Line Chart: Tren Transaksi & Kunjungan
-            </h4>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Grafik penuh terdistribusi merata di seluruh rentang periode data.
-            </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* CARD 1: LINE & AREA CHART */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative flex flex-col justify-between">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#175cd3]" />
+                Line Chart: Tren Transaksi & Kunjungan
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Perbandingan data realisasi transaksi terhadap estimasi kunjungan.
+              </p>
+            </div>
+            {/* Series Legend */}
+            <div className="flex items-center gap-3 text-xs font-semibold shrink-0">
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-full bg-[#175cd3]" />
+                Transaksi
+              </span>
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-full bg-[#10b981]" />
+                Kunjungan
+              </span>
+            </div>
           </div>
-          {/* Series Legend */}
-          <div className="flex items-center gap-4 text-xs font-semibold">
-            <span className="flex items-center gap-1.5 text-slate-700">
-              <span className="w-3 h-3 rounded-full bg-[#175cd3]" />
-              Transaksi Kasbon
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-700">
-              <span className="w-3 h-3 rounded-full bg-[#10b981]" />
-              Kunjungan Portal
-            </span>
-          </div>
-        </div>
 
-        <div className="p-6">
-          <div className="w-full">
-            <svg viewBox={`0 0 ${lineW} ${lineH}`} className="w-full h-64 sm:h-80 select-none overflow-visible">
-              <defs>
-                <linearGradient id="areaGradientPrimary" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#175cd3" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#175cd3" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
+          <div className="p-5 sm:p-6 flex-1 flex flex-col justify-center">
+            <div className="w-full">
+              <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-64 sm:h-72 select-none overflow-visible">
+                <defs>
+                  <linearGradient id="areaGradientPrimary" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#175cd3" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#175cd3" stopOpacity="0.0" />
+                  </linearGradient>
+                </defs>
 
-              {/* Horizontal Grid lines spanning 100% */}
-              {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
-                const y = lineH - padBottom - pct * usableH;
-                return (
-                  <g key={i}>
-                    <line
-                      x1={padLeft}
-                      y1={y}
-                      x2={lineW - padRight}
-                      y2={y}
-                      stroke="#f1f5f9"
-                      strokeWidth="1.5"
-                      strokeDasharray="4 4"
-                    />
-                    <text
-                      x={padLeft - 10}
-                      y={y + 4}
-                      textAnchor="end"
-                      className="text-[11px] font-semibold fill-slate-400"
-                    >
-                      {Math.round(pct * maxLineVal)}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* Area fill */}
-              <path d={areaPath1} fill="url(#areaGradientPrimary)" />
-
-              {/* Series 2 Line (Green) */}
-              <path
-                d={path2}
-                fill="none"
-                stroke="#10b981"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* Series 1 Line (Blue) */}
-              <path
-                d={path1}
-                fill="none"
-                stroke="#175cd3"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* Interactive Points Series 1 */}
-              {points1.map((p, idx) => (
-                <g
-                  key={idx}
-                  className="cursor-pointer"
-                  onMouseEnter={() => setActiveLineIndex(idx)}
-                  onMouseLeave={() => setActiveLineIndex(null)}
-                >
-                  <circle
-                    cx={p.x}
-                    cy={p.y}
-                    r={activeLineIndex === idx ? 7 : 4.5}
-                    fill="#ffffff"
-                    stroke="#175cd3"
-                    strokeWidth="3.5"
-                    className="transition-all duration-150"
-                  />
-                  {/* Tooltip on hover */}
-                  {activeLineIndex === idx && (
-                    <g>
-                      <rect
-                        x={Math.max(10, Math.min(lineW - 100, p.x - 45))}
-                        y={p.y - 42}
-                        width="90"
-                        height="32"
-                        rx="8"
-                        fill="#0f172a"
-                        className="shadow-xl"
+                {/* Horizontal Grid lines spanning 100% */}
+                {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
+                  const y = chartH - padBottom - pct * usableH;
+                  return (
+                    <g key={i}>
+                      <line
+                        x1={padLeft}
+                        y1={y}
+                        x2={chartW - padRight}
+                        y2={y}
+                        stroke="#f1f5f9"
+                        strokeWidth="1.5"
+                        strokeDasharray="4 4"
                       />
                       <text
-                        x={Math.max(55, Math.min(lineW - 55, p.x))}
-                        y={p.y - 28}
-                        textAnchor="middle"
-                        className="text-[10px] font-medium fill-slate-300"
+                        x={padLeft - 10}
+                        y={y + 4}
+                        textAnchor="end"
+                        className="text-[11px] font-semibold fill-slate-400"
                       >
-                        {timeLabels[idx] || `T-${idx}`}
-                      </text>
-                      <text
-                        x={Math.max(55, Math.min(lineW - 55, p.x))}
-                        y={p.y - 15}
-                        textAnchor="middle"
-                        className="text-[11px] font-bold fill-white"
-                      >
-                        {p.val} Transaksi
+                        {Math.round(pct * maxLineVal)}
                       </text>
                     </g>
-                  )}
-                </g>
-              ))}
+                  );
+                })}
 
-              {/* X-axis Labels */}
-              {points1.map((p, idx) => (
-                <text
-                  key={idx}
-                  x={p.x}
-                  y={lineH - 15}
-                  textAnchor="middle"
-                  className="text-[11px] font-semibold fill-slate-500"
-                >
-                  {timeLabels[idx] || `T-${idx}`}
-                </text>
-              ))}
-            </svg>
-          </div>
-        </div>
-      </div>
+                {/* Area fill */}
+                <path d={areaPath1} fill="url(#areaGradientPrimary)" />
 
-      {/* ======================================================== */}
-      {/* SECTION 3: FULL-WIDTH BAR CHART                          */}
-      {/* ======================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative">
-        <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-[#175cd3]" />
-              Bar Chart: Performa Periode & Realisasi Target
-            </h4>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Distribusi komparasi target vs realisasi yang memenuhi lebar penuh kontainer secara proporsional.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 text-xs font-semibold">
-            <span className="flex items-center gap-1.5 text-slate-700">
-              <span className="w-3 h-3 rounded-md bg-[#175cd3]" />
-              Realisasi Aktual
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-700">
-              <span className="w-3 h-3 rounded-md bg-[#10b981]" />
-              Target Rencana
-            </span>
-            <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
-              Rata-rata 89%
-            </span>
-          </div>
-        </div>
+                {/* Series 2 Line (Green) */}
+                <path
+                  d={path2}
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
 
-        <div className="p-6">
-          <div className="w-full">
-            <svg viewBox={`0 0 ${lineW} ${lineH}`} className="w-full h-64 sm:h-80 select-none overflow-visible">
-              {/* Horizontal Grid lines */}
-              {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
-                const y = lineH - padBottom - pct * usableH;
-                return (
-                  <g key={i}>
-                    <line
-                      x1={padLeft}
-                      y1={y}
-                      x2={lineW - padRight}
-                      y2={y}
-                      stroke="#f1f5f9"
-                      strokeWidth="1.5"
-                      strokeDasharray="4 4"
-                    />
-                    <text
-                      x={padLeft - 10}
-                      y={y + 4}
-                      textAnchor="end"
-                      className="text-[11px] font-semibold fill-slate-400"
-                    >
-                      {Math.round(pct * Math.max(...barData1, ...barData2) * 1.12)}
-                    </text>
-                  </g>
-                );
-              })}
+                {/* Series 1 Line (Blue) */}
+                <path
+                  d={path1}
+                  fill="none"
+                  stroke="#175cd3"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
 
-              {/* Bars across all categories filling full width */}
-              {timeLabels.map((label, idx) => {
-                const numCats = timeLabels.length;
-                const colW = usableW / numCats;
-                const colCenter = padLeft + (idx + 0.5) * colW;
-                const singleW = Math.min(28, Math.max(14, colW * 0.32));
-                const gap = 4;
-                const maxVal = Math.max(...barData1, ...barData2) * 1.12;
-
-                const val1 = barData1[idx] || 0;
-                const val2 = barData2[idx] || 0;
-                const h1 = (val1 / maxVal) * usableH;
-                const h2 = (val2 / maxVal) * usableH;
-                const isHovered = activeBarIndex === idx;
-
-                const b1X = colCenter - singleW - gap / 2;
-                const b2X = colCenter + gap / 2;
-                const baseY = lineH - padBottom;
-
-                return (
+                {/* Interactive Points Series 1 */}
+                {points1.map((p, idx) => (
                   <g
                     key={idx}
-                    className="cursor-pointer transition-all"
-                    onMouseEnter={() => setActiveBarIndex(idx)}
-                    onMouseLeave={() => setActiveBarIndex(null)}
+                    className="cursor-pointer"
+                    onMouseEnter={() => setActiveLineIndex(idx)}
+                    onMouseLeave={() => setActiveLineIndex(null)}
                   >
-                    {/* Bar 1: Realisasi */}
-                    <rect
-                      x={b1X}
-                      y={baseY - h1}
-                      width={singleW}
-                      height={h1}
-                      rx="4"
-                      fill={isHovered ? '#103a94' : '#175cd3'}
-                      className="transition-colors duration-150"
+                    <circle
+                      cx={p.x}
+                      cy={p.y}
+                      r={activeLineIndex === idx ? 7 : 4.5}
+                      fill="#ffffff"
+                      stroke="#175cd3"
+                      strokeWidth="3.5"
+                      className="transition-all duration-150"
                     />
-                    {/* Bar 2: Target */}
-                    <rect
-                      x={b2X}
-                      y={baseY - h2}
-                      width={singleW}
-                      height={h2}
-                      rx="4"
-                      fill={isHovered ? '#059669' : '#10b981'}
-                      className="transition-colors duration-150"
-                    />
-
                     {/* Tooltip on hover */}
-                    {isHovered && (
+                    {activeLineIndex === idx && (
                       <g>
                         <rect
-                          x={Math.max(10, Math.min(lineW - 100, colCenter - 45))}
-                          y={baseY - Math.max(h1, h2) - 40}
+                          x={Math.max(10, Math.min(chartW - 100, p.x - 45))}
+                          y={p.y - 42}
                           width="90"
                           height="32"
                           rx="8"
@@ -13641,37 +13490,194 @@ function StatisticView() {
                           className="shadow-xl"
                         />
                         <text
-                          x={Math.max(55, Math.min(lineW - 55, colCenter))}
-                          y={baseY - Math.max(h1, h2) - 26}
+                          x={Math.max(55, Math.min(chartW - 55, p.x))}
+                          y={p.y - 28}
                           textAnchor="middle"
                           className="text-[10px] font-medium fill-slate-300"
                         >
-                          {label}
+                          {timeLabels[idx] || `T-${idx}`}
                         </text>
                         <text
-                          x={Math.max(55, Math.min(lineW - 55, colCenter))}
-                          y={baseY - Math.max(h1, h2) - 13}
+                          x={Math.max(55, Math.min(chartW - 55, p.x))}
+                          y={p.y - 15}
                           textAnchor="middle"
                           className="text-[11px] font-bold fill-white"
                         >
-                          {val1} / {val2}
+                          {p.val} Transaksi
                         </text>
                       </g>
                     )}
-
-                    {/* X-axis Label */}
-                    <text
-                      x={colCenter}
-                      y={lineH - 15}
-                      textAnchor="middle"
-                      className="text-[11px] font-semibold fill-slate-500"
-                    >
-                      {label}
-                    </text>
                   </g>
-                );
-              })}
-            </svg>
+                ))}
+
+                {/* X-axis Labels */}
+                {points1.map((p, idx) => (
+                  <text
+                    key={idx}
+                    x={p.x}
+                    y={chartH - 12}
+                    textAnchor="middle"
+                    className="text-[11px] font-semibold fill-slate-500"
+                  >
+                    {timeLabels[idx] || `T-${idx}`}
+                  </text>
+                ))}
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 2: BAR CHART */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-xs relative flex flex-col justify-between">
+          <div className="px-6 py-4.5 border-b border-slate-100 rounded-t-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h4 className="text-base font-bold text-[#1351b8] flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#175cd3]" />
+                Bar Chart: Performa Periode
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Komparasi target vs realisasi mingguan / bulanan.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                Rata-rata 89%
+              </span>
+            </div>
+          </div>
+
+          <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+            <div className="w-full">
+              <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-64 sm:h-72 select-none overflow-visible">
+                {/* Horizontal Grid lines */}
+                {[0, 0.25, 0.5, 0.75, 1].map((pct, i) => {
+                  const y = chartH - padBottom - pct * usableH;
+                  return (
+                    <g key={i}>
+                      <line
+                        x1={padLeft}
+                        y1={y}
+                        x2={chartW - padRight}
+                        y2={y}
+                        stroke="#f1f5f9"
+                        strokeWidth="1.5"
+                        strokeDasharray="4 4"
+                      />
+                      <text
+                        x={padLeft - 10}
+                        y={y + 4}
+                        textAnchor="end"
+                        className="text-[11px] font-semibold fill-slate-400"
+                      >
+                        {Math.round(pct * maxBarVal)}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {/* Bars across all categories filling full width */}
+                {timeLabels.map((label, idx) => {
+                  const numCats = timeLabels.length;
+                  const colW = usableW / numCats;
+                  const colCenter = padLeft + (idx + 0.5) * colW;
+                  const singleW = Math.min(20, Math.max(9, colW * 0.32));
+                  const gap = 3;
+
+                  const val1 = barData1[idx] || 0;
+                  const val2 = barData2[idx] || 0;
+                  const h1 = (val1 / maxBarVal) * usableH;
+                  const h2 = (val2 / maxBarVal) * usableH;
+                  const isHovered = activeBarIndex === idx;
+
+                  const b1X = colCenter - singleW - gap / 2;
+                  const b2X = colCenter + gap / 2;
+                  const baseY = chartH - padBottom;
+
+                  return (
+                    <g
+                      key={idx}
+                      className="cursor-pointer transition-all"
+                      onMouseEnter={() => setActiveBarIndex(idx)}
+                      onMouseLeave={() => setActiveBarIndex(null)}
+                    >
+                      {/* Bar 1: Realisasi */}
+                      <rect
+                        x={b1X}
+                        y={baseY - h1}
+                        width={singleW}
+                        height={h1}
+                        rx="3.5"
+                        fill={isHovered ? '#103a94' : '#175cd3'}
+                        className="transition-colors duration-150"
+                      />
+                      {/* Bar 2: Target */}
+                      <rect
+                        x={b2X}
+                        y={baseY - h2}
+                        width={singleW}
+                        height={h2}
+                        rx="3.5"
+                        fill={isHovered ? '#059669' : '#10b981'}
+                        className="transition-colors duration-150"
+                      />
+
+                      {/* Tooltip on hover */}
+                      {isHovered && (
+                        <g>
+                          <rect
+                            x={Math.max(10, Math.min(chartW - 100, colCenter - 45))}
+                            y={baseY - Math.max(h1, h2) - 40}
+                            width="90"
+                            height="32"
+                            rx="8"
+                            fill="#0f172a"
+                            className="shadow-xl"
+                          />
+                          <text
+                            x={Math.max(55, Math.min(chartW - 55, colCenter))}
+                            y={baseY - Math.max(h1, h2) - 26}
+                            textAnchor="middle"
+                            className="text-[10px] font-medium fill-slate-300"
+                          >
+                            {label}
+                          </text>
+                          <text
+                            x={Math.max(55, Math.min(chartW - 55, colCenter))}
+                            y={baseY - Math.max(h1, h2) - 13}
+                            textAnchor="middle"
+                            className="text-[11px] font-bold fill-white"
+                          >
+                            {val1} / {val2}
+                          </text>
+                        </g>
+                      )}
+
+                      {/* X-axis Label */}
+                      <text
+                        x={colCenter}
+                        y={chartH - 12}
+                        textAnchor="middle"
+                        className="text-[11px] font-semibold fill-slate-500"
+                      >
+                        {label}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+
+            {/* Bottom Legend for Bar Chart */}
+            <div className="flex items-center justify-center gap-6 mt-3 pt-3 border-t border-slate-100 text-xs font-semibold">
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-md bg-[#175cd3]" />
+                Realisasi
+              </span>
+              <span className="flex items-center gap-1.5 text-slate-700">
+                <span className="w-3 h-3 rounded-md bg-[#10b981]" />
+                Target Rencana
+              </span>
+            </div>
           </div>
         </div>
       </div>
