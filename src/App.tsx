@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -6913,6 +6913,28 @@ function ProgressView() {
 function TableView() {
   const [selectedProjects, setSelectedProjects] = useState<number[]>([1, 3]);
   const [projectSearch, setProjectSearch] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'in_progress' | 'completed'>('all');
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close filter dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterDropdownRef.current &&
+        !filterDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsFilterOpen(false);
+      }
+    };
+    if (isFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isFilterOpen]);
 
   // Collapsible date groups state for Financial Ledger
   const [expandedDateGroups, setExpandedDateGroups] = useState<Record<string, boolean>>({
@@ -7054,13 +7076,58 @@ function TableView() {
       progress: 100,
       priority: 'Low',
     },
+    {
+      id: 5,
+      name: 'Pusat Analitik & Laporan Keuangan Realtime',
+      category: 'Business Intelligence',
+      members: ['Dewi', 'Ahmad'],
+      deadline: '12 Jan 2027',
+      progress: 50,
+      priority: 'Medium',
+    },
+    {
+      id: 6,
+      name: 'Audit Kepatuhan ISO 27001 & Pen-Test',
+      category: 'Cyber Security',
+      members: ['Fahmi', 'Irwansyah'],
+      deadline: '15 Jan 2027',
+      progress: 100,
+      priority: 'High',
+    },
   ];
 
-  const filteredProjects = projectsData.filter(
-    (p) =>
+  const activeFilterCount =
+    selectedPriorities.length + (selectedStatus !== 'all' ? 1 : 0);
+
+  const resetFilters = () => {
+    setSelectedPriorities([]);
+    setSelectedStatus('all');
+    setProjectSearch('');
+    showToast('Filter dan pencarian direset', 'info');
+  };
+
+  const filteredProjects = projectsData.filter((p) => {
+    // 1. Text search
+    const matchesSearch =
       p.name.toLowerCase().includes(projectSearch.toLowerCase()) ||
-      p.category.toLowerCase().includes(projectSearch.toLowerCase())
-  );
+      p.category.toLowerCase().includes(projectSearch.toLowerCase());
+    if (!matchesSearch) return false;
+
+    // 2. Priority filter
+    if (selectedPriorities.length > 0 && !selectedPriorities.includes(p.priority)) {
+      return false;
+    }
+
+    // 3. Status/progress filter
+    if (selectedStatus === 'in_progress' && p.progress === 100) {
+      return false;
+    }
+    if (selectedStatus === 'completed' && p.progress < 100) {
+      return false;
+    }
+
+    return true;
+  });
 
   const toggleSelectAll = () => {
     if (selectedProjects.length === filteredProjects.length) {
@@ -7733,8 +7800,8 @@ function TableView() {
       </div>
 
       {/* Row 4: Advanced Interactive Table with Selection & Bulk Actions */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-        <div className="px-6 py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs">
+        <div className="px-6 py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative rounded-t-2xl">
           <div>
             <h4 className="text-base font-bold text-[#1351b8]">Interactive Table with Row Selection</h4>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -7749,15 +7816,161 @@ function TableView() {
                 value={projectSearch}
                 onChange={(e) => setProjectSearch(e.target.value)}
                 placeholder="Cari proyek..."
-                className="pl-8.5 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 w-48 transition-all"
+                className="pl-8.5 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1351b8]/20 focus:border-[#1351b8] text-slate-700 w-48 transition-all"
               />
+              {projectSearch && (
+                <button
+                  type="button"
+                  onClick={() => setProjectSearch('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
             </div>
-            <button
-              onClick={() => showToast('Menampilkan filter lanjutan...', 'info')}
-              className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
-            >
-              <Filter className="w-3.5 h-3.5 text-slate-500" /> Filter
-            </button>
+
+            {/* Filter Dropdown Popover Container */}
+            <div className="relative" ref={filterDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs ${
+                  activeFilterCount > 0 || isFilterOpen
+                    ? 'bg-blue-50/90 border border-blue-300 text-[#1351b8] ring-2 ring-blue-500/15'
+                    : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <Filter className={`w-3.5 h-3.5 ${activeFilterCount > 0 ? 'text-[#1351b8]' : 'text-slate-500'}`} />
+                <span>Filter</span>
+                {activeFilterCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-[#1351b8] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                    {activeFilterCount}
+                  </span>
+                )}
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isFilterOpen ? 'rotate-180 text-[#1351b8]' : ''}`} />
+              </button>
+
+              {/* Popover Floating Card */}
+              {isFilterOpen && (
+                <div className="absolute right-0 top-full mt-2 w-76 sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
+                  {/* Popover Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-blue-50 text-[#1351b8] flex items-center justify-center">
+                        <Filter className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-bold text-slate-800 text-sm">Filter Proyek</span>
+                    </div>
+                    {activeFilterCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer transition-colors"
+                      >
+                        Reset Semua
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Section 1: Tingkat Prioritas */}
+                  <div className="py-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Tingkat Prioritas
+                      </span>
+                      {selectedPriorities.length > 0 && (
+                        <span className="text-[10px] font-semibold text-[#1351b8]">
+                          {selectedPriorities.length} dipilih
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {[
+                        { label: 'High', color: 'bg-rose-500', text: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-300' },
+                        { label: 'Medium', color: 'bg-amber-500', text: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-300' },
+                        { label: 'Low', color: 'bg-blue-500', text: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-300' },
+                      ].map((item) => {
+                        const isSelected = selectedPriorities.includes(item.label);
+                        return (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={() => {
+                              setSelectedPriorities((prev) =>
+                                prev.includes(item.label)
+                                  ? prev.filter((p) => p !== item.label)
+                                  : [...prev, item.label]
+                              );
+                            }}
+                            className={`px-2 py-1.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                              isSelected
+                                ? `${item.bg} ${item.border} ${item.text} ring-2 ring-[#1351b8]/15 shadow-2xs`
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                            }`}
+                          >
+                            <span className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
+                            {item.label}
+                            {isSelected && <Check className="w-3 h-3 ml-0.5" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Section 2: Status Progres */}
+                  <div className="py-3 border-b border-slate-100">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                      Status Progres
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { key: 'all', label: 'Semua Status Progres' },
+                        { key: 'in_progress', label: 'Sedang Berjalan (< 100%)' },
+                        { key: 'completed', label: 'Selesai (100%)' },
+                      ].map((opt) => {
+                        const isSelected = selectedStatus === opt.key;
+                        return (
+                          <label
+                            key={opt.key}
+                            onClick={() => setSelectedStatus(opt.key as any)}
+                            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors ${
+                              isSelected ? 'bg-blue-50 text-[#1351b8] font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span className="text-xs">{opt.label}</span>
+                            <input
+                              type="radio"
+                              name="filterStatus"
+                              checked={isSelected}
+                              onChange={() => setSelectedStatus(opt.key as any)}
+                              className="w-3.5 h-3.5 text-[#1351b8] focus:ring-[#1351b8] border-slate-300 cursor-pointer"
+                            />
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Popover Footer */}
+                  <div className="pt-3 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {filteredProjects.length} data ditemukan
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsFilterOpen(false);
+                        showToast(`${filteredProjects.length} proyek sesuai filter`, 'info');
+                      }}
+                      className="px-3.5 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white font-semibold rounded-xl text-xs transition-all shadow-sm cursor-pointer"
+                    >
+                      Terapkan
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => showToast('Mengekspor proyek terpilih...', 'success')}
               className="px-3.5 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] rounded-xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
@@ -7766,6 +7979,47 @@ function TableView() {
             </button>
           </div>
         </div>
+
+        {/* Active Filter Chips Bar (Visible when any filter is active) */}
+        {activeFilterCount > 0 && (
+          <div className="px-6 py-2 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+            <span className="text-slate-500 font-medium text-[11px]">Filter Aktif:</span>
+            {selectedPriorities.map((pri) => (
+              <span
+                key={pri}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs"
+              >
+                <span>Prioritas: {pri}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPriorities((prev) => prev.filter((p) => p !== pri))}
+                  className="text-slate-400 hover:text-rose-600 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+            {selectedStatus !== 'all' && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs">
+                <span>Status: {selectedStatus === 'in_progress' ? 'Sedang Berjalan' : 'Selesai'}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedStatus('all')}
+                  className="text-slate-400 hover:text-rose-600 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="text-[11px] text-[#1351b8] hover:underline font-semibold ml-auto cursor-pointer"
+            >
+              Hapus Semua Filter
+            </button>
+          </div>
+        )}
 
         {/* Selected Banner */}
         {selectedProjects.length > 0 && (
@@ -7817,8 +8071,23 @@ function TableView() {
             <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
-                    Tidak ada proyek yang sesuai dengan pencarian.
+                  <td colSpan={7} className="py-12 text-center">
+                    <div className="max-w-xs mx-auto space-y-2.5">
+                      <div className="w-10 h-10 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center">
+                        <Filter className="w-5 h-5" />
+                      </div>
+                      <div className="font-semibold text-slate-700 text-sm">Tidak ada proyek yang cocok</div>
+                      <p className="text-slate-400 text-xs leading-relaxed">
+                        Coba sesuaikan kata kunci pencarian atau bersihkan kriteria filter yang aktif.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="mt-1 px-3.5 py-1.5 bg-blue-50 text-[#1351b8] hover:bg-blue-100 rounded-xl font-semibold text-xs transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" /> Reset Filter & Pencarian
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -7931,7 +8200,7 @@ function TableView() {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white text-xs text-slate-500">
+        <div className="px-6 py-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white text-xs text-slate-500 rounded-b-2xl">
           <span>Menampilkan {filteredProjects.length} dari {projectsData.length} proyek aktif</span>
           <div className="flex items-center gap-1">
             <button disabled className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 cursor-not-allowed">
