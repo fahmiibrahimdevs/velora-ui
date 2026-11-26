@@ -363,9 +363,9 @@ export function ActivitiesView() {
         )}
       </div>
 
-      {/* Clean Communication & System Activity Timeline Canvas (Reference Layout) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 sm:p-8">
-        <div className="relative space-y-5 before:content-[''] before:absolute before:left-[18px] before:top-3 before:bottom-3 before:w-px before:bg-slate-200">
+      {/* Clean Communication & System Activity Timeline Directly on Page Canvas */}
+      <div className="max-w-5xl py-1">
+        <div className="relative space-y-5 before:content-[''] before:absolute before:left-[18px] before:top-3 before:bottom-3 before:w-px before:bg-slate-300/80">
           {filtered.map((item) => {
             const isExpanded = Boolean(expandedIds[item.id]);
 
