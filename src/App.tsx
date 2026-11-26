@@ -12,6 +12,11 @@ import { UploadFilesView } from './components/forms/UploadFilesView';
 import { CalendarView } from './components/modules/CalendarView';
 import { ChartJSView } from './components/modules/ChartJSView';
 import { DataTablesView } from './components/modules/DataTablesView';
+import { FlagView } from './components/modules/FlagView';
+import { FontAwesomeView } from './components/modules/FontAwesomeView';
+import { IonIconsView } from './components/modules/IonIconsView';
+import { OwlCarouselView } from './components/modules/OwlCarouselView';
+import { SparklineView } from './components/modules/SparklineView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15494,6 +15499,26 @@ export function App() {
       title: 'DataTables',
       breadcrumbs: ['Dashboard', 'Modules', 'DataTables'],
     },
+    flag: {
+      title: 'Flag',
+      breadcrumbs: ['Dashboard', 'Modules', 'Flag'],
+    },
+    'font-awesome': {
+      title: 'Font Awesome',
+      breadcrumbs: ['Dashboard', 'Modules', 'Font Awesome'],
+    },
+    'ion-icons': {
+      title: 'Ion Icons',
+      breadcrumbs: ['Dashboard', 'Modules', 'Ion Icons'],
+    },
+    'owl-carousel': {
+      title: 'Owl Carousel',
+      breadcrumbs: ['Dashboard', 'Modules', 'Owl Carousel'],
+    },
+    sparkline: {
+      title: 'Sparkline',
+      breadcrumbs: ['Dashboard', 'Modules', 'Sparkline'],
+    },
     credits: {
       title: 'Credits & Attribution',
       breadcrumbs: ['Velora UI', 'Credits'],
@@ -15547,6 +15572,16 @@ export function App() {
         return <UserView />;
       case 'datatables':
         return <DataTablesView />;
+      case 'flag':
+        return <FlagView />;
+      case 'font-awesome':
+        return <FontAwesomeView />;
+      case 'ion-icons':
+        return <IonIconsView />;
+      case 'owl-carousel':
+        return <OwlCarouselView />;
+      case 'sparkline':
+        return <SparklineView />;
       case 'components-table':
         return <KelasView />;
       case 'advanced-form':
