@@ -17,6 +17,8 @@ import { FontAwesomeView } from './components/modules/FontAwesomeView';
 import { IonIconsView } from './components/modules/IonIconsView';
 import { OwlCarouselView } from './components/modules/OwlCarouselView';
 import { SparklineView } from './components/modules/SparklineView';
+import { SweetAlertView } from './components/modules/SweetAlertView';
+import { ToastrView } from './components/modules/ToastrView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15519,6 +15521,14 @@ export function App() {
       title: 'Sparkline',
       breadcrumbs: ['Dashboard', 'Modules', 'Sparkline'],
     },
+    'sweet-alert': {
+      title: 'SweetAlert',
+      breadcrumbs: ['Dashboard', 'Modules', 'SweetAlert'],
+    },
+    toastr: {
+      title: 'Toastr',
+      breadcrumbs: ['Dashboard', 'Modules', 'Toastr'],
+    },
     credits: {
       title: 'Credits & Attribution',
       breadcrumbs: ['Velora UI', 'Credits'],
@@ -15582,6 +15592,10 @@ export function App() {
         return <OwlCarouselView />;
       case 'sparkline':
         return <SparklineView />;
+      case 'sweet-alert':
+        return <SweetAlertView />;
+      case 'toastr':
+        return <ToastrView />;
       case 'components-table':
         return <KelasView />;
       case 'advanced-form':
