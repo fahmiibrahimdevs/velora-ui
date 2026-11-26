@@ -9,6 +9,7 @@ import { AdvancedFormsView } from './components/forms/AdvancedFormsView';
 import { EditorView } from './components/forms/EditorView';
 import { ValidationView } from './components/forms/ValidationView';
 import { UploadFilesView } from './components/forms/UploadFilesView';
+import { CalendarView } from './components/modules/CalendarView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15479,6 +15480,10 @@ export function App() {
       title: 'Upload Files',
       breadcrumbs: ['Dashboard', 'Forms', 'Upload Files'],
     },
+    calendar: {
+      title: 'Calendar',
+      breadcrumbs: ['Dashboard', 'Modules', 'Calendar'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -15545,6 +15550,8 @@ export function App() {
         return <ValidationView />;
       case 'upload-files':
         return <UploadFilesView />;
+      case 'calendar':
+        return <CalendarView />;
       case 'forms':
         return <MataPelajaranView />;
       case 'card':
