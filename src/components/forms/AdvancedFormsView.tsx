@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Phone,
   Lock,
@@ -196,7 +196,14 @@ export function AdvancedFormsView() {
 
   // Select2 Multiple
   const [select2MultiValues, setSelect2MultiValues] = useState<string[]>(['Option 1', 'Option 4']);
+  const [select2MultiSearch, setSelect2MultiSearch] = useState('');
+  const [select2MultiHighlighted, setSelect2MultiHighlighted] = useState(0);
+  const select2MultiInputRef = useRef<HTMLInputElement>(null);
   const select2MultiOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+  const filteredMultiOptions = select2MultiOptions.filter((opt) =>
+    opt.toLowerCase().includes(select2MultiSearch.toLowerCase().trim())
+  );
 
   // jQuery Selectric
   const [selectricVal, setSelectricVal] = useState('Option 2');
@@ -907,32 +914,34 @@ export function AdvancedFormsView() {
                     )}
                   </div>
 
-                  {/* Select2 Multiple with Tag Chips (Matching Screenshot 2) */}
+                  {/* Select2 Multiple with Search & Tag Chips */}
                   <div className="form-group relative" data-popover-id="select2-multi">
                     <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                       Select2 Multiple
                     </label>
                     <div
-                      onClick={() => togglePopover('select2-multi')}
-                      className={`w-full min-h-[44px] px-3 py-2 bg-white border rounded-xl text-sm flex flex-wrap items-center gap-1.5 cursor-pointer transition-all ${
+                      onClick={() => {
+                        setActivePopover('select2-multi');
+                        select2MultiInputRef.current?.focus();
+                      }}
+                      className={`w-full min-h-[42px] px-2.5 py-1.5 bg-white border rounded-xl text-sm flex flex-wrap items-center gap-1.5 cursor-text transition-all ${
                         activePopover === 'select2-multi'
                           ? 'border-[#175cd3] ring-2 ring-[#175cd3]/10'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      {select2MultiValues.length === 0 && (
-                        <span className="text-slate-400 text-xs">Select options...</span>
-                      )}
+                      {/* Selected Tag Badges */}
                       {select2MultiValues.map((val) => (
                         <span
                           key={val}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#175cd3] text-white text-xs font-medium rounded-md shadow-xs"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#175cd3] text-white text-xs font-medium rounded-md shadow-xs select-none"
                         >
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelect2MultiValues(select2MultiValues.filter((v) => v !== val));
+                              select2MultiInputRef.current?.focus();
                             }}
                             className="hover:text-red-200 cursor-pointer"
                           >
@@ -941,34 +950,91 @@ export function AdvancedFormsView() {
                           {val}
                         </span>
                       ))}
+
+                      {/* Inline Search Input (matching Screenshot 0, 1, 2) */}
+                      <input
+                        ref={select2MultiInputRef}
+                        type="text"
+                        value={select2MultiSearch}
+                        onChange={(e) => {
+                          setSelect2MultiSearch(e.target.value);
+                          setSelect2MultiHighlighted(0);
+                          setActivePopover('select2-multi');
+                        }}
+                        onFocus={() => setActivePopover('select2-multi')}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Backspace' && !select2MultiSearch && select2MultiValues.length > 0) {
+                            setSelect2MultiValues(select2MultiValues.slice(0, -1));
+                          } else if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            if (filteredMultiOptions.length > 0) {
+                              setSelect2MultiHighlighted((prev) =>
+                                prev < filteredMultiOptions.length - 1 ? prev + 1 : 0
+                              );
+                            }
+                          } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            if (filteredMultiOptions.length > 0) {
+                              setSelect2MultiHighlighted((prev) =>
+                                prev > 0 ? prev - 1 : filteredMultiOptions.length - 1
+                              );
+                            }
+                          } else if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (filteredMultiOptions.length > 0) {
+                              const targetOpt = filteredMultiOptions[select2MultiHighlighted] || filteredMultiOptions[0];
+                              if (select2MultiValues.includes(targetOpt)) {
+                                setSelect2MultiValues(select2MultiValues.filter((v) => v !== targetOpt));
+                              } else {
+                                setSelect2MultiValues([...select2MultiValues, targetOpt]);
+                              }
+                              setSelect2MultiSearch('');
+                            }
+                          } else if (e.key === 'Escape') {
+                            setActivePopover(null);
+                          }
+                        }}
+                        placeholder=""
+                        className="flex-1 min-w-[50px] max-w-full bg-transparent text-sm text-slate-800 outline-none border-none py-0.5 px-1"
+                      />
                     </div>
 
-                    {/* Popover Dropdown */}
+                    {/* Popover Dropdown with Search Results & Scrollbar */}
                     {activePopover === 'select2-multi' && (
                       <div className="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1 animate-in fade-in duration-150">
-                        {select2MultiOptions.map((opt) => {
-                          const isSelected = select2MultiValues.includes(opt);
-                          return (
-                            <div
-                              key={opt}
-                              onClick={() => {
-                                if (isSelected) {
-                                  setSelect2MultiValues(select2MultiValues.filter((v) => v !== opt));
-                                } else {
-                                  setSelect2MultiValues([...select2MultiValues, opt]);
-                                }
-                              }}
-                              className={`px-3.5 py-2 text-xs font-medium cursor-pointer transition-colors flex items-center justify-between ${
-                                isSelected
-                                  ? 'bg-[#175cd3] text-white font-semibold'
-                                  : 'text-slate-700 hover:bg-slate-50'
-                              }`}
-                            >
-                              <span>{opt}</span>
-                              {isSelected && <Check className="w-3.5 h-3.5" />}
-                            </div>
-                          );
-                        })}
+                        {filteredMultiOptions.length === 0 ? (
+                          <div className="px-3.5 py-2.5 text-xs text-slate-400 select-none">
+                            No results found
+                          </div>
+                        ) : (
+                          filteredMultiOptions.map((opt, idx) => {
+                            const isSelected = select2MultiValues.includes(opt);
+                            const isHighlighted = idx === select2MultiHighlighted;
+                            return (
+                              <div
+                                key={opt}
+                                onMouseEnter={() => setSelect2MultiHighlighted(idx)}
+                                onClick={() => {
+                                  if (isSelected) {
+                                    setSelect2MultiValues(select2MultiValues.filter((v) => v !== opt));
+                                  } else {
+                                    setSelect2MultiValues([...select2MultiValues, opt]);
+                                  }
+                                  setSelect2MultiSearch('');
+                                  select2MultiInputRef.current?.focus();
+                                }}
+                                className={`px-3.5 py-2 text-xs font-medium cursor-pointer transition-colors flex items-center justify-between ${
+                                  isHighlighted || isSelected
+                                    ? 'bg-[#175cd3] text-white font-semibold'
+                                    : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                              >
+                                <span>{opt}</span>
+                                {isSelected && <Check className="w-3.5 h-3.5" />}
+                              </div>
+                            );
+                          })
+                        )}
                       </div>
                     )}
                   </div>
