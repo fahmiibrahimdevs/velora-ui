@@ -41,6 +41,9 @@ import { PostsView, PostCreateView } from './components/features/PostsViews';
 import { ProfileView } from './components/features/ProfileView';
 import { SettingsView, SettingDetailView } from './components/features/SettingsViews';
 import { TicketsView } from './components/features/TicketsView';
+import { ContactView } from './components/utilities/ContactView';
+import { InvoiceView } from './components/utilities/InvoiceView';
+import { SubscribeView } from './components/utilities/SubscribeView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15590,6 +15593,18 @@ export function App() {
       title: 'Tickets',
       breadcrumbs: ['Dashboard', 'Features', 'Tickets'],
     },
+    contact: {
+      title: 'Contact',
+      breadcrumbs: ['Dashboard', 'Utilities', 'Contact'],
+    },
+    invoice: {
+      title: 'Invoice',
+      breadcrumbs: ['Dashboard', 'Utilities', 'Invoice'],
+    },
+    subscribe: {
+      title: 'Subscribe',
+      breadcrumbs: ['Dashboard', 'Utilities', 'Subscribe'],
+    },
     credits: {
       title: 'Credits & Attribution',
       breadcrumbs: ['Velora UI', 'Credits'],
@@ -15728,6 +15743,12 @@ export function App() {
         return <SettingDetailView key={settingSection} initialSection={settingSection} />;
       case 'tickets':
         return <TicketsView />;
+      case 'contact':
+        return <ContactView />;
+      case 'invoice':
+        return <InvoiceView />;
+      case 'subscribe':
+        return <SubscribeView />;
       case 'credits':
         return (
           <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm max-w-3xl space-y-4">
