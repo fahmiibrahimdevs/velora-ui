@@ -44,6 +44,7 @@ import { TicketsView } from './components/features/TicketsView';
 import { ContactView } from './components/utilities/ContactView';
 import { InvoiceView } from './components/utilities/InvoiceView';
 import { SubscribeView } from './components/utilities/SubscribeView';
+import { ComponentsTableCrudView } from './components/components/ComponentsTableCrudView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15673,7 +15674,7 @@ export function App() {
       case 'weather-icon':
         return <WeatherIconView />;
       case 'components-table':
-        return <KelasView />;
+        return <ComponentsTableCrudView />;
       case 'advanced-form':
         return <AdvancedFormsView />;
       case 'editor':
