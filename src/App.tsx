@@ -10,6 +10,7 @@ import { EditorView } from './components/forms/EditorView';
 import { ValidationView } from './components/forms/ValidationView';
 import { UploadFilesView } from './components/forms/UploadFilesView';
 import { CalendarView } from './components/modules/CalendarView';
+import { ChartJSView } from './components/modules/ChartJSView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15484,6 +15485,10 @@ export function App() {
       title: 'Calendar',
       breadcrumbs: ['Dashboard', 'Modules', 'Calendar'],
     },
+    chartjs: {
+      title: 'ChartJS',
+      breadcrumbs: ['Dashboard', 'Modules', 'ChartJS'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -15552,6 +15557,8 @@ export function App() {
         return <UploadFilesView />;
       case 'calendar':
         return <CalendarView />;
+      case 'chartjs':
+        return <ChartJSView />;
       case 'forms':
         return <MataPelajaranView />;
       case 'card':
