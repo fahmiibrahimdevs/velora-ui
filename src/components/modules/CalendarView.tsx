@@ -44,36 +44,36 @@ const CATEGORY_META: Record<
 > = {
   work: {
     label: 'Work & Sprint',
-    pill: 'bg-[#175cd3] text-white',
-    dot: 'bg-[#175cd3]',
+    pill: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white',
+    dot: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0]',
     softBg: 'bg-blue-50 text-[#175cd3]',
     border: 'border-blue-200',
   },
   meeting: {
     label: 'Meeting',
-    pill: 'bg-indigo-600 text-white',
-    dot: 'bg-indigo-600',
-    softBg: 'bg-indigo-50 text-indigo-700',
-    border: 'border-indigo-200',
+    pill: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] text-white',
+    dot: 'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7]',
+    softBg: 'bg-sky-50 text-sky-700',
+    border: 'border-sky-200',
   },
   design: {
     label: 'UI/UX Design',
-    pill: 'bg-emerald-600 text-white',
-    dot: 'bg-emerald-600',
+    pill: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] text-white',
+    dot: 'bg-gradient-to-r from-[#22c55e] to-[#15803d]',
     softBg: 'bg-emerald-50 text-emerald-700',
     border: 'border-emerald-200',
   },
   deadline: {
     label: 'Deadline',
-    pill: 'bg-rose-600 text-white',
-    dot: 'bg-rose-600',
+    pill: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white',
+    dot: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c]',
     softBg: 'bg-rose-50 text-rose-700',
     border: 'border-rose-200',
   },
   personal: {
     label: 'Personal',
-    pill: 'bg-amber-500 text-white',
-    dot: 'bg-amber-500',
+    pill: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-white',
+    dot: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706]',
     softBg: 'bg-amber-50 text-amber-700',
     border: 'border-amber-200',
   },
@@ -548,7 +548,7 @@ export function CalendarView() {
             <button
               type="button"
               onClick={() => openCreateModal(cursorDate)}
-              className="w-full py-2.5 px-4 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="w-full py-2.5 px-4 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
             >
               <Plus className="w-4 h-4" />
               <span>Buat Event Baru</span>
@@ -596,7 +596,7 @@ export function CalendarView() {
                       onClick={() => setCursorDate(cell.dateStr)}
                       className={`relative py-1 rounded-lg font-medium cursor-pointer transition-colors ${
                         isToday
-                          ? 'bg-[#175cd3] text-white font-bold'
+                          ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-bold shadow-xs'
                           : isCursor
                           ? 'bg-blue-100 text-[#175cd3] font-bold'
                           : cell.inMonth
@@ -774,7 +774,7 @@ export function CalendarView() {
                       type="button"
                       onClick={() => setViewMode(tab.id)}
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                        active ? 'bg-[#175cd3] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                        active ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -837,7 +837,7 @@ export function CalendarView() {
                           <span
                             className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
                               isToday
-                                ? 'bg-[#175cd3] text-white font-bold shadow-xs'
+                                ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white font-bold shadow-xs'
                                 : cell.inMonth
                                 ? 'text-slate-700'
                                 : 'text-slate-400'
@@ -925,7 +925,7 @@ export function CalendarView() {
                         </div>
                         <div
                           className={`mt-0.5 inline-flex w-7 h-7 items-center justify-center rounded-full text-xs font-bold ${
-                            isToday ? 'bg-[#175cd3] text-white' : 'text-slate-800'
+                            isToday ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs' : 'text-slate-800'
                           }`}
                         >
                           {d.getDate()}
@@ -1040,7 +1040,7 @@ export function CalendarView() {
                         {formatReadableDate(group.date)}
                       </span>
                       {group.date === TODAY_STR && (
-                        <span className="px-2 py-0.5 rounded-full bg-[#175cd3] text-white text-[10px] font-bold">
+                        <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white text-[10px] font-bold">
                           Hari Ini
                         </span>
                       )}
@@ -1187,7 +1187,7 @@ export function CalendarView() {
                 <button
                   type="button"
                   onClick={() => openEditModal(detailEvent)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                   <span>Edit Event</span>
@@ -1354,7 +1354,7 @@ export function CalendarView() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   {editingId ? 'Simpan Perubahan' : 'Tambahkan Event'}
                 </button>
