@@ -11,6 +11,7 @@ import { ValidationView } from './components/forms/ValidationView';
 import { UploadFilesView } from './components/forms/UploadFilesView';
 import { CalendarView } from './components/modules/CalendarView';
 import { ChartJSView } from './components/modules/ChartJSView';
+import { DataTablesView } from './components/modules/DataTablesView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15490,8 +15491,8 @@ export function App() {
       breadcrumbs: ['Dashboard', 'Modules', 'ChartJS'],
     },
     datatables: {
-      title: 'DataTables Module',
-      breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
+      title: 'DataTables',
+      breadcrumbs: ['Dashboard', 'Modules', 'DataTables'],
     },
     credits: {
       title: 'Credits & Attribution',
@@ -15545,6 +15546,7 @@ export function App() {
       case 'user':
         return <UserView />;
       case 'datatables':
+        return <DataTablesView />;
       case 'components-table':
         return <KelasView />;
       case 'advanced-form':
