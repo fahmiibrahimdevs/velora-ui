@@ -29,6 +29,13 @@ import {
   ForgotPasswordView,
   ResetPasswordView,
 } from './components/auth/AuthPages';
+import {
+  ERROR_ROUTES,
+  Error404View,
+  Error403View,
+  Error500View,
+  Error503View,
+} from './components/errors/ErrorPages';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15708,10 +15715,33 @@ export function App() {
     }
   };
 
+  const renderStandaloneError = () => {
+    switch (activeMenu) {
+      case 'error-404':
+        return <Error404View onNavigate={handleSelectMenu} />;
+      case 'error-403':
+        return <Error403View onNavigate={handleSelectMenu} />;
+      case 'error-500':
+        return <Error500View onNavigate={handleSelectMenu} />;
+      case 'error-503':
+        return <Error503View onNavigate={handleSelectMenu} />;
+      default:
+        return null;
+    }
+  };
+
   if (AUTH_ROUTES.has(activeMenu)) {
     return (
       <QueryClientProvider client={queryClient}>
         {renderStandaloneAuth()}
+      </QueryClientProvider>
+    );
+  }
+
+  if (ERROR_ROUTES.has(activeMenu)) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {renderStandaloneError()}
       </QueryClientProvider>
     );
   }
