@@ -118,6 +118,7 @@ const navSections: NavSection[] = [
           { id: 'advanced-form', label: 'Advanced Form' },
           { id: 'editor', label: 'Editor' },
           { id: 'validation', label: 'Validation' },
+          { id: 'upload-files', label: 'Upload Files' },
         ],
       },
       {

@@ -8,6 +8,7 @@ import { useDashboardData } from './hooks/useDashboardData';
 import { AdvancedFormsView } from './components/forms/AdvancedFormsView';
 import { EditorView } from './components/forms/EditorView';
 import { ValidationView } from './components/forms/ValidationView';
+import { UploadFilesView } from './components/forms/UploadFilesView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15474,6 +15475,10 @@ export function App() {
       title: 'Form Validation',
       breadcrumbs: ['Dashboard', 'Forms', 'Form Validation'],
     },
+    'upload-files': {
+      title: 'Upload Files',
+      breadcrumbs: ['Dashboard', 'Forms', 'Upload Files'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -15538,6 +15543,8 @@ export function App() {
         return <EditorView />;
       case 'validation':
         return <ValidationView />;
+      case 'upload-files':
+        return <UploadFilesView />;
       case 'forms':
         return <MataPelajaranView />;
       case 'card':
