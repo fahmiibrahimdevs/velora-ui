@@ -14,7 +14,6 @@ import {
   Edit3,
   Eye,
   Send,
-  Copy,
   Check,
   Save,
   Filter,
@@ -494,24 +493,6 @@ export function KanbanView() {
     setTasks((prev) => prev.filter((t) => t.id !== task.id));
     if (detailTaskId === task.id) setDetailTaskId(null);
     showToast(`Kartu ${task.id} dihapus.`, 'success');
-  };
-
-  const duplicateTask = (task: KanbanTask) => {
-    const nextNum =
-      tasks.reduce((max, t) => {
-        const n = Number(t.id.replace('KAN-', ''));
-        return Number.isFinite(n) ? Math.max(max, n) : max;
-      }, 100) + 1;
-    const copy: KanbanTask = {
-      ...task,
-      id: `KAN-${nextNum}`,
-      title: `${task.title} (Salinan)`,
-      subtasks: task.subtasks.map((s, i) => ({ ...s, id: `sub-copy-${Date.now()}-${i}` })),
-      comments: [],
-    };
-    setTasks((prev) => [copy, ...prev]);
-    setDetailTaskId(copy.id);
-    showToast(`Kartu diduplikasi sebagai ${copy.id}`, 'info');
   };
 
   // Detail Modal Actions (Live Subtask Toggle & Add Comment)
@@ -1119,40 +1100,14 @@ export function KanbanView() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => duplicateTask(detailTask)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.light}`}
-                >
-                  <Copy className="w-3 h-3" /> Duplikat
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const t = detailTask;
-                    setDetailTaskId(null);
-                    openEditModal(t);
-                  }}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.warning}`}
-                >
-                  <Edit3 className="w-3 h-3" /> Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteTask(detailTask)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.danger}`}
-                >
-                  <Trash2 className="w-3 h-3" /> Hapus
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDetailTaskId(null)}
-                  className={`p-1.5 rounded-xl cursor-pointer ${GRAD.light}`}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setDetailTaskId(null)}
+                className={`p-1.5 rounded-xl cursor-pointer ${GRAD.light}`}
+                aria-label="Tutup detail tugas"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="p-6 space-y-5 overflow-y-auto">
@@ -1161,46 +1116,50 @@ export function KanbanView() {
                 <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{detailTask.desc}</p>
               </div>
 
-              {/* Meta & Instant Status Switcher */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-3 rounded-xl border border-slate-200/80 flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${GRAD.primaryStatic}`}>
-                    {detailTask.initials}
+              {/* Clean Notion/Linear Metadata Strip + Clickable Stage Stepper (Zero Box Clutter) */}
+              <div className="space-y-3.5 py-3.5 border-y border-slate-100 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] shrink-0 ${GRAD.primaryStatic}`}>
+                      {detailTask.initials}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-slate-500">Pelaksana:</span>
+                      <span className="font-bold text-slate-900">{detailTask.assignee}</span>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-[11px] text-slate-500">Pelaksana</div>
-                    <div className="font-bold text-slate-900">{detailTask.assignee}</div>
-                  </div>
-                </div>
 
-                <div className="p-3 rounded-xl border border-slate-200/80">
-                  <div className="text-[11px] text-slate-500">Tenggat Waktu</div>
-                  <div className="font-bold text-slate-900 mt-0.5 flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 text-slate-700">
                     <Calendar className="w-3.5 h-3.5 text-[#175cd3]" />
-                    <span>{formatDueDate(detailTask.due)}</span>
+                    <span className="text-slate-500">Tenggat:</span>
+                    <span className="font-bold text-slate-900">{formatDueDate(detailTask.due)}</span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl border border-slate-200/80">
-                  <div className="text-[11px] text-slate-500 mb-1">Pindah Kolom</div>
-                  <select
-                    value={detailTask.column}
-                    onChange={(e) => {
-                      const next = e.target.value as ColumnId;
-                      moveTask(detailTask.id, next);
-                      showToast(
-                        `Status diubah ke ${COLUMNS.find((c) => c.id === next)?.label}`,
-                        'success'
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                  <span className="text-[11px] font-semibold text-slate-500">Status Tahapan:</span>
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
+                    {COLUMNS.map((col) => {
+                      const active = detailTask.column === col.id;
+                      return (
+                        <button
+                          key={col.id}
+                          type="button"
+                          onClick={() => {
+                            if (active) return;
+                            moveTask(detailTask.id, col.id);
+                            showToast(`Dipindahkan ke ${col.label}`, 'success');
+                          }}
+                          className={`px-3 py-1 rounded-full text-[11px] font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all ${
+                            active ? `${col.badgeGrad} shadow-xs` : GRAD.light
+                          }`}
+                        >
+                          {!active && <span className={`w-1.5 h-1.5 rounded-full ${col.dotColor}`} />}
+                          <span>{col.label}</span>
+                        </button>
                       );
-                    }}
-                    className="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                  >
-                    {COLUMNS.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
+                    })}
+                  </div>
                 </div>
               </div>
 
