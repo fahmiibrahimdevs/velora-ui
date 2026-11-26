@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { showToast, showSuccess, confirmDialog } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
@@ -177,6 +178,11 @@ export function PostsView({ onNavigate }: { onNavigate: (id: string) => void }) 
 
   return (
     <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Posts"
+        description="Kelola artikel, status publikasi, pratinjau cepat, dan aksi massal konten dalam satu daftar terstruktur."
+      />
+
       {/* KPI Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {(
@@ -433,7 +439,13 @@ export function PostCreateView({ onNavigate }: { onNavigate: (id: string) => voi
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+    <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Post Create"
+        description="Composer artikel lengkap dengan auto-slug, pratinjau langsung, pengatur cover, serta tag dan status terbit."
+      />
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
       {/* Main Editor Column */}
       <div className="xl:col-span-8 bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -678,6 +690,7 @@ export function PostCreateView({ onNavigate }: { onNavigate: (id: string) => voi
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

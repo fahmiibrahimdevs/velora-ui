@@ -10,6 +10,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { showToast, showSuccess } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
@@ -217,7 +218,12 @@ export function TicketsView() {
     s === 'Open' ? GRAD.warning : s === 'In Progress' ? GRAD.primaryStatic : GRAD.success;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Tickets"
+        description="Pusat layanan bantuan teknis lengkap dengan filter antrean prioritas, pembuatan tiket baru, dan utas balasan agen."
+      />
+
       {showNewComposer && (
         <form
           onSubmit={createTicket}

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, Send, Mail, MessageCircle, ShieldCheck, CreditCard } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
@@ -247,9 +248,14 @@ export function ActivitiesView() {
   };
 
   return (
-    <div className="space-y-5">
-      {/* Compact Header Filter & Action Toolbar */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 space-y-4">
+    <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Activities"
+        description="Linimasa aktivitas komunikasi tim lewat Email, WhatsApp, billing, dan catatan sistem secara kronologis."
+      />
+
+      {/* Cardless Filter Tabs & Action Bar directly on Page Canvas */}
+      <div className="space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             {(
@@ -303,7 +309,7 @@ export function ActivitiesView() {
 
         {/* Inline Activity Logger */}
         {showComposer && (
-          <form onSubmit={handleAddActivity} className="pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-12 gap-3">
+          <form onSubmit={handleAddActivity} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 grid grid-cols-1 md:grid-cols-12 gap-3">
             <div className="md:col-span-3">
               <select
                 value={newChannel}

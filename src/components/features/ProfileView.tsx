@@ -10,6 +10,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { showSuccess } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
@@ -46,6 +47,11 @@ export function ProfileView() {
 
   return (
     <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Profile"
+        description="Profil administrator lengkap dengan statistik ringkas, daftar keahlian, pencapaian, serta formulir pembaruan akun."
+      />
+
       {/* Executive Profile Banner */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
         <div className={`h-28 sm:h-32 px-6 py-4 flex items-start justify-end ${GRAD.primaryStatic}`}>
