@@ -174,14 +174,6 @@ export function ComponentsTableCrudView() {
     }),
     [records]
   );
-  const statusCounts = useMemo(
-    () => ({
-      siap: records.filter((r) => r.status === 'Siap Ujian').length,
-      aktif: records.filter((r) => r.status === 'Sesi Aktif').length,
-      selesai: records.filter((r) => r.status === 'Selesai').length,
-    }),
-    [records]
-  );
 
   const activeFilterCount = selectedTingkats.length + (selectedStatus !== 'Semua' ? 1 : 0);
 
@@ -467,10 +459,10 @@ export function ComponentsTableCrudView() {
         </div>
       </div>
 
-      {/* Unified 4-Segment Executive KPI Strip (Stripe/Linear Bento Pattern with Live Mini Visuals) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 overflow-hidden">
-        {/* Segment 1: Total Rombel + Mini Tier Bar Chart */}
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
+      {/* 4 Separate Compact KPI Cards Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* Card 1: Total Rombel */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-1.5">
               <GraduationCap className="w-3.5 h-3.5 text-[#175cd3]" />
@@ -484,8 +476,8 @@ export function ComponentsTableCrudView() {
               </span>
               <span className="text-xs font-medium text-slate-500">Kelas</span>
             </div>
-            <div className="text-[11px] text-slate-600">
-              X ({tingkatCounts.X}) &bull; XI ({tingkatCounts.XI}) &bull; XII ({tingkatCounts.XII})
+            <div className="text-[11px] text-emerald-600 font-semibold">
+              3 Tingkatan (X, XI, XII)
             </div>
           </div>
 
@@ -506,13 +498,13 @@ export function ComponentsTableCrudView() {
           </div>
         </div>
 
-        {/* Segment 2: Total Siswa + Circular Occupancy Ring */}
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
+        {/* Card 2: Total Siswa */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-emerald-600" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Siswa Terdaftar
+                Total Siswa Aktif
               </span>
             </div>
             <div className="flex items-baseline gap-1.5">
@@ -521,8 +513,8 @@ export function ComponentsTableCrudView() {
               </span>
               <span className="text-xs font-medium text-slate-500">Siswa</span>
             </div>
-            <div className="text-[11px] text-slate-600">
-              Dari <strong className="text-slate-800">{totalKapasitas.toLocaleString()}</strong> kapasitas kursi
+            <div className="text-[11px] text-emerald-600 font-semibold">
+              100% Terdaftar CBT
             </div>
           </div>
 
@@ -545,23 +537,23 @@ export function ComponentsTableCrudView() {
           </div>
         </div>
 
-        {/* Segment 3: Rata-rata per Kelas + Sparkline */}
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
+        {/* Card 3: Rata-rata per Kelas */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Rata-rata Kelas
+                Rata-rata per Kelas
               </span>
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {avgSiswa}
               </span>
-              <span className="text-xs font-medium text-slate-500">Siswa/Rombel</span>
+              <span className="text-xs font-medium text-slate-500">Siswa</span>
             </div>
-            <div className="text-[11px] text-slate-600">
-              Standar ideal maks <strong className="text-slate-800">36</strong> siswa
+            <div className="text-[11px] text-slate-500 font-semibold">
+              Standar Kemdikbud
             </div>
           </div>
 
@@ -577,23 +569,23 @@ export function ComponentsTableCrudView() {
           </svg>
         </div>
 
-        {/* Segment 4: Kesiapan CBT + Circular Readiness Ring */}
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
+        {/* Card 4: Siap & Sesi Aktif */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-1.5">
               <Radio className="w-3.5 h-3.5 text-[#0284c7]" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Kesiapan CBT
+                Siap &amp; Sesi Aktif
               </span>
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {readyCount}
               </span>
-              <span className="text-xs font-medium text-slate-500">/ {records.length} Siap</span>
+              <span className="text-xs font-medium text-slate-500">Kelas Siap</span>
             </div>
-            <div className="text-[11px] text-slate-600">
-              Siap {statusCounts.siap} &bull; Aktif {statusCounts.aktif} &bull; Selesai {statusCounts.selesai}
+            <div className="text-[11px] text-[#175cd3] font-semibold">
+              6 Lab CBT Tersedia
             </div>
           </div>
 
