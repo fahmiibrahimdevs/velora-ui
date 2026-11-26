@@ -36,6 +36,11 @@ import {
   Error500View,
   Error503View,
 } from './components/errors/ErrorPages';
+import { ActivitiesView } from './components/features/ActivitiesView';
+import { PostsView, PostCreateView } from './components/features/PostsViews';
+import { ProfileView } from './components/features/ProfileView';
+import { SettingsView, SettingDetailView } from './components/features/SettingsViews';
+import { TicketsView } from './components/features/TicketsView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15326,6 +15331,9 @@ const getInitialMenu = (): string => {
 
 export function App() {
   const [activeMenu, setActiveMenu] = useState<string>(getInitialMenu);
+  const [settingSection, setSettingSection] = useState<
+    'general' | 'seo' | 'email' | 'system' | 'security' | 'automation'
+  >('general');
 
   const handleSelectMenu = (id: string) => {
     setActiveMenu(id);
@@ -15554,6 +15562,34 @@ export function App() {
       title: 'Weather Icon',
       breadcrumbs: ['Dashboard', 'Modules', 'Weather Icon'],
     },
+    activities: {
+      title: 'Activities',
+      breadcrumbs: ['Dashboard', 'Features', 'Activities'],
+    },
+    'post-create': {
+      title: 'Post Create',
+      breadcrumbs: ['Dashboard', 'Features', 'Post Create'],
+    },
+    posts: {
+      title: 'Posts',
+      breadcrumbs: ['Dashboard', 'Features', 'Posts'],
+    },
+    profile: {
+      title: 'Profile',
+      breadcrumbs: ['Dashboard', 'Features', 'Profile'],
+    },
+    settings: {
+      title: 'Settings',
+      breadcrumbs: ['Dashboard', 'Features', 'Settings'],
+    },
+    'setting-detail': {
+      title: 'Setting Detail',
+      breadcrumbs: ['Dashboard', 'Features', 'Setting Detail'],
+    },
+    tickets: {
+      title: 'Tickets',
+      breadcrumbs: ['Dashboard', 'Features', 'Tickets'],
+    },
     credits: {
       title: 'Credits & Attribution',
       breadcrumbs: ['Velora UI', 'Credits'],
@@ -15671,6 +15707,27 @@ export function App() {
         return <ButtonsView />;
       case 'blank-page':
         return <KelasView />;
+      case 'activities':
+        return <ActivitiesView />;
+      case 'post-create':
+        return <PostCreateView onNavigate={handleSelectMenu} />;
+      case 'posts':
+        return <PostsView onNavigate={handleSelectMenu} />;
+      case 'profile':
+        return <ProfileView />;
+      case 'settings':
+        return (
+          <SettingsView
+            onOpenDetail={(section) => {
+              setSettingSection(section);
+              handleSelectMenu('setting-detail');
+            }}
+          />
+        );
+      case 'setting-detail':
+        return <SettingDetailView key={settingSection} initialSection={settingSection} />;
+      case 'tickets':
+        return <TicketsView />;
       case 'credits':
         return (
           <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm max-w-3xl space-y-4">
