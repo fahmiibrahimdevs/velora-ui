@@ -172,6 +172,7 @@ const navSections: NavSection[] = [
         icon: Bike,
         children: [
           { id: 'activities', label: 'Activities' },
+          { id: 'kanban', label: 'Kanban' },
           { id: 'post-create', label: 'Post Create' },
           { id: 'posts', label: 'Posts' },
           { id: 'profile', label: 'Profile' },

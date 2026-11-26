@@ -10,8 +10,10 @@ import {
   X,
   ArrowLeft,
   ArrowRight,
+  Search,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
@@ -161,9 +163,10 @@ const INITIAL_TASKS: KanbanTask[] = [
   },
 ];
 
-export function KanbanBoardSection() {
+export function KanbanView() {
   const [tasks, setTasks] = useState<KanbanTask[]>(INITIAL_TASKS);
   const [priorityFilter, setPriorityFilter] = useState<'All' | PriorityType>('All');
+  const [search, setSearch] = useState('');
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [dragOverCol, setDragOverCol] = useState<ColumnId | null>(null);
   const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
@@ -172,12 +175,21 @@ export function KanbanBoardSection() {
   const [addingInCol, setAddingInCol] = useState<ColumnId | null>(null);
   const [newTitle, setNewTitle] = useState('');
   const [newPriority, setNewPriority] = useState<PriorityType>('Medium');
-  const [newCategory, setNewCategory] = useState('Components');
+  const [newCategory, setNewCategory] = useState('Features');
 
   const visibleTasks = useMemo(() => {
-    if (priorityFilter === 'All') return tasks;
-    return tasks.filter((t) => t.priority === priorityFilter);
-  }, [tasks, priorityFilter]);
+    const q = search.trim().toLowerCase();
+    return tasks.filter((t) => {
+      const matchPriority = priorityFilter === 'All' || t.priority === priorityFilter;
+      const matchSearch =
+        !q ||
+        t.title.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        t.assignee.toLowerCase().includes(q) ||
+        t.desc.toLowerCase().includes(q);
+      return matchPriority && matchSearch;
+    });
+  }, [tasks, priorityFilter, search]);
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     setDraggedTaskId(taskId);
@@ -285,30 +297,34 @@ export function KanbanBoardSection() {
   const resetBoard = () => {
     setTasks(INITIAL_TASKS);
     setPriorityFilter('All');
+    setSearch('');
     setAddingInCol(null);
-    showToast('Papan Kanban dikembalikan ke urutan awal.', 'info');
+    showToast('Papan Kanban dikembalikan ke kondisi awal.', 'info');
   };
 
   const priorityBadge = (p: PriorityType) =>
     p === 'High' ? GRAD.danger : p === 'Medium' ? GRAD.warning : GRAD.info;
 
   return (
-    <div className="space-y-4">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h3 className="text-base sm:text-lg font-bold text-slate-800">
-              Kanban Board (Drag &amp; Drop Cards)
-            </h3>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Seret dan jatuhkan kartu antar kolom (*Backlog*, *In Progress*, *In Review*, *Done*) atau atur ulang urutannya langsung.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <FeatureSectionHeader
+          title="Kanban"
+          description="Papan kerja Kanban interaktif dengan fitur drag & drop lintas kolom, filter prioritas, pencarian, dan pembuatan tugas cepat."
+        />
 
-        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto">
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari tugas atau pelaksana..."
+              className="pl-8 pr-3 py-1.5 w-48 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
+            />
+          </div>
+
           <div className="flex items-center gap-1">
             {(['All', 'High', 'Medium', 'Low'] as const).map((p) => (
               <button
@@ -352,7 +368,7 @@ export function KanbanBoardSection() {
                 if (dragOverCol === col.id) setDragOverCol(null);
               }}
               onDrop={(e) => handleDropOnColumn(e, col.id)}
-              className={`bg-white rounded-2xl border transition-all duration-150 flex flex-col min-h-[340px] ${
+              className={`bg-white rounded-2xl border transition-all duration-150 flex flex-col min-h-[420px] ${
                 isOverCol
                   ? 'border-[#175cd3] ring-2 ring-[#175cd3]/20 shadow-md'
                   : 'border-slate-200/90 shadow-xs'
@@ -410,10 +426,10 @@ export function KanbanBoardSection() {
                       onChange={(e) => setNewCategory(e.target.value)}
                       className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-[11px] font-semibold text-slate-700 focus:outline-none focus:border-[#175cd3]"
                     >
+                      <option value="Features">Features</option>
                       <option value="Components">Components</option>
                       <option value="Modules">Modules</option>
                       <option value="Design Ops">Design Ops</option>
-                      <option value="Auth">Auth</option>
                     </select>
                   </div>
                   <button
@@ -451,7 +467,6 @@ export function KanbanBoardSection() {
                             : 'border-slate-200/90 hover:border-[#175cd3]/60 hover:shadow-xs'
                       }`}
                     >
-                      {/* Card Top Row: Priority + Category + Grip */}
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${priorityBadge(task.priority)}`}>
@@ -464,7 +479,6 @@ export function KanbanBoardSection() {
                         <GripVertical className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0" />
                       </div>
 
-                      {/* Card Title & Description */}
                       <div>
                         <h5 className="text-xs font-bold text-slate-900 leading-snug">{task.title}</h5>
                         <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">
@@ -472,7 +486,6 @@ export function KanbanBoardSection() {
                         </p>
                       </div>
 
-                      {/* Card Footer Meta + Quick Move Controls */}
                       <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <div
@@ -531,7 +544,7 @@ export function KanbanBoardSection() {
                 })}
 
                 {colTasks.length === 0 && (
-                  <div className="h-32 rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-center px-4 text-xs text-slate-500">
+                  <div className="h-36 rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-center px-4 text-xs text-slate-500">
                     Jatuhkan kartu di sini atau klik + untuk menambah tugas baru.
                   </div>
                 )}

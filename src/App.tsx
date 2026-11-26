@@ -45,7 +45,7 @@ import { ContactView } from './components/utilities/ContactView';
 import { InvoiceView } from './components/utilities/InvoiceView';
 import { SubscribeView } from './components/utilities/SubscribeView';
 import { ComponentsTableCrudView } from './components/components/ComponentsTableCrudView';
-import { KanbanBoardSection } from './components/components/KanbanBoardSection';
+import { KanbanView } from './components/features/KanbanView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -2031,11 +2031,6 @@ function CardsView() {
           ))}
         </div>
       </div>
-
-      {/* ======================================================== */}
-      {/* 6. Interactive Kanban Board (Cross-Column Drag & Drop)   */}
-      {/* ======================================================== */}
-      <KanbanBoardSection />
 
       {/* ======================================================== */}
       {/* Lightbox Modal for "My Picture" */}
@@ -15576,6 +15571,10 @@ export function App() {
       title: 'Activities',
       breadcrumbs: ['Dashboard', 'Features', 'Activities'],
     },
+    kanban: {
+      title: 'Kanban',
+      breadcrumbs: ['Dashboard', 'Features', 'Kanban'],
+    },
     'post-create': {
       title: 'Post Create',
       breadcrumbs: ['Dashboard', 'Features', 'Post Create'],
@@ -15727,6 +15726,8 @@ export function App() {
         return <KelasView />;
       case 'activities':
         return <ActivitiesView />;
+      case 'kanban':
+        return <KanbanView />;
       case 'post-create':
         return <PostCreateView onNavigate={handleSelectMenu} />;
       case 'posts':
