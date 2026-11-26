@@ -121,7 +121,7 @@ export function ComponentsTableCrudView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTingkat, setSelectedTingkat] = useState<'Semua' | TingkatType>('Semua');
   const [selectedStatus, setSelectedStatus] = useState<'Semua' | StatusCbtType>('Semua');
-  const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
+  const [density, setDensity] = useState<'comfortable' | 'compact'>('compact');
   const [sortField, setSortField] = useState<SortField>('nama');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [pageSize, setPageSize] = useState(5);
@@ -385,7 +385,8 @@ export function ComponentsTableCrudView() {
     showToast('Data tabel dikembalikan ke kondisi awal.', 'info');
   };
 
-  const cellPad = density === 'compact' ? 'py-2.5 px-4' : 'py-3.5 px-4';
+  const cellPad = density === 'compact' ? 'py-2 px-3.5' : 'py-3.5 px-4';
+  const headPad = density === 'compact' ? 'py-2.5 px-3.5' : 'py-3 px-4';
 
   const statusBadgeClass = (s: StatusCbtType) =>
     s === 'Siap Ujian' ? GRAD.success : s === 'Sesi Aktif' ? GRAD.info : GRAD.secondary;
@@ -473,8 +474,23 @@ export function ComponentsTableCrudView() {
 
       {/* MAIN INTERACTIVE TABLE CARD */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+        {/* CARD HEADER */}
+        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h4 className="text-base font-bold text-[#1351b8]">
+              Daftar Rombongan Belajar &amp; CRUD Manajemen
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Pilih satu atau lebih baris dengan checkbox untuk tindakan massal atau kelola data kelas langsung.
+            </p>
+          </div>
+          <span className={`px-3 py-1 rounded-full text-[11px] font-semibold self-start sm:self-auto ${GRAD.info}`}>
+            {filteredAndSorted.length} Rombel Terdata
+          </span>
+        </div>
+
         {/* ROW 1: Show Entries on Left, Search + Status Select + Ekspor on Right (1 Horizontal Line like DataTables) */}
-        <div className="px-5 sm:px-6 pt-5 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="px-5 sm:px-6 pt-4 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <span>Tampilkan</span>
             <select
@@ -567,7 +583,7 @@ export function ComponentsTableCrudView() {
           </div>
 
           <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-0.5">
-            {(['comfortable', 'compact'] as const).map((d) => (
+            {(['compact', 'comfortable'] as const).map((d) => (
               <button
                 key={d}
                 type="button"
@@ -628,7 +644,7 @@ export function ComponentsTableCrudView() {
             <table className="w-full min-w-[820px] text-left border-collapse table-auto">
               <thead>
                 <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
-                  <th className="py-3 px-4 w-10 text-center">
+                  <th className={`${headPad} w-10 text-center`}>
                     <input
                       type="checkbox"
                       checked={isAllVisibleSelected}
@@ -636,7 +652,7 @@ export function ComponentsTableCrudView() {
                       className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
                     />
                   </th>
-                  <th className="py-3 px-4 min-w-[210px]">
+                  <th className={`${headPad} min-w-[210px]`}>
                     <button
                       type="button"
                       onClick={() => handleSort('nama')}
@@ -646,8 +662,8 @@ export function ComponentsTableCrudView() {
                       <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  <th className="py-3 px-4 min-w-[180px]">Wali Kelas</th>
-                  <th className="py-3 px-4 min-w-[140px]">
+                  <th className={`${headPad} min-w-[180px]`}>Wali Kelas</th>
+                  <th className={`${headPad} min-w-[140px]`}>
                     <button
                       type="button"
                       onClick={() => handleSort('tingkat')}
@@ -657,7 +673,7 @@ export function ComponentsTableCrudView() {
                       <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  <th className="py-3 px-4 min-w-[155px]">
+                  <th className={`${headPad} min-w-[155px]`}>
                     <button
                       type="button"
                       onClick={() => handleSort('siswa')}
@@ -667,8 +683,8 @@ export function ComponentsTableCrudView() {
                       <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-center min-w-[100px]">Status CBT</th>
-                  <th className="py-3 px-4 text-center min-w-[95px]">Aksi</th>
+                  <th className={`${headPad} text-center min-w-[100px]`}>Status CBT</th>
+                  <th className={`${headPad} text-center min-w-[95px]`}>Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
