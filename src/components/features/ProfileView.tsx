@@ -8,8 +8,15 @@ import {
   UserCheck,
   Sparkles,
   Globe,
+  Shield,
+  Laptop,
+  MessageSquare,
+  UserPlus,
+  Lock,
+  Bell,
 } from 'lucide-react';
-import { showSuccess } from '../../lib/swal';
+import { showSuccess, showToast } from '../../lib/swal';
+import { Avatar } from '../common/Avatar';
 import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
@@ -24,7 +31,12 @@ const GRAD = {
   dark: 'bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white',
 };
 
+type ProfileTab = 'edit' | 'security' | 'notifications';
+
 export function ProfileView() {
+  const [activeTab, setActiveTab] = useState<ProfileTab>('edit');
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const [firstName, setFirstName] = useState('Fahmi');
   const [lastName, setLastName] = useState('Ibrahim');
   const [roleTitle, setRoleTitle] = useState('Principal Product Architect');
@@ -36,110 +48,168 @@ export function ProfileView() {
     'Merancang sistem antarmuka modern berbasis React 19, Laravel, dan TypeScript dengan fokus performa tinggi serta keterbacaan visual eksekutif.'
   );
   const [newsletter, setNewsletter] = useState(true);
+  const [securityAlerts, setSecurityAlerts] = useState(true);
+  const [ticketDigest, setTicketDigest] = useState(false);
   const [twoFactor, setTwoFactor] = useState(true);
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || 'FI';
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     await showSuccess('Profil Diperbarui', `Informasi akun ${firstName} ${lastName} telah disimpan.`);
+  };
+
+  const handleSaveSecurity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword && newPassword.length < 8) {
+      showToast('Kata sandi baru minimal 8 karakter.', 'warning');
+      return;
+    }
+    setCurrentPassword('');
+    setNewPassword('');
+    await showSuccess('Keamanan Diperbarui', 'Pengaturan 2FA dan kredensial keamanan tersimpan.');
   };
 
   return (
     <div className="space-y-6">
       <FeatureSectionHeader
         title="Profile"
-        description="Profil administrator lengkap dengan statistik ringkas, daftar keahlian, pencapaian, serta formulir pembaruan akun."
+        description="Profil administrator lengkap dengan statistik ringkas, daftar keahlian, pencapaian, serta pengaturan akun & keamanan."
       />
 
-      {/* Executive Profile Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        <div className={`h-28 sm:h-32 px-6 py-4 flex items-start justify-end ${GRAD.primaryStatic}`}>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs border border-white/25 text-[11px] font-semibold">
-            <UserCheck className="w-3.5 h-3.5" /> Verified Enterprise Admin
-          </span>
-        </div>
-
-        <div className="px-6 pb-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-10">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-              <div
-                className={`w-20 h-20 rounded-2xl border-4 border-white shadow-md flex items-center justify-center text-2xl font-bold shrink-0 ${GRAD.dark}`}
-              >
-                {initials}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: Balanced Executive Profile Card */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+            {/* Clean White Identity Header (No empty stretched blue bar) */}
+            <div className="p-6 text-center space-y-4">
+              <div className="flex justify-center">
+                <Avatar
+                  size="2xl"
+                  shape="rounded"
+                  status="online"
+                  initials={initials}
+                  bg={GRAD.primaryStatic}
+                />
               </div>
-              <div className="pt-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-xl font-bold text-slate-900">
+
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <h3 className="text-lg font-bold text-slate-900">
                     {firstName} {lastName}
-                  </h2>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
+                  </h3>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
                     Active
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 mt-0.5 flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center gap-1">
-                    <Briefcase className="w-3.5 h-3.5 text-[#175cd3]" /> {roleTitle}
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#175cd3]" /> {location}
-                  </span>
+                <p className="text-xs font-semibold text-[#175cd3] flex items-center justify-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5" />
+                  <span>{roleTitle}</span>
                 </p>
+                <p className="text-xs text-slate-600 flex items-center justify-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{location}</span>
+                </p>
+                <div className="pt-1">
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold ${GRAD.info}`}>
+                    <UserCheck className="w-3.5 h-3.5" /> Verified Enterprise Admin
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsFollowing((v) => !v);
+                    showToast(
+                      !isFollowing ? `Anda mengikuti ${firstName}.` : `Berhenti mengikuti ${firstName}.`,
+                      'info'
+                    );
+                  }}
+                  className={`py-2 px-3 rounded-xl text-xs font-semibold shadow-xs cursor-pointer inline-flex items-center justify-center gap-1.5 ${
+                    isFollowing ? GRAD.success : GRAD.primary
+                  }`}
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>{isFollowing ? 'Mengikuti' : 'Ikuti Profil'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => showToast(`Membuka pesan langsung ke ${email}`, 'info')}
+                  className={`py-2 px-3 rounded-xl text-xs font-semibold cursor-pointer inline-flex items-center justify-center gap-1.5 ${GRAD.light}`}
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Kirim Pesan</span>
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-2 border-t md:border-t-0 border-slate-100">
-              <div className="text-center">
+            {/* Clean 3-Column Divided Stat Bar */}
+            <div className="grid grid-cols-3 divide-x divide-slate-100 border-y border-slate-100 py-4 bg-white">
+              <div className="text-center px-2">
                 <div className="text-lg font-bold text-slate-900">142</div>
                 <div className="text-[11px] text-slate-600">Posts</div>
               </div>
-              <div className="text-center">
+              <div className="text-center px-2">
                 <div className="text-lg font-bold text-slate-900">6.8K</div>
                 <div className="text-[11px] text-slate-600">Followers</div>
               </div>
-              <div className="text-center">
+              <div className="text-center px-2">
                 <div className="text-lg font-bold text-slate-900">28</div>
                 <div className="text-[11px] text-slate-600">Projects</div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Split Profile Summary & Edit Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900">Tentang & Kontak</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">{bio}</p>
+            {/* Bio, Contact & Skills */}
+            <div className="p-6 space-y-4">
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Tentang Saya
+                </h4>
+                <p className="text-xs text-slate-600 leading-relaxed">{bio}</p>
+              </div>
 
-            <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex items-center gap-2.5 text-slate-700">
-                <Mail className="w-4 h-4 text-[#175cd3]" />
-                <span>{email}</span>
+              <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
+                <div className="flex items-center gap-2.5 text-slate-700">
+                  <Mail className="w-4 h-4 text-[#175cd3] shrink-0" />
+                  <span className="truncate">{email}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-slate-700">
+                  <Phone className="w-4 h-4 text-[#175cd3] shrink-0" />
+                  <span>{phone}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-slate-700">
+                  <Globe className="w-4 h-4 text-[#175cd3] shrink-0" />
+                  <span className="truncate">{website}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2.5 text-slate-700">
-                <Phone className="w-4 h-4 text-[#175cd3]" />
-                <span>{phone}</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-slate-700">
-                <Globe className="w-4 h-4 text-[#175cd3]" />
-                <span>{website}</span>
+
+              <div className="pt-3 border-t border-slate-100 space-y-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Keahlian Utama
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {['React 19', 'TypeScript', 'Tailwind v4', 'Laravel', 'Design Systems', 'ChartJS'].map(
+                    (skill) => (
+                      <span
+                        key={skill}
+                        className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${GRAD.primaryStatic}`}
+                      >
+                        {skill}
+                      </span>
+                    )
+                  )}
+                </div>
               </div>
             </div>
-
-            <div className="pt-2 border-t border-slate-100 space-y-2">
-              <div className="text-xs font-semibold text-slate-800">Keahlian Utama</div>
-              <div className="flex flex-wrap gap-1.5">
-                {['React 19', 'TypeScript', 'Tailwind v4', 'Laravel', 'Design Systems', 'ChartJS'].map((skill) => (
-                  <span key={skill} className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${GRAD.info}`}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
+          {/* Achievements Card */}
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-3">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#175cd3]" /> Pencapaian Terkini
@@ -147,10 +217,13 @@ export function ProfileView() {
             <div className="space-y-2.5 text-xs">
               {[
                 { label: 'Velora UI Release v2.5', detail: '40+ Modul Selesai', grad: GRAD.success },
-                { label: 'Zero Lint Warnings Streak', detail: '33 Files Clean', grad: GRAD.primaryStatic },
+                { label: 'Zero Lint Warnings Streak', detail: '39 Files Clean', grad: GRAD.primaryStatic },
                 { label: 'Uptime SLA Monitor', detail: '99.98% Bulanan', grad: GRAD.info },
               ].map((ach) => (
-                <div key={ach.label} className="p-3 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2">
+                <div
+                  key={ach.label}
+                  className="p-3 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2"
+                >
                   <span className="font-semibold text-slate-800">{ach.label}</span>
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${ach.grad}`}>
                     {ach.detail}
@@ -161,153 +234,314 @@ export function ProfileView() {
           </div>
         </div>
 
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
-          <form onSubmit={handleSave} className="space-y-5">
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">Edit Informasi Profil</h3>
+        {/* RIGHT COLUMN: Tabbed Profile Management Card */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+          {/* Card Tabs Header */}
+          <div className="px-6 pt-5 pb-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-bold text-slate-900">Pengaturan Akun</h3>
               <p className="text-xs text-slate-600 mt-0.5">
-                Perubahan akan langsung disinkronkan ke tampilan kartu profil Anda.
+                Perubahan data langsung diperbarui pada kartu profil di sebelah kiri.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-first">
-                  Nama Depan
-                </label>
-                <input
-                  id="prof-first"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-last">
-                  Nama Belakang
-                </label>
-                <input
-                  id="prof-last"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
-              </div>
+            <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1">
+              {(
+                [
+                  { id: 'edit', label: 'Edit Profil' },
+                  { id: 'security', label: 'Keamanan & Sesi' },
+                  { id: 'notifications', label: 'Preferensi' },
+                ] as const
+              ).map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setActiveTab(t.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                    activeTab === t.id ? `${GRAD.primaryStatic} shadow-xs` : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-role">
-                  Jabatan / Peran
+          <div className="p-6">
+            {activeTab === 'edit' && (
+              <form onSubmit={handleSaveProfile} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-first">
+                      Nama Depan
+                    </label>
+                    <input
+                      id="prof-first"
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-last">
+                      Nama Belakang
+                    </label>
+                    <input
+                      id="prof-last"
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-role">
+                      Jabatan / Peran
+                    </label>
+                    <input
+                      id="prof-role"
+                      type="text"
+                      value={roleTitle}
+                      onChange={(e) => setRoleTitle(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-loc">
+                      Lokasi
+                    </label>
+                    <input
+                      id="prof-loc"
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-email">
+                      Email
+                    </label>
+                    <input
+                      id="prof-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-phone">
+                      No. Telepon
+                    </label>
+                    <input
+                      id="prof-phone"
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-web">
+                    Situs Web
+                  </label>
+                  <input
+                    id="prof-web"
+                    type="url"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-bio">
+                    Bio Singkat
+                  </label>
+                  <textarea
+                    id="prof-bio"
+                    rows={4}
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="w-full p-3.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Simpan Perubahan Profil</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {activeTab === 'security' && (
+              <form onSubmit={handleSaveSecurity} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="sec-curr">
+                      Kata Sandi Saat Ini
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="sec-curr"
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700" htmlFor="sec-new">
+                      Kata Sandi Baru
+                    </label>
+                    <div className="relative">
+                      <Shield className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="sec-new"
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Minimal 8 karakter"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <label className="p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2 text-xs cursor-pointer">
+                  <div>
+                    <div className="font-semibold text-slate-800">Autentikasi Dua Faktor (2FA TOTP)</div>
+                    <div className="text-[11px] text-slate-500">
+                      Lindungi login admin menggunakan aplikasi Authenticator
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={twoFactor}
+                    onChange={(e) => setTwoFactor(e.target.checked)}
+                    className="w-4 h-4 accent-[#175cd3] cursor-pointer"
+                  />
                 </label>
-                <input
-                  id="prof-role"
-                  type="text"
-                  value={roleTitle}
-                  onChange={(e) => setRoleTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
+
+                <div className="space-y-2.5">
+                  <div className="text-xs font-bold text-slate-800">Perangkat Aktif</div>
+                  {[
+                    { dev: 'Chrome 131 · Linux Desktop', loc: 'Jakarta, ID', current: true },
+                    { dev: 'Safari 18 · MacBook Pro', loc: 'Bandung, ID', current: false },
+                  ].map((s) => (
+                    <div
+                      key={s.dev}
+                      className="p-3.5 rounded-xl border border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-xs"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Laptop className="w-4 h-4 text-[#175cd3]" />
+                        <div>
+                          <div className="font-semibold text-slate-900">{s.dev}</div>
+                          <div className="text-[11px] text-slate-500">{s.loc}</div>
+                        </div>
+                      </div>
+                      {s.current ? (
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
+                          Sesi Ini
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => showToast(`Sesi ${s.dev} telah dicabut.`, 'info')}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${GRAD.danger}`}
+                        >
+                          Cabut Sesi
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Simpan Keamanan</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {activeTab === 'notifications' && (
+              <div className="space-y-4">
+                {[
+                  {
+                    title: 'Laporan Ringkasan Mingguan',
+                    desc: 'Kirim rekap analitik dashboard setiap hari Senin pagi ke email.',
+                    checked: newsletter,
+                    toggle: () => setNewsletter((v) => !v),
+                  },
+                  {
+                    title: 'Peringatan Login & Keamanan RBAC',
+                    desc: 'Notifikasi instan saat ada login dari perangkat atau lokasi baru.',
+                    checked: securityAlerts,
+                    toggle: () => setSecurityAlerts((v) => !v),
+                  },
+                  {
+                    title: 'Ringkasan Harian Tiket Support',
+                    desc: 'Dapatkan daftar tiket prioritas tinggi yang belum ditanggapi.',
+                    checked: ticketDigest,
+                    toggle: () => setTicketDigest((v) => !v),
+                  },
+                ].map((pref) => (
+                  <label
+                    key={pref.title}
+                    className="p-4 rounded-xl border border-slate-200/80 flex items-center justify-between gap-3 cursor-pointer"
+                  >
+                    <div className="flex items-start gap-3">
+                      <Bell className="w-4 h-4 text-[#175cd3] mt-0.5 shrink-0" />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900">{pref.title}</div>
+                        <div className="text-[11px] text-slate-600 mt-0.5">{pref.desc}</div>
+                      </div>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={pref.checked}
+                      onChange={pref.toggle}
+                      className="w-4 h-4 accent-[#175cd3] cursor-pointer"
+                    />
+                  </label>
+                ))}
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => showSuccess('Preferensi Disimpan', 'Pengaturan notifikasi Anda telah diperbarui.')}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Simpan Preferensi</span>
+                  </button>
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-loc">
-                  Lokasi
-                </label>
-                <input
-                  id="prof-loc"
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-email">
-                  Email
-                </label>
-                <input
-                  id="prof-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-phone">
-                  No. Telepon
-                </label>
-                <input
-                  id="prof-phone"
-                  type="text"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-web">
-                Situs Web
-              </label>
-              <input
-                id="prof-web"
-                type="url"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700" htmlFor="prof-bio">
-                Bio Singkat
-              </label>
-              <textarea
-                id="prof-bio"
-                rows={4}
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                className="w-full p-3.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#175cd3]"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <label className="p-3 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2 text-xs cursor-pointer">
-                <span className="font-semibold text-slate-700">Langganan Laporan Mingguan</span>
-                <input
-                  type="checkbox"
-                  checked={newsletter}
-                  onChange={(e) => setNewsletter(e.target.checked)}
-                  className="w-4 h-4 accent-[#175cd3] cursor-pointer"
-                />
-              </label>
-              <label className="p-3 rounded-xl border border-slate-200/80 flex items-center justify-between gap-2 text-xs cursor-pointer">
-                <span className="font-semibold text-slate-700">Autentikasi Dua Faktor (2FA)</span>
-                <input
-                  type="checkbox"
-                  checked={twoFactor}
-                  onChange={(e) => setTwoFactor(e.target.checked)}
-                  className="w-4 h-4 accent-[#175cd3] cursor-pointer"
-                />
-              </label>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                type="submit"
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
-              >
-                <Save className="w-4 h-4" />
-                <span>Simpan Perubahan Profil</span>
-              </button>
-            </div>
-          </form>
+            )}
+          </div>
         </div>
       </div>
     </div>
