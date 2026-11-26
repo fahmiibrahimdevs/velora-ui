@@ -1089,13 +1089,13 @@ export function KanbanView() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-2xl overflow-hidden max-h-[92vh] flex flex-col">
             <div className="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 shrink-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${GRAD.primaryStatic}`}>
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${GRAD.primaryStatic}`}>
                   {detailTask.id}
                 </span>
-                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${priorityBadge(detailTask.priority)}`}>
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${priorityBadge(detailTask.priority)}`}>
                   {detailTask.priority} Priority
                 </span>
-                <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-semibold">
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
                   {detailTask.category}
                 </span>
               </div>
