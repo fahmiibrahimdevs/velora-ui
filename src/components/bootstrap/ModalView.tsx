@@ -2,11 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   AlertTriangle,
   ArrowRight,
+  Bell,
+  Briefcase,
   Building2,
+  Calendar,
   Check,
   CheckCircle2,
   Clock,
   Command,
+  Compass,
+  Cookie,
   Copy,
   CreditCard,
   Crown,
@@ -15,11 +20,17 @@ import {
   EyeOff,
   FileSpreadsheet,
   FileText,
+  Image as ImageIcon,
   KeyRound,
+  Layers,
   Link2,
   Lock,
   Mail,
+  MapPin,
+  Package,
   PanelRight,
+  Paperclip,
+  Phone,
   Plus,
   QrCode,
   RefreshCw,
@@ -27,13 +38,17 @@ import {
   Send,
   Share2,
   ShieldCheck,
+  ShoppingBag,
   SlidersHorizontal,
   Sparkles,
   Star,
   Trash2,
   UploadCloud,
+  UserCheck,
   Users,
   X,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
 
@@ -64,15 +79,24 @@ type ModalId =
   | 'payment-success'
   | 'payment-checkout'
   | 'upgrade-plan'
+  | 'product-quickview'
+  | 'shipping-address'
   | 'otp-verify'
   | 'change-password'
+  | 'cookie-consent'
   | 'invite-team'
   | 'share-access'
+  | 'profile-detail'
+  | 'event-rsvp'
+  | 'multi-input-form'
   | 'command-palette'
   | 'upload-dropzone'
   | 'export-filter'
   | 'drawer-detail'
   | 'feedback-rating'
+  | 'onboarding-tour'
+  | 'notification-inbox'
+  | 'media-lightbox'
   | 'demo'
   | 'center'
   | 'confirm'
@@ -82,7 +106,7 @@ type ModalId =
   | 'login'
   | 'footer-extra';
 
-type AppCategory = 'all' | 'payment' | 'security' | 'workspace' | 'utility';
+type AppCategory = 'all' | 'forms' | 'payment' | 'security' | 'workspace' | 'utility';
 
 interface AppModalCardItem {
   id: ModalId;
@@ -97,14 +121,37 @@ interface AppModalCardItem {
 }
 
 const CATEGORY_TABS: { id: AppCategory; label: string }[] = [
-  { id: 'all', label: 'Semua UI (12)' },
-  { id: 'payment', label: 'Payment & Billing' },
-  { id: 'security', label: 'Auth & Security' },
-  { id: 'workspace', label: 'Team & Sharing' },
-  { id: 'utility', label: 'Productivity & Data' },
+  { id: 'all', label: 'Semua UI (21)' },
+  { id: 'forms', label: 'Forms & Multi-Input' },
+  { id: 'payment', label: 'Payment & Commerce' },
+  { id: 'workspace', label: 'Profile & Team' },
+  { id: 'security', label: 'Auth & Privacy' },
+  { id: 'utility', label: 'Productivity & Media' },
 ];
 
 const APP_MODAL_CARDS: AppModalCardItem[] = [
+  {
+    id: 'multi-input-form',
+    category: 'forms',
+    title: 'Complete Multi-Input Form & Upload',
+    desc: 'Form lengkap berisi input text, email, number, date, color, range slider, password, select, radio, toggle, single file, dan multiple file dengan UX progress bar + delete.',
+    badge: 'Full Form UX',
+    badgeGrad: GRAD.primaryStatic,
+    iconGrad: GRAD.primaryStatic,
+    icon: Layers,
+    ctaLabel: 'Buka Form Lengkap',
+  },
+  {
+    id: 'profile-detail',
+    category: 'workspace',
+    title: 'Detail Profile User & Karyawan',
+    desc: 'Kartu profil cepat dengan cover header, status online, statistik performa, kontak salin cepat, dan aksi pesan.',
+    badge: 'Profile Card',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: UserCheck,
+    ctaLabel: 'Lihat Profil',
+  },
   {
     id: 'payment-success',
     category: 'payment',
@@ -139,6 +186,28 @@ const APP_MODAL_CARDS: AppModalCardItem[] = [
     ctaLabel: 'Pilih Paket',
   },
   {
+    id: 'product-quickview',
+    category: 'payment',
+    title: 'Quick View Produk (E-Commerce)',
+    desc: 'Pratinjau produk interaktif dengan pilih warna, edisi, pengatur jumlah stok, dan tombol tambah ke keranjang.',
+    badge: 'Commerce UI',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: ShoppingBag,
+    ctaLabel: 'Lihat Produk',
+  },
+  {
+    id: 'shipping-address',
+    category: 'payment',
+    title: 'Pilih & Tambah Alamat Kirim',
+    desc: 'Pilih daftar alamat tersimpan (Rumah / Kantor) atau tambah alamat pengiriman baru langsung di dalam modal.',
+    badge: 'Address Book',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: MapPin,
+    ctaLabel: 'Atur Alamat',
+  },
+  {
     id: 'otp-verify',
     category: 'security',
     title: 'Verifikasi OTP & 2FA',
@@ -161,6 +230,17 @@ const APP_MODAL_CARDS: AppModalCardItem[] = [
     ctaLabel: 'Ubah Password',
   },
   {
+    id: 'cookie-consent',
+    category: 'security',
+    title: 'Preferensi Privasi & Cookie',
+    desc: 'Dialog persetujuan privasi dengan switch kontrol granular (Esensial, Analitik, Personalisasi).',
+    badge: 'Privacy Consent',
+    badgeGrad: GRAD.warning,
+    iconGrad: GRAD.warning,
+    icon: Cookie,
+    ctaLabel: 'Atur Privasi',
+  },
+  {
     id: 'invite-team',
     category: 'workspace',
     title: 'Undang Anggota Tim',
@@ -181,6 +261,50 @@ const APP_MODAL_CARDS: AppModalCardItem[] = [
     iconGrad: GRAD.info,
     icon: Share2,
     ctaLabel: 'Bagikan Dokumen',
+  },
+  {
+    id: 'event-rsvp',
+    category: 'workspace',
+    title: 'Detail Jadwal Meeting & RSVP',
+    desc: 'Rincian jadwal rapat lengkap dengan tautan meeting salin cepat, daftar peserta, agenda, dan status RSVP.',
+    badge: 'Calendar Event',
+    badgeGrad: GRAD.success,
+    iconGrad: GRAD.success,
+    icon: Calendar,
+    ctaLabel: 'Buka Jadwal',
+  },
+  {
+    id: 'onboarding-tour',
+    category: 'utility',
+    title: "What's New & Onboarding Stepper",
+    desc: 'Modal pengumuman rilis fitur atau welcome tour 3 langkah lengkap dengan indikator progress dan navigasi.',
+    badge: 'Product Tour',
+    badgeGrad: GRAD.primaryStatic,
+    iconGrad: GRAD.primaryStatic,
+    icon: Compass,
+    ctaLabel: 'Mulai Tour',
+  },
+  {
+    id: 'notification-inbox',
+    category: 'utility',
+    title: 'Pusat Notifikasi (Inbox)',
+    desc: 'Pratinjau pesan dan aktivitas terbaru dengan tab filter belum dibaca serta aksi tandai semua dibaca.',
+    badge: 'Notifications',
+    badgeGrad: GRAD.warning,
+    iconGrad: GRAD.warning,
+    icon: Bell,
+    ctaLabel: 'Buka Notifikasi',
+  },
+  {
+    id: 'media-lightbox',
+    category: 'utility',
+    title: 'Preview Dokumen & Lightbox',
+    desc: 'Modal penampil visual & aset dengan kontrol zoom in/out, informasi resolusi berkas, dan tombol unduh.',
+    badge: 'Media Preview',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: ImageIcon,
+    ctaLabel: 'Preview Media',
   },
   {
     id: 'command-palette',
@@ -346,6 +470,129 @@ export function ModalView() {
   const [feedbackTags, setFeedbackTags] = useState<string[]>(['Desain UI']);
   const [feedbackNote, setFeedbackNote] = useState('');
 
+  // Product quick view state
+  const [productColor, setProductColor] = useState<'Midnight Black' | 'Ocean Blue' | 'Silver Mist'>('Ocean Blue');
+  const [productEdition, setProductEdition] = useState<'Standard' | 'Pro LTE'>('Pro LTE');
+  const [productQty, setProductQty] = useState(1);
+
+  // Event RSVP state
+  const [rsvpStatus, setRsvpStatus] = useState<'hadir' | 'mungkin' | 'tidak'>('hadir');
+
+  // Shipping address state
+  const [addresses, setAddresses] = useState([
+    {
+      id: 'addr-1',
+      label: 'Rumah Utama',
+      recipient: 'Fahmi Ibrahim',
+      phone: '+62 812-3456-7890',
+      city: 'Jakarta Selatan',
+      street: 'Jl. Kemang Raya No. 48B, Mampang Prapatan',
+      isPrimary: true,
+    },
+    {
+      id: 'addr-2',
+      label: 'Kantor SCBD',
+      recipient: 'Fahmi Ibrahim',
+      phone: '+62 812-9988-7766',
+      city: 'Jakarta Pusat',
+      street: 'Treasury Tower Lt. 19, Jl. Jend. Sudirman Kav 52-53',
+      isPrimary: false,
+    },
+  ]);
+  const [selectedAddrId, setSelectedAddrId] = useState('addr-1');
+  const [showNewAddrForm, setShowNewAddrForm] = useState(false);
+  const [newAddrLabel, setNewAddrLabel] = useState('');
+  const [newAddrRecipient, setNewAddrRecipient] = useState('');
+  const [newAddrPhone, setNewAddrPhone] = useState('');
+  const [newAddrCity, setNewAddrCity] = useState('');
+  const [newAddrStreet, setNewAddrStreet] = useState('');
+
+  // Onboarding tour state
+  const [tourStep, setTourStep] = useState(0);
+
+  // Notification inbox state
+  const [notifTab, setNotifTab] = useState<'all' | 'unread'>('all');
+  const [notifications, setNotifications] = useState([
+    {
+      id: 'n1',
+      title: 'Pembayaran #TXN-94021-X berhasil diterima',
+      desc: 'Langganan Velora Pro Enterprise aktif hingga Nov 2027.',
+      time: '2 menit lalu',
+      unread: true,
+      badgeGrad: GRAD.success,
+    },
+    {
+      id: 'n2',
+      title: 'Nadia Kusuma menandai Anda di KAN-105',
+      desc: 'Review desain auth split layout siap dicek pada kolom In Review.',
+      time: '28 menit lalu',
+      unread: true,
+      badgeGrad: GRAD.primaryStatic,
+    },
+    {
+      id: 'n3',
+      title: 'Laporan Payroll November selesai digenerate',
+      desc: 'Dokumen siap diunduh melalui modul Utilities > Invoice.',
+      time: '3 jam lalu',
+      unread: false,
+      badgeGrad: GRAD.info,
+    },
+  ]);
+
+  // Lightbox zoom state
+  const [lightboxZoom, setLightboxZoom] = useState(100);
+
+  // Cookie preferences state
+  const [cookieAnalytics, setCookieAnalytics] = useState(true);
+  const [cookiePersonalization, setCookiePersonalization] = useState(false);
+
+  // Complete Multi-Input & File Upload Form Modal state
+  const [formFullName, setFormFullName] = useState('Fahmi Ibrahim');
+  const [formEmail, setFormEmail] = useState('fahmi@velora.id');
+  const [formPhone, setFormPhone] = useState('+62 812-7700-1122');
+  const [formBudget, setFormBudget] = useState('15000000');
+  const [formDate, setFormDate] = useState('2026-12-15');
+  const [formPassword, setFormPassword] = useState('Velora@2026');
+  const [showFormPass, setShowFormPass] = useState(false);
+  const [formDivision, setFormDivision] = useState('Engineering & Product');
+  const [formPriority, setFormPriority] = useState<'normal' | 'urgent'>('normal');
+  const [formAccent, setFormAccent] = useState('#175cd3');
+  const [formScale, setFormScale] = useState(75);
+  const [formPublicAccess, setFormPublicAccess] = useState(true);
+  const [formAgreeTerms, setFormAgreeTerms] = useState(true);
+  const [formNotes, setFormNotes] = useState(
+    'Integrasi form modal lengkap dengan validasi tipe input dan manajemen unggahan multi-berkas.',
+  );
+  const [singleFormFile, setSingleFormFile] = useState<{ name: string; size: string } | null>({
+    name: 'Proposal-Q4-Velora.pdf',
+    size: '1.2 MB',
+  });
+  const [multiFormFiles, setMultiFormFiles] = useState<
+    { id: string; name: string; size: string; progress: number; status: 'uploading' | 'done' }[]
+  >([
+    { id: 'mf-1', name: 'Kontrak-Vendor-2026.pdf', size: '2.4 MB', progress: 100, status: 'done' },
+    { id: 'mf-2', name: 'Mockup-Dashboard-v3.png', size: '840 KB', progress: 48, status: 'uploading' },
+  ]);
+
+  useEffect(() => {
+    const hasUploading = multiFormFiles.some((f) => f.status === 'uploading' && f.progress < 100);
+    if (!hasUploading) return;
+    const interval = window.setInterval(() => {
+      setMultiFormFiles((prev) =>
+        prev.map((file) => {
+          if (file.status !== 'uploading') return file;
+          const nextProg = Math.min(100, file.progress + Math.floor(12 + Math.random() * 18));
+          return {
+            ...file,
+            progress: nextProg,
+            status: nextProg >= 100 ? 'done' : 'uploading',
+          };
+        }),
+      );
+    }, 240);
+    return () => window.clearInterval(interval);
+  }, [multiFormFiles]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -432,6 +679,41 @@ export function ModalView() {
       c.label.toLowerCase().includes(cmdQuery.toLowerCase()) ||
       c.hint.toLowerCase().includes(cmdQuery.toLowerCase()),
   );
+
+  const enqueueMultiFormFiles = (items: { name: string; size: string }[]) => {
+    const newEntries = items.map((item, idx) => ({
+      id: `mf-${Date.now()}-${idx}`,
+      name: item.name,
+      size: item.size,
+      progress: 8,
+      status: 'uploading' as const,
+    }));
+    setMultiFormFiles((prev) => [...newEntries, ...prev]);
+  };
+
+  const handleMultiFormInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    enqueueMultiFormFiles(
+      Array.from(files).map((f) => ({
+        name: f.name,
+        size: `${Math.max(12, Math.round(f.size / 1024))} KB`,
+      })),
+    );
+    e.target.value = '';
+  };
+
+  const handleSimulateMultiUpload = () => {
+    const samples = [
+      { name: `Lampiran-Audit-${Math.floor(10 + Math.random() * 89)}.xlsx`, size: '1.1 MB' },
+      { name: `Bukti-Transfer-${Math.floor(100 + Math.random() * 899)}.png`, size: '420 KB' },
+    ];
+    enqueueMultiFormFiles([samples[Math.floor(Math.random() * samples.length)]]);
+  };
+
+  const unreadNotifCount = notifications.filter((n) => n.unread).length;
+  const visibleNotifications =
+    notifTab === 'unread' ? notifications.filter((n) => n.unread) : notifications;
 
   return (
     <div className="space-y-8">
@@ -1840,6 +2122,1267 @@ export function ModalView() {
               className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.primary}`}
             >
               Kirim Feedback
+            </button>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A13. COMPLETE MULTI-INPUT & FILE UPLOAD FORM MODAL */}
+      {activeModal === 'multi-input-form' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-2xl">
+          <div className="max-h-[88vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-slate-100 shrink-0 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${GRAD.primaryStatic}`}>
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-slate-900">Complete Multi-Input Form Modal</h4>
+                  <p className="text-[11px] text-slate-500">
+                    Showcase lengkap input text, password, select, date, range, color, toggle, single file &amp; multi-file progress.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form
+              id="velora-multi-input-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                showToast(
+                  `Form "${formFullName}" tersimpan (${multiFormFiles.length} file terlampir)!`,
+                  'success',
+                );
+                closeModal();
+              }}
+              className="p-6 overflow-y-auto space-y-5 flex-1 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]"
+            >
+              {/* Basic Inputs Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Nama Lengkap (Text)
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formFullName}
+                    onChange={(e) => setFormFullName(e.target.value)}
+                    placeholder="Masukkan nama lengkap"
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/15"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Email Kerja (Email)
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formEmail}
+                    onChange={(e) => setFormEmail(e.target.value)}
+                    placeholder="nama@perusahaan.id"
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/15"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Nomor Telepon (Tel)
+                  </label>
+                  <input
+                    type="tel"
+                    value={formPhone}
+                    onChange={(e) => setFormPhone(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Estimasi Anggaran (Number)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={50000}
+                    value={formBudget}
+                    onChange={(e) => setFormBudget(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Tanggal Deadline (Date)
+                  </label>
+                  <input
+                    type="date"
+                    value={formDate}
+                    onChange={(e) => setFormDate(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Password Akses (Password)
+                  </label>
+                  <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden focus-within:border-[#175cd3]">
+                    <input
+                      type={showFormPass ? 'text' : 'password'}
+                      required
+                      value={formPassword}
+                      onChange={(e) => setFormPassword(e.target.value)}
+                      className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowFormPass((v) => !v)}
+                      className="px-3 text-slate-500 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      {showFormPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Select, Color Picker, Range Slider */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Divisi (Select)</label>
+                  <select
+                    value={formDivision}
+                    onChange={(e) => setFormDivision(e.target.value)}
+                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl bg-white outline-none focus:border-[#175cd3]"
+                  >
+                    <option>Engineering &amp; Product</option>
+                    <option>Finance &amp; Accounting</option>
+                    <option>Human Capital</option>
+                    <option>Operations &amp; Supply</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Warna Label (Color)
+                  </label>
+                  <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-2.5 py-1.5">
+                    <input
+                      type="color"
+                      value={formAccent}
+                      onChange={(e) => setFormAccent(e.target.value)}
+                      className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent p-0"
+                    />
+                    <span className="text-xs font-mono text-slate-700 uppercase">{formAccent}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-medium text-slate-700">Bobot Prioritas (Range)</label>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.primaryStatic}`}>
+                      {formScale}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={formScale}
+                    onChange={(e) => setFormScale(Number(e.target.value))}
+                    className="w-full accent-[#175cd3] cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* Radio & Switch */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                    Tingkat Urgensi (Radio)
+                  </label>
+                  <div className="flex items-center gap-4">
+                    {[
+                      { id: 'normal' as const, label: 'Reguler' },
+                      { id: 'urgent' as const, label: 'Prioritas Tinggi' },
+                    ].map((opt) => (
+                      <label key={opt.id} className="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="formPriority"
+                          checked={formPriority === opt.id}
+                          onChange={() => setFormPriority(opt.id)}
+                          className="text-[#175cd3]"
+                        />
+                        <span>{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl border border-slate-200">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-900">Tampilkan ke Tim</p>
+                    <p className="text-[11px] text-slate-500">Toggle status publikasi dokumen</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormPublicAccess((v) => !v)}
+                    className={`w-10 h-5.5 rounded-full transition-colors p-0.5 cursor-pointer ${
+                      formPublicAccess ? 'bg-[#175cd3]' : 'bg-slate-300'
+                    }`}
+                  >
+                    <span
+                      className={`block w-4.5 h-4.5 rounded-full bg-white shadow transition-transform ${
+                        formPublicAccess ? 'translate-x-4.5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              {/* Single File Input */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-slate-700">
+                  Dokumen Utama (Single File Input)
+                </label>
+                {singleFormFile ? (
+                  <div className="px-3.5 py-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-3 bg-white">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${GRAD.info}`}>
+                        <Paperclip className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-slate-900 truncate">{singleFormFile.name}</p>
+                        <p className="text-[11px] text-slate-500">{singleFormFile.size}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <label className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg cursor-pointer ${GRAD.light}`}>
+                        Ganti
+                        <input
+                          type="file"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) {
+                              setSingleFormFile({
+                                name: f.name,
+                                size: `${Math.max(10, Math.round(f.size / 1024))} KB`,
+                              });
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setSingleFormFile(null)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg cursor-pointer"
+                        title="Hapus file"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="block px-4 py-3 rounded-xl border border-dashed border-slate-300 hover:border-[#175cd3] text-center text-xs text-slate-600 cursor-pointer">
+                    <span>Klik untuk pilih 1 file dokumen utama</span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setSingleFormFile({
+                            name: f.name,
+                            size: `${Math.max(10, Math.round(f.size / 1024))} KB`,
+                          });
+                        }
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+
+              {/* Multiple File Input with Live Progress & Delete */}
+              <div className="space-y-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label className="text-xs font-medium text-slate-700">
+                    Lampiran Pendukung (Multiple File • Progress &amp; Delete)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleSimulateMultiUpload}
+                    className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg inline-flex items-center gap-1 cursor-pointer ${GRAD.info}`}
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Simulasikan Upload File</span>
+                  </button>
+                </div>
+
+                <label className="border-2 border-dashed border-slate-200 hover:border-[#175cd3] rounded-xl p-4 text-center block cursor-pointer transition-colors">
+                  <input type="file" multiple className="hidden" onChange={handleMultiFormInput} />
+                  <UploadCloud className="w-5 h-5 text-[#175cd3] mx-auto mb-1" />
+                  <p className="text-xs font-semibold text-slate-800">
+                    Pilih satu atau banyak file sekaligus (multiple)
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    File yang dipilih otomatis berjalan progres unggahnya dan dapat dihapus kapan saja
+                  </p>
+                </label>
+
+                {multiFormFiles.length > 0 && (
+                  <div className="space-y-2">
+                    {multiFormFiles.map((file) => (
+                      <div key={file.id} className="p-3 rounded-xl border border-slate-200 bg-white space-y-1.5">
+                        <div className="flex items-center justify-between gap-2 text-xs">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FileText
+                              className={`w-4 h-4 shrink-0 ${
+                                file.status === 'done' ? 'text-emerald-600' : 'text-[#175cd3]'
+                              }`}
+                            />
+                            <span className="font-semibold text-slate-900 truncate">{file.name}</span>
+                            <span className="text-slate-500 shrink-0">({file.size})</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                file.status === 'done' ? GRAD.success : GRAD.primaryStatic
+                              }`}
+                            >
+                              {file.status === 'done' ? 'Selesai 100%' : `Mengunggah ${file.progress}%`}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setMultiFormFiles((prev) => prev.filter((item) => item.id !== file.id))
+                              }
+                              className="p-1 text-slate-400 hover:text-rose-600 rounded-md cursor-pointer"
+                              title="Hapus file ini"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-200 ${
+                              file.status === 'done' ? GRAD.success : GRAD.primaryStatic
+                            }`}
+                            style={{ width: `${file.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Textarea & Agreement Checkbox */}
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  Catatan Tambahan (Textarea)
+                </label>
+                <textarea
+                  rows={2}
+                  value={formNotes}
+                  onChange={(e) => setFormNotes(e.target.value)}
+                  className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3]"
+                />
+              </div>
+
+              <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formAgreeTerms}
+                  onChange={(e) => setFormAgreeTerms(e.target.checked)}
+                  className="rounded-sm text-[#175cd3]"
+                />
+                <span>Saya menyatakan seluruh data dan berkas yang diunggah sudah valid</span>
+              </label>
+            </form>
+
+            <div className="px-6 py-3.5 border-t border-slate-100 shrink-0 flex items-center justify-between gap-2 bg-white">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormFullName('');
+                  setFormEmail('');
+                  setMultiFormFiles([]);
+                  setSingleFormFile(null);
+                  showToast('Isian form direset', 'info');
+                }}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+              >
+                Reset
+              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  form="velora-multi-input-form"
+                  className={`px-5 py-2 text-xs font-semibold rounded-xl shadow-xs cursor-pointer ${GRAD.primary}`}
+                >
+                  Simpan Form
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A14. DETAIL PROFILE USER & KARYAWAN MODAL */}
+      {activeModal === 'profile-detail' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-md">
+          <div className="relative">
+            <div className={`h-24 w-full ${GRAD.primaryStatic}`} />
+            <button
+              type="button"
+              onClick={closeModal}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/25 hover:bg-black/40 text-white flex items-center justify-center cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="px-6 pb-6">
+              <div className="-mt-10 flex items-end justify-between gap-3 mb-3">
+                <div className="relative">
+                  <div
+                    className={`w-20 h-20 rounded-2xl border-4 border-white shadow-md flex items-center justify-center text-xl font-bold ${GRAD.info}`}
+                  >
+                    NK
+                  </div>
+                  <span
+                    className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"
+                    title="Online"
+                  />
+                </div>
+                <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold inline-flex items-center gap-1 ${GRAD.success}`}>
+                  <CheckCircle2 className="w-3 h-3" />
+                  Verified Lead
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-lg font-bold text-slate-900">Nadia Kusuma</h4>
+                <p className="text-xs font-medium text-slate-600 inline-flex items-center gap-1.5 mt-0.5">
+                  <Briefcase className="w-3.5 h-3.5 text-[#175cd3]" />
+                  Senior UI/UX Lead • Product Design
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed mt-2">
+                  Memimpin sistem desain Velora UI serta riset pengalaman pengguna modul ERP, HRIS, dan Checkout Flow.
+                </p>
+              </div>
+
+              {/* Mini Stats */}
+              <div className="grid grid-cols-3 gap-2.5 my-4">
+                {[
+                  { label: 'Proyek', val: '34' },
+                  { label: 'Task Selesai', val: '148' },
+                  { label: 'Rating Tim', val: '4.9 ★' },
+                ].map((stat) => (
+                  <div key={stat.label} className="p-2.5 rounded-xl border border-slate-200 text-center">
+                    <p className="text-sm font-bold text-slate-900">{stat.val}</p>
+                    <p className="text-[11px] text-slate-500">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Contact Rows */}
+              <div className="space-y-2 text-xs border-t border-slate-100 pt-3.5 pb-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 inline-flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-slate-400" />
+                    nadia@velora.id
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => showToast('Email nadia@velora.id disalin!', 'info')}
+                    className="text-[#175cd3] font-semibold hover:underline cursor-pointer"
+                  >
+                    Salin
+                  </button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 inline-flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    +62 812-3456-7890
+                  </span>
+                  <span className="text-slate-500">Jakarta Selatan</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast('Membuka obrolan dengan Nadia Kusuma...', 'info');
+                    closeModal();
+                  }}
+                  className={`flex-1 py-2.5 text-xs font-semibold rounded-xl shadow-xs inline-flex items-center justify-center gap-1.5 cursor-pointer ${GRAD.primary}`}
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Kirim Pesan</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.hash = '#/profile';
+                    closeModal();
+                  }}
+                  className={`flex-1 py-2.5 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+                >
+                  Profil Lengkap
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A15. PRODUCT QUICK VIEW (E-COMMERCE) MODAL */}
+      {activeModal === 'product-quickview' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="p-6 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between bg-white">
+              <div className="flex items-center justify-between">
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${GRAD.warning}`}>
+                  Hemat 20%
+                </span>
+                <span className="text-[11px] font-mono text-slate-500">SKU: VLR-WATCH-09</span>
+              </div>
+
+              <div className="my-6 py-8 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-2">
+                <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-md ${GRAD.primaryStatic}`}>
+                  <Package className="w-10 h-10" />
+                </div>
+                <span className="text-[11px] font-medium text-slate-500">{productColor} • {productEdition}</span>
+              </div>
+
+              <p className="text-[11px] text-slate-500">Garansi resmi 24 bulan &amp; bebas ongkir seluruh Indonesia.</p>
+            </div>
+
+            <div className="p-6 flex flex-col justify-between space-y-4">
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <h4 className="text-base font-bold text-slate-900">Velora Chrono Smart ERP Band</h4>
+                  <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-600">
+                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                  <span className="font-semibold text-slate-900">4.8</span>
+                  <span>(124 ulasan) • Stok 18 unit</span>
+                </div>
+
+                <div className="flex items-baseline gap-2 mt-3">
+                  <span className="text-2xl font-extrabold text-slate-900">$149.00</span>
+                  <span className="text-xs text-slate-400 line-through">$189.00</span>
+                </div>
+
+                <div className="space-y-3 mt-4">
+                  <div>
+                    <p className="text-xs font-medium text-slate-700 mb-1.5">Warna</p>
+                    <div className="flex flex-wrap gap-2">
+                      {(['Ocean Blue', 'Midnight Black', 'Silver Mist'] as const).map((clr) => (
+                        <button
+                          key={clr}
+                          type="button"
+                          onClick={() => setProductColor(clr)}
+                          className={`px-3 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
+                            productColor === clr ? GRAD.primary : GRAD.light
+                          }`}
+                        >
+                          {clr}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3 pt-1">
+                    <div>
+                      <p className="text-xs font-medium text-slate-700 mb-1">Edisi</p>
+                      <div className="flex gap-1.5">
+                        {(['Standard', 'Pro LTE'] as const).map((ed) => (
+                          <button
+                            key={ed}
+                            type="button"
+                            onClick={() => setProductEdition(ed)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
+                              productEdition === ed ? GRAD.info : GRAD.light
+                            }`}
+                          >
+                            {ed}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-medium text-slate-700 mb-1">Jumlah</p>
+                      <div className="inline-flex items-center border border-slate-200 rounded-lg overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => setProductQty((q) => Math.max(1, q - 1))}
+                          className="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
+                        >
+                          -
+                        </button>
+                        <span className="px-3 py-1 text-xs font-semibold text-slate-900">{productQty}</span>
+                        <button
+                          type="button"
+                          onClick={() => setProductQty((q) => Math.min(18, q + 1))}
+                          className="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    showToast(
+                      `${productQty}× Velora Band (${productColor}) masuk keranjang!`,
+                      'success',
+                    );
+                    closeModal();
+                  }}
+                  className={`flex-1 py-2.5 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+                >
+                  + Keranjang
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaidAmount(`$${(149 * productQty).toFixed(2)}`);
+                    setActiveModal('payment-checkout');
+                  }}
+                  className={`flex-1 py-2.5 text-xs font-semibold rounded-xl shadow-xs cursor-pointer ${GRAD.primary}`}
+                >
+                  Beli Langsung
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A16. DETAIL JADWAL MEETING & RSVP MODAL */}
+      {activeModal === 'event-rsvp' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-md">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className={`px-2.5 py-1 rounded-xl text-center leading-tight ${GRAD.success}`}>
+                <span className="block text-[10px] uppercase">Nov</span>
+                <span className="text-sm font-bold">27</span>
+              </div>
+              <div>
+                <h4 className="text-sm sm:text-base font-bold text-slate-900">
+                  Sprint Review &amp; Architecture Sync
+                </h4>
+                <p className="text-[11px] text-slate-500">10:00 – 11:30 WIB • Google Meet</p>
+              </div>
+            </div>
+            <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="p-6 space-y-4 text-xs">
+            <div className="p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+              <span className="font-mono text-slate-700 truncate">https://meet.google.com/vlr-sync-26</span>
+              <button
+                type="button"
+                onClick={() => showToast('Link meeting disalin!', 'success')}
+                className={`px-3 py-1 rounded-lg text-[11px] font-semibold shrink-0 cursor-pointer ${GRAD.primary}`}
+              >
+                Salin Link
+              </button>
+            </div>
+
+            <div>
+              <p className="font-semibold text-slate-800 mb-1.5">Peserta (6 Diundang)</p>
+              <div className="flex items-center gap-1.5">
+                {['FI', 'NK', 'BP', 'RH', 'SR'].map((ini) => (
+                  <span
+                    key={ini}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${GRAD.primaryStatic}`}
+                  >
+                    {ini}
+                  </span>
+                ))}
+                <span className="px-2 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700">
+                  +1 lagi
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <p className="font-semibold text-slate-800 mb-1.5">Agenda Singkat</p>
+              <ul className="list-disc pl-4 space-y-1 text-slate-600">
+                <li>Demo Modal Gallery &amp; Checkout Receipt flow</li>
+                <li>Evaluasi performa scroll kolom Kanban Board</li>
+                <li>Penentuan prioritas sprint pekan depan</li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-semibold text-slate-800 mb-1.5">Konfirmasi Kehadiran Anda</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: 'hadir' as const, label: 'Hadir', grad: GRAD.success },
+                  { id: 'mungkin' as const, label: 'Mungkin', grad: GRAD.warning },
+                  { id: 'tidak' as const, label: 'Tidak Bisa', grad: GRAD.danger },
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => {
+                      setRsvpStatus(opt.id);
+                      showToast(`Status RSVP diubah menjadi: ${opt.label}`, 'success');
+                    }}
+                    className={`py-2 rounded-xl text-xs font-semibold cursor-pointer ${
+                      rsvpStatus === opt.id ? opt.grad : GRAD.light
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="px-6 py-3.5 border-t border-slate-100 flex justify-end">
+            <button type="button" onClick={closeModal} className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}>
+              Tutup
+            </button>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A17. SHIPPING ADDRESS BOOK & ADD FORM MODAL */}
+      {activeModal === 'shipping-address' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-lg">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-[#175cd3]" />
+              <h4 className="text-base font-bold text-slate-900">Alamat Pengiriman</h4>
+            </div>
+            <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div className="space-y-2.5">
+              {addresses.map((addr) => {
+                const selected = selectedAddrId === addr.id;
+                return (
+                  <div
+                    key={addr.id}
+                    onClick={() => setSelectedAddrId(addr.id)}
+                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                      selected ? 'border-[#175cd3] ring-2 ring-[#175cd3]/15' : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-900">{addr.label}</span>
+                        {addr.isPrimary && (
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.primaryStatic}`}>
+                            Utama
+                          </span>
+                        )}
+                      </div>
+                      {selected && <CheckCircle2 className="w-4 h-4 text-[#175cd3]" />}
+                    </div>
+                    <p className="text-xs font-semibold text-slate-800">
+                      {addr.recipient} • {addr.phone}
+                    </p>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      {addr.street}, {addr.city}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {showNewAddrForm ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const nextId = `addr-${Date.now()}`;
+                  setAddresses((prev) => [
+                    ...prev,
+                    {
+                      id: nextId,
+                      label: newAddrLabel || 'Alamat Baru',
+                      recipient: newAddrRecipient,
+                      phone: newAddrPhone,
+                      city: newAddrCity,
+                      street: newAddrStreet,
+                      isPrimary: false,
+                    },
+                  ]);
+                  setSelectedAddrId(nextId);
+                  setShowNewAddrForm(false);
+                  setNewAddrLabel('');
+                  setNewAddrRecipient('');
+                  setNewAddrPhone('');
+                  setNewAddrCity('');
+                  setNewAddrStreet('');
+                  showToast('Alamat baru berhasil ditambahkan!', 'success');
+                }}
+                className="p-4 rounded-xl border border-slate-200 space-y-3"
+              >
+                <p className="text-xs font-bold text-slate-900">Tambah Alamat Baru</p>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Label (mis. Gudang)"
+                    value={newAddrLabel}
+                    onChange={(e) => setNewAddrLabel(e.target.value)}
+                    className="px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-[#175cd3]"
+                  />
+                  <input
+                    type="text"
+                    required
+                    placeholder="Kota / Kabupaten"
+                    value={newAddrCity}
+                    onChange={(e) => setNewAddrCity(e.target.value)}
+                    className="px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-[#175cd3]"
+                  />
+                  <input
+                    type="text"
+                    required
+                    placeholder="Nama Penerima"
+                    value={newAddrRecipient}
+                    onChange={(e) => setNewAddrRecipient(e.target.value)}
+                    className="px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-[#175cd3]"
+                  />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="No. Telepon"
+                    value={newAddrPhone}
+                    onChange={(e) => setNewAddrPhone(e.target.value)}
+                    className="px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-[#175cd3]"
+                  />
+                </div>
+                <textarea
+                  rows={2}
+                  required
+                  placeholder="Alamat lengkap (Jalan, RT/RW, Kode Pos)"
+                  value={newAddrStreet}
+                  onChange={(e) => setNewAddrStreet(e.target.value)}
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-[#175cd3]"
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowNewAddrForm(false)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer ${GRAD.light}`}
+                  >
+                    Batal
+                  </button>
+                  <button type="submit" className={`px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer ${GRAD.primary}`}>
+                    Simpan Alamat
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowNewAddrForm(true)}
+                className={`w-full py-2.5 text-xs font-semibold rounded-xl inline-flex items-center justify-center gap-1.5 cursor-pointer ${GRAD.light}`}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Tambah Alamat Pengiriman Baru</span>
+              </button>
+            )}
+          </div>
+
+          <div className="px-6 py-3.5 border-t border-slate-100 flex justify-end gap-2">
+            <button type="button" onClick={closeModal} className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}>
+              Tutup
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const chosen = addresses.find((a) => a.id === selectedAddrId);
+                showToast(`Alamat "${chosen?.label}" dipilih untuk pengiriman!`, 'success');
+                closeModal();
+              }}
+              className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.primary}`}
+            >
+              Gunakan Alamat Ini
+            </button>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A18. WHAT'S NEW / ONBOARDING TOUR MODAL */}
+      {activeModal === 'onboarding-tour' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-md">
+          {(() => {
+            const steps = [
+              {
+                badge: 'Pembaruan v2.4 • Langkah 1/3',
+                title: 'Selamat Datang di Velora Workspace',
+                desc: 'Kelola alur kerja Kanban, persetujuan invoice, dan analitik tim dari satu dashboard terintegrasi.',
+                grad: GRAD.primaryStatic,
+              },
+              {
+                badge: 'Produktivitas • Langkah 2/3',
+                title: '21+ Modal UI Siap Pakai',
+                desc: 'Tersedia modal Payment Checkout, Struk Transaksi, Form Multi-Input dengan Progress Upload, hingga Command Palette.',
+                grad: GRAD.info,
+              },
+              {
+                badge: 'Keamanan • Langkah 3/3',
+                title: 'Kontrol Akses & 2FA Terjaga',
+                desc: 'Aktifkan verifikasi OTP dua langkah dan kelola role tiap anggota tim hanya dalam beberapa klik.',
+                grad: GRAD.success,
+              },
+            ];
+            const current = steps[tourStep];
+            return (
+              <div>
+                <div className={`p-7 text-white relative ${current.grad}`}>
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="absolute top-3.5 right-3.5 w-7 h-7 rounded-full bg-black/20 hover:bg-black/35 flex items-center justify-center cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/20 mb-3">
+                    {current.badge}
+                  </span>
+                  <h4 className="text-lg font-bold leading-snug">{current.title}</h4>
+                </div>
+
+                <div className="p-6 space-y-5">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{current.desc}</p>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-1.5">
+                      {steps.map((_, idx) => (
+                        <span
+                          key={idx}
+                          className={`h-2 rounded-full transition-all ${
+                            idx === tourStep ? 'w-6 bg-[#175cd3]' : 'w-2 bg-slate-200'
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {tourStep > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setTourStep((s) => s - 1)}
+                          className={`px-3.5 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+                        >
+                          Sebelumnya
+                        </button>
+                      )}
+                      {tourStep < steps.length - 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => setTourStep((s) => s + 1)}
+                          className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.primary}`}
+                        >
+                          Lanjut
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            showToast('Onboarding selesai! Selamat menjelajah Velora UI.', 'success');
+                            setTourStep(0);
+                            closeModal();
+                          }}
+                          className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.success}`}
+                        >
+                          Mulai Sekarang
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </ModalShell>
+      )}
+
+      {/* A19. NOTIFICATION INBOX MODAL */}
+      {activeModal === 'notification-inbox' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-md">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-[#175cd3]" />
+              <h4 className="text-base font-bold text-slate-900">Pusat Notifikasi</h4>
+              {unreadNotifCount > 0 && (
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.danger}`}>
+                  {unreadNotifCount} Baru
+                </span>
+              )}
+            </div>
+            <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="px-6 pt-3 flex items-center justify-between gap-2">
+            <div className="flex gap-1.5">
+              <button
+                type="button"
+                onClick={() => setNotifTab('all')}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                  notifTab === 'all' ? GRAD.primary : GRAD.light
+                }`}
+              >
+                Semua
+              </button>
+              <button
+                type="button"
+                onClick={() => setNotifTab('unread')}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                  notifTab === 'unread' ? GRAD.primary : GRAD.light
+                }`}
+              >
+                Belum Dibaca ({unreadNotifCount})
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+                showToast('Semua notifikasi ditandai sudah dibaca', 'info');
+              }}
+              className="text-[11px] font-semibold text-[#175cd3] hover:underline cursor-pointer"
+            >
+              Tandai Semua Dibaca
+            </button>
+          </div>
+
+          <div className="p-4 space-y-2 max-h-80 overflow-y-auto">
+            {visibleNotifications.length === 0 ? (
+              <p className="text-xs text-slate-500 text-center py-8">Semua notifikasi sudah dibaca.</p>
+            ) : (
+              visibleNotifications.map((n) => (
+                <div
+                  key={n.id}
+                  onClick={() =>
+                    setNotifications((prev) =>
+                      prev.map((item) => (item.id === n.id ? { ...item, unread: false } : item)),
+                    )
+                  }
+                  className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    n.unread ? 'border-[#175cd3]/30 shadow-xs' : 'border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-2.5">
+                      <span className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${n.badgeGrad}`} />
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">{n.title}</p>
+                        <p className="text-xs text-slate-600 mt-0.5">{n.desc}</p>
+                        <p className="text-[10px] text-slate-400 mt-1">{n.time}</p>
+                      </div>
+                    </div>
+                    {n.unread && <span className="w-2 h-2 rounded-full bg-[#175cd3] shrink-0 mt-1" />}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A20. MEDIA LIGHTBOX / DOCUMENT PREVIEW MODAL */}
+      {activeModal === 'media-lightbox' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-2xl">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h4 className="text-sm sm:text-base font-bold text-slate-900 truncate">
+                UI-System-Blueprint-v2.png
+              </h4>
+              <p className="text-[11px] text-slate-500">1920 × 1080 px • 2.4 MB • Zoom {lightboxZoom}%</p>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setLightboxZoom((z) => Math.max(60, z - 20))}
+                className={`p-2 rounded-lg cursor-pointer ${GRAD.light}`}
+                title="Perkecil"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setLightboxZoom((z) => Math.min(140, z + 20))}
+                className={`p-2 rounded-lg cursor-pointer ${GRAD.light}`}
+                title="Perbesar"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => showToast('File UI-System-Blueprint-v2.png diunduh!', 'success')}
+                className={`px-3 py-2 text-xs font-semibold rounded-lg inline-flex items-center gap-1 cursor-pointer ${GRAD.primary}`}
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Unduh</span>
+              </button>
+              <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1.5 cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 bg-slate-950 flex items-center justify-center overflow-auto min-h-[280px]">
+            <div
+              style={{ transform: `scale(${lightboxZoom / 100})` }}
+              className="transition-transform duration-200 bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.primaryStatic}`}>
+                  Velora Design Tokens
+                </span>
+                <span className="text-[11px] font-mono text-slate-500">v2.4.0</span>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                <div className={`h-14 rounded-xl ${GRAD.primaryStatic}`} />
+                <div className={`h-14 rounded-xl ${GRAD.success}`} />
+                <div className={`h-14 rounded-xl ${GRAD.warning}`} />
+                <div className={`h-14 rounded-xl ${GRAD.danger}`} />
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-3 w-3/4 rounded bg-slate-200" />
+                <div className="h-2.5 w-1/2 rounded bg-slate-100" />
+              </div>
+            </div>
+          </div>
+        </ModalShell>
+      )}
+
+      {/* A21. COOKIE & PRIVACY CONSENT MODAL */}
+      {activeModal === 'cookie-consent' && (
+        <ModalShell onClose={closeModal} maxWidth="max-w-md">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Cookie className="w-4 h-4 text-amber-600" />
+              <h4 className="text-base font-bold text-slate-900">Preferensi Privasi &amp; Cookie</h4>
+            </div>
+            <button type="button" onClick={closeModal} className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="p-6 space-y-3 text-xs">
+            <p className="text-slate-600 leading-relaxed">
+              Kami menggunakan cookie untuk menjaga sesi login tetap aman serta memahami bagaimana Anda memakai aplikasi.
+            </p>
+
+            <div className="p-3.5 rounded-xl border border-slate-200 flex items-center justify-between gap-3">
+              <div>
+                <p className="font-bold text-slate-900">Cookie Esensial</p>
+                <p className="text-[11px] text-slate-500">Wajib aktif untuk keamanan &amp; autentikasi sesi</p>
+              </div>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
+                Selalu Aktif
+              </span>
+            </div>
+
+            {[
+              {
+                title: 'Analitik & Performa',
+                sub: 'Membantu mengukur kecepatan halaman dan error log',
+                checked: cookieAnalytics,
+                toggle: () => setCookieAnalytics((v) => !v),
+              },
+              {
+                title: 'Personalisasi UI',
+                sub: 'Menyimpan tata letak sidebar dan preferensi tabel Anda',
+                checked: cookiePersonalization,
+                toggle: () => setCookiePersonalization((v) => !v),
+              },
+            ].map((item) => (
+              <div key={item.title} className="p-3.5 rounded-xl border border-slate-200 flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-bold text-slate-900">{item.title}</p>
+                  <p className="text-[11px] text-slate-500">{item.sub}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={item.toggle}
+                  className={`w-10 h-5.5 rounded-full transition-colors p-0.5 shrink-0 cursor-pointer ${
+                    item.checked ? 'bg-[#175cd3]' : 'bg-slate-300'
+                  }`}
+                >
+                  <span
+                    className={`block w-4.5 h-4.5 rounded-full bg-white shadow transition-transform ${
+                      item.checked ? 'translate-x-4.5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setCookieAnalytics(false);
+                setCookiePersonalization(false);
+                showToast('Hanya cookie esensial yang aktif', 'info');
+                closeModal();
+              }}
+              className={`px-3.5 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.light}`}
+            >
+              Hanya Esensial
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCookieAnalytics(true);
+                setCookiePersonalization(true);
+                showToast('Semua preferensi cookie disimpan!', 'success');
+                closeModal();
+              }}
+              className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${GRAD.primary}`}
+            >
+              Terima Semua
             </button>
           </div>
         </ModalShell>
