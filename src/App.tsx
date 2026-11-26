@@ -19,6 +19,8 @@ import { OwlCarouselView } from './components/modules/OwlCarouselView';
 import { SparklineView } from './components/modules/SparklineView';
 import { SweetAlertView } from './components/modules/SweetAlertView';
 import { ToastrView } from './components/modules/ToastrView';
+import { VectorMapView } from './components/modules/VectorMapView';
+import { WeatherIconView } from './components/modules/WeatherIconView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15529,6 +15531,14 @@ export function App() {
       title: 'Toastr',
       breadcrumbs: ['Dashboard', 'Modules', 'Toastr'],
     },
+    'vector-map': {
+      title: 'Vector Map',
+      breadcrumbs: ['Dashboard', 'Modules', 'Vector Map'],
+    },
+    'weather-icon': {
+      title: 'Weather Icon',
+      breadcrumbs: ['Dashboard', 'Modules', 'Weather Icon'],
+    },
     credits: {
       title: 'Credits & Attribution',
       breadcrumbs: ['Velora UI', 'Credits'],
@@ -15596,6 +15606,10 @@ export function App() {
         return <SweetAlertView />;
       case 'toastr':
         return <ToastrView />;
+      case 'vector-map':
+        return <VectorMapView />;
+      case 'weather-icon':
+        return <WeatherIconView />;
       case 'components-table':
         return <KelasView />;
       case 'advanced-form':
