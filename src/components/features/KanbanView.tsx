@@ -1111,55 +1111,54 @@ export function KanbanView() {
             </div>
 
             <div className="p-6 space-y-5 overflow-y-auto">
+              {/* Pelaksana & Tenggat Bar Above Title */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] shrink-0 ${GRAD.primaryStatic}`}>
+                    {detailTask.initials}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-500">Pelaksana:</span>
+                    <span className="font-bold text-slate-900">{detailTask.assignee}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-slate-700">
+                  <Calendar className="w-3.5 h-3.5 text-[#175cd3]" />
+                  <span className="text-slate-500">Tenggat:</span>
+                  <span className="font-bold text-slate-900">{formatDueDate(detailTask.due)}</span>
+                </div>
+              </div>
+
               <div>
                 <h3 className="text-lg font-bold text-slate-900">{detailTask.title}</h3>
                 <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{detailTask.desc}</p>
               </div>
 
-              {/* Clean Notion/Linear Metadata Strip + Clickable Stage Stepper (Zero Box Clutter) */}
-              <div className="space-y-3.5 py-3.5 border-y border-slate-100 text-xs">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] shrink-0 ${GRAD.primaryStatic}`}>
-                      {detailTask.initials}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-slate-500">Pelaksana:</span>
-                      <span className="font-bold text-slate-900">{detailTask.assignee}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-slate-700">
-                    <Calendar className="w-3.5 h-3.5 text-[#175cd3]" />
-                    <span className="text-slate-500">Tenggat:</span>
-                    <span className="font-bold text-slate-900">{formatDueDate(detailTask.due)}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
-                  <span className="text-[11px] font-semibold text-slate-500">Status Tahapan:</span>
-                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
-                    {COLUMNS.map((col) => {
-                      const active = detailTask.column === col.id;
-                      return (
-                        <button
-                          key={col.id}
-                          type="button"
-                          onClick={() => {
-                            if (active) return;
-                            moveTask(detailTask.id, col.id);
-                            showToast(`Dipindahkan ke ${col.label}`, 'success');
-                          }}
-                          className={`px-3 py-1 rounded-full text-[11px] font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all ${
-                            active ? `${col.badgeGrad} shadow-xs` : GRAD.light
-                          }`}
-                        >
-                          {!active && <span className={`w-1.5 h-1.5 rounded-full ${col.dotColor}`} />}
-                          <span>{col.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Clickable Stage Stepper */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3 border-y border-slate-100 text-xs">
+                <span className="text-[11px] font-semibold text-slate-500">Status Tahapan:</span>
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
+                  {COLUMNS.map((col) => {
+                    const active = detailTask.column === col.id;
+                    return (
+                      <button
+                        key={col.id}
+                        type="button"
+                        onClick={() => {
+                          if (active) return;
+                          moveTask(detailTask.id, col.id);
+                          showToast(`Dipindahkan ke ${col.label}`, 'success');
+                        }}
+                        className={`px-3 py-1 rounded-full text-[11px] font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-all ${
+                          active ? `${col.badgeGrad} shadow-xs` : GRAD.light
+                        }`}
+                      >
+                        {!active && <span className={`w-1.5 h-1.5 rounded-full ${col.dotColor}`} />}
+                        <span>{col.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
