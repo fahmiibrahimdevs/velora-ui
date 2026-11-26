@@ -15605,10 +15605,6 @@ export function App() {
       title: 'Subscribe',
       breadcrumbs: ['Dashboard', 'Utilities', 'Subscribe'],
     },
-    credits: {
-      title: 'Credits & Attribution',
-      breadcrumbs: ['Velora UI', 'Credits'],
-    },
   };
 
   const formatSlug = (slug: string) =>
@@ -15749,22 +15745,6 @@ export function App() {
         return <InvoiceView />;
       case 'subscribe':
         return <SubscribeView />;
-      case 'credits':
-        return (
-          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm max-w-3xl space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">Credits & Attribution</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Velora UI is built with love, inspired by the legendary Stisla admin dashboard theme and modernized using React 19, Tailwind CSS v4, Vite, and Lucide React.
-            </p>
-            <div className="pt-4 border-t border-slate-100 flex flex-wrap gap-4 text-xs font-medium text-slate-500">
-              <span>Author: <b>Fahmi Ibrahim</b></span>
-              <span>•</span>
-              <span>License: <b>MIT License</b></span>
-              <span>•</span>
-              <a href="https://github.com/fahmiibrahimdevs/velora-ui" target="_blank" rel="noreferrer" className="text-[#1351b8] hover:underline font-semibold">GitHub Repository</a>
-            </div>
-          </div>
-        );
       default:
         return (
           <PlaceholderView
