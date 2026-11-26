@@ -63,7 +63,7 @@ interface KanbanTask {
   comments: CommentItem[];
 }
 
-const STORAGE_KEY = 'velora_kanban_tasks_v2';
+const STORAGE_KEY = 'velora_kanban_tasks_v3';
 
 const TEAM_MEMBERS = [
   { name: 'Fahmi Ibrahim', initials: 'FI' },
@@ -208,6 +208,66 @@ const INITIAL_TASKS: KanbanTask[] = [
     subtasks: [
       { id: 's13', title: 'Implementasi 6 sudut toast stack', done: true },
       { id: 's14', title: 'Playground kode interaktif', done: true },
+    ],
+    comments: [],
+  },
+  {
+    id: 'KAN-107',
+    column: 'backlog',
+    title: 'Pipeline Export Laporan Payroll PDF & XLSX',
+    desc: 'Tambahkan filter periode penggajian dan template kop resmi perusahaan untuk unduhan massal.',
+    category: 'Utilities',
+    priority: 'High',
+    assignee: 'Bima Pratama',
+    initials: 'BP',
+    due: '2026-12-03',
+    subtasks: [
+      { id: 's15', title: 'Desain struktur header tabel PDF', done: false },
+      { id: 's16', title: 'Format formula total otomatis XLSX', done: false },
+    ],
+    comments: [],
+  },
+  {
+    id: 'KAN-108',
+    column: 'backlog',
+    title: 'Audit Akses Role & Matrix Izin Modul ERP',
+    desc: 'Susun pemetaan izin granular per departemen untuk Super Admin, HRD, Finance, dan Supervisor.',
+    category: 'Auth',
+    priority: 'Medium',
+    assignee: 'Nadia Kusuma',
+    initials: 'NK',
+    due: '2026-12-04',
+    subtasks: [
+      { id: 's17', title: 'Definisikan matrix permission JSON', done: false },
+    ],
+    comments: [],
+  },
+  {
+    id: 'KAN-109',
+    column: 'backlog',
+    title: 'Sinkronisasi Log Aktivitas Webhook Real-Time',
+    desc: 'Tampilkan status delivery HTTP dan tombol retry payload untuk integrasi pihak ketiga.',
+    category: 'Features',
+    priority: 'Low',
+    assignee: 'Rizky Hidayat',
+    initials: 'RH',
+    due: '2026-12-06',
+    subtasks: [],
+    comments: [],
+  },
+  {
+    id: 'KAN-110',
+    column: 'in-progress',
+    title: 'Kalibrasi Widget Statistik Kehadiran Harian',
+    desc: 'Gabungkan indikator hadir tepat waktu, terlambat, dan cuti dalam satu kartu ringkasan.',
+    category: 'Components',
+    priority: 'Medium',
+    assignee: 'Siti Rahma',
+    initials: 'SR',
+    due: '2026-11-29',
+    subtasks: [
+      { id: 's18', title: 'Integrasi filter shift kerja', done: true },
+      { id: 's19', title: 'Validasi responsive breakpoint', done: false },
     ],
     comments: [],
   },
@@ -659,17 +719,17 @@ export function KanbanView() {
                 if (dragOverCol === col.id) setDragOverCol(null);
               }}
               onDrop={(e) => handleDropOnColumn(e, col.id)}
-              className={`bg-white rounded-2xl border transition-all duration-150 flex flex-col min-h-[420px] ${
+              className={`bg-white rounded-2xl border transition-all duration-150 flex flex-col h-[560px] lg:h-[580px] overflow-hidden ${
                 isOverCol
                   ? 'border-[#175cd3] ring-2 ring-[#175cd3]/20 shadow-md'
                   : 'border-slate-200/90 shadow-xs'
               }`}
             >
               {/* Thin gradient column top bar */}
-              <div className={`h-1.5 w-full rounded-t-2xl bg-gradient-to-r ${col.accentTop}`} />
+              <div className={`h-1.5 w-full shrink-0 rounded-t-2xl bg-gradient-to-r ${col.accentTop}`} />
 
               {/* Column Header */}
-              <div className="px-4 py-3.5 border-b border-slate-100 flex items-center justify-between gap-2">
+              <div className="px-4 py-3.5 border-b border-slate-100 shrink-0 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${col.dotColor}`} />
                   <h4 className="text-sm font-bold text-slate-900">{col.label}</h4>
@@ -689,7 +749,7 @@ export function KanbanView() {
               </div>
 
               {/* Column Cards Stack */}
-              <div className="p-3 space-y-3 flex-1">
+              <div className="p-3 space-y-3 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-200 hover:[&::-webkit-scrollbar-thumb]:bg-slate-300">
                 {colTasks.map((task) => {
                   const isDragging = draggedTaskId === task.id;
                   const isOverCard = dragOverTaskId === task.id && draggedTaskId !== task.id;
