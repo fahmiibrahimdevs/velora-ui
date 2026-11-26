@@ -21,6 +21,14 @@ import { SweetAlertView } from './components/modules/SweetAlertView';
 import { ToastrView } from './components/modules/ToastrView';
 import { VectorMapView } from './components/modules/VectorMapView';
 import { WeatherIconView } from './components/modules/WeatherIconView';
+import {
+  AUTH_ROUTES,
+  LoginView,
+  LoginSplitView,
+  RegisterView,
+  ForgotPasswordView,
+  ResetPasswordView,
+} from './components/auth/AuthPages';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15682,6 +15690,31 @@ export function App() {
         );
     }
   };
+
+  const renderStandaloneAuth = () => {
+    switch (activeMenu) {
+      case 'login':
+        return <LoginView onNavigate={handleSelectMenu} />;
+      case 'login-2':
+        return <LoginSplitView onNavigate={handleSelectMenu} />;
+      case 'register':
+        return <RegisterView onNavigate={handleSelectMenu} />;
+      case 'forgot-password':
+        return <ForgotPasswordView onNavigate={handleSelectMenu} />;
+      case 'reset-password':
+        return <ResetPasswordView onNavigate={handleSelectMenu} />;
+      default:
+        return null;
+    }
+  };
+
+  if (AUTH_ROUTES.has(activeMenu)) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {renderStandaloneAuth()}
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
