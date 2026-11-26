@@ -158,9 +158,28 @@ export function ComponentsTableCrudView() {
 
   // Dynamic KPIs
   const totalSiswa = useMemo(() => records.reduce((s, r) => s + r.siswa, 0), [records]);
+  const totalKapasitas = useMemo(() => records.reduce((s, r) => s + r.kapasitas, 0), [records]);
+  const occupancyPct = totalKapasitas ? Math.round((totalSiswa / totalKapasitas) * 100) : 0;
   const avgSiswa = records.length ? Math.round(totalSiswa / records.length) : 0;
   const readyCount = useMemo(
     () => records.filter((r) => r.status === 'Siap Ujian' || r.status === 'Sesi Aktif').length,
+    [records]
+  );
+  const readyPct = records.length ? Math.round((readyCount / records.length) * 100) : 0;
+  const tingkatCounts = useMemo(
+    () => ({
+      X: records.filter((r) => r.tingkat === 'X').length,
+      XI: records.filter((r) => r.tingkat === 'XI').length,
+      XII: records.filter((r) => r.tingkat === 'XII').length,
+    }),
+    [records]
+  );
+  const statusCounts = useMemo(
+    () => ({
+      siap: records.filter((r) => r.status === 'Siap Ujian').length,
+      aktif: records.filter((r) => r.status === 'Sesi Aktif').length,
+      selesai: records.filter((r) => r.status === 'Selesai').length,
+    }),
     [records]
   );
 
@@ -448,49 +467,112 @@ export function ComponentsTableCrudView() {
         </div>
       </div>
 
-      {/* Live Metric Cards Row */}
+      {/* Compact Live KPI Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">Total Rombel</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{records.length} Kelas</p>
-            <p className="text-[11px] text-emerald-600 font-semibold mt-1">3 Tingkatan (X, XI, XII)</p>
+        {/* Card 1: Total Rombel */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.primaryStatic}`}>
+                <GraduationCap className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-slate-600">Total Rombel</span>
+            </div>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.primaryStatic}`}>
+              3 Tingkat
+            </span>
           </div>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs ${GRAD.primaryStatic}`}>
-            <GraduationCap className="w-6 h-6" />
+
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold text-slate-900">{records.length}</span>
+            <span className="text-xs text-slate-500">Kelas Aktif</span>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
+            <span>X: <strong className="text-slate-900">{tingkatCounts.X}</strong></span>
+            <span>XI: <strong className="text-slate-900">{tingkatCounts.XI}</strong></span>
+            <span>XII: <strong className="text-slate-900">{tingkatCounts.XII}</strong></span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">Total Siswa Aktif</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{totalSiswa.toLocaleString()} Siswa</p>
-            <p className="text-[11px] text-emerald-600 font-semibold mt-1">100% Terdaftar CBT</p>
+        {/* Card 2: Total Siswa */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.success}`}>
+                <Users className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-slate-600">Siswa Terdaftar</span>
+            </div>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
+              {occupancyPct}% Terisi
+            </span>
           </div>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs ${GRAD.success}`}>
-            <Users className="w-6 h-6" />
+
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold text-slate-900">{totalSiswa.toLocaleString()}</span>
+            <span className="text-xs text-slate-500">/ {totalKapasitas.toLocaleString()} Kursi</span>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div className={`h-full rounded-full ${GRAD.success}`} style={{ width: `${occupancyPct}%` }} />
+            </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">Rata-rata per Kelas</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{avgSiswa} Siswa</p>
-            <p className="text-[11px] text-slate-600 font-semibold mt-1">Kapasitas Ideal</p>
+        {/* Card 3: Rata-rata per Kelas */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.warning}`}>
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-slate-600">Rata-rata Kelas</span>
+            </div>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.warning}`}>
+              Maks 36
+            </span>
           </div>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs ${GRAD.warning}`}>
-            <Sparkles className="w-6 h-6" />
+
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold text-slate-900">{avgSiswa}</span>
+            <span className="text-xs text-slate-500">Siswa / Rombel</span>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className={`h-full rounded-full ${GRAD.warning}`}
+                style={{ width: `${Math.min(100, Math.round((avgSiswa / 36) * 100))}%` }}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-slate-500">Siap &amp; Sesi Aktif</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{readyCount} Kelas</p>
-            <p className="text-[11px] text-[#175cd3] font-semibold mt-1">6 Lab CBT Tersedia</p>
+        {/* Card 4: Kesiapan Ujian */}
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.info}`}>
+                <Radio className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-slate-600">Kesiapan CBT</span>
+            </div>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.info}`}>
+              {readyPct}% Ready
+            </span>
           </div>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs ${GRAD.info}`}>
-            <Radio className="w-6 h-6" />
+
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold text-slate-900">{readyCount}</span>
+            <span className="text-xs text-slate-500">/ {records.length} Kelas Siap</span>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
+            <span>Siap: <strong className="text-emerald-700">{statusCounts.siap}</strong></span>
+            <span>Aktif: <strong className="text-[#0284c7]">{statusCounts.aktif}</strong></span>
+            <span>Selesai: <strong className="text-slate-700">{statusCounts.selesai}</strong></span>
           </div>
         </div>
       </div>
