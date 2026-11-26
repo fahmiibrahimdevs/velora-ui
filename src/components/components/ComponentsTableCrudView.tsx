@@ -158,20 +158,9 @@ export function ComponentsTableCrudView() {
 
   // Dynamic KPIs
   const totalSiswa = useMemo(() => records.reduce((s, r) => s + r.siswa, 0), [records]);
-  const totalKapasitas = useMemo(() => records.reduce((s, r) => s + r.kapasitas, 0), [records]);
-  const occupancyPct = totalKapasitas ? Math.round((totalSiswa / totalKapasitas) * 100) : 0;
   const avgSiswa = records.length ? Math.round(totalSiswa / records.length) : 0;
   const readyCount = useMemo(
     () => records.filter((r) => r.status === 'Siap Ujian' || r.status === 'Sesi Aktif').length,
-    [records]
-  );
-  const readyPct = records.length ? Math.round((readyCount / records.length) * 100) : 0;
-  const tingkatCounts = useMemo(
-    () => ({
-      X: records.filter((r) => r.tingkat === 'X').length,
-      XI: records.filter((r) => r.tingkat === 'XI').length,
-      XII: records.filter((r) => r.tingkat === 'XII').length,
-    }),
     [records]
   );
 
@@ -464,12 +453,9 @@ export function ComponentsTableCrudView() {
         {/* Card 1: Total Rombel */}
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
-            <div className="flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5 text-[#175cd3]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Total Rombel
-              </span>
-            </div>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Total Rombel
+            </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {records.length}
@@ -481,32 +467,17 @@ export function ComponentsTableCrudView() {
             </div>
           </div>
 
-          <div className="flex items-end gap-1.5 h-11 shrink-0 px-2 py-1.5 rounded-xl bg-slate-50/80 border border-slate-100">
-            {[
-              { label: 'X', val: tingkatCounts.X },
-              { label: 'XI', val: tingkatCounts.XI },
-              { label: 'XII', val: tingkatCounts.XII },
-            ].map((bar) => {
-              const maxBar = Math.max(1, tingkatCounts.X, tingkatCounts.XI, tingkatCounts.XII);
-              const px = Math.max(8, Math.round((bar.val / maxBar) * 26));
-              return (
-                <div key={bar.label} className="flex flex-col items-center gap-0.5" title={`Kelas ${bar.label}: ${bar.val}`}>
-                  <div className={`w-3 rounded-xs ${GRAD.primaryStatic}`} style={{ height: `${px}px` }} />
-                </div>
-              );
-            })}
+          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xs shrink-0 ${GRAD.primaryStatic}`}>
+            <GraduationCap className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Card 2: Total Siswa */}
+        {/* Card 2: Total Siswa Aktif */}
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
-            <div className="flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Total Siswa Aktif
-              </span>
-            </div>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Total Siswa Aktif
+            </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {totalSiswa.toLocaleString()}
@@ -518,34 +489,17 @@ export function ComponentsTableCrudView() {
             </div>
           </div>
 
-          <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
-            <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="17" fill="none" stroke="#e2e8f0" strokeWidth="4" />
-              <circle
-                cx="22"
-                cy="22"
-                r="17"
-                fill="none"
-                stroke="#16a34a"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 17}`}
-                strokeDashoffset={`${2 * Math.PI * 17 * (1 - occupancyPct / 100)}`}
-              />
-            </svg>
-            <span className="absolute text-[10px] font-bold text-slate-800">{occupancyPct}%</span>
+          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xs shrink-0 ${GRAD.success}`}>
+            <Users className="w-5 h-5" />
           </div>
         </div>
 
         {/* Card 3: Rata-rata per Kelas */}
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Rata-rata per Kelas
-              </span>
-            </div>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Rata-rata per Kelas
+            </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {avgSiswa}
@@ -557,27 +511,17 @@ export function ComponentsTableCrudView() {
             </div>
           </div>
 
-          <svg className="w-16 h-10 shrink-0 overflow-visible" viewBox="0 0 64 32">
-            <path
-              d="M 2,24 Q 14,10 24,18 T 46,12 T 62,6"
-              fill="none"
-              stroke="#d97706"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-            />
-            <circle cx="62" cy="6" r="3" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
-          </svg>
+          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xs shrink-0 ${GRAD.warning}`}>
+            <Sparkles className="w-5 h-5" />
+          </div>
         </div>
 
         {/* Card 4: Siap & Sesi Aktif */}
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-5 py-4 flex items-center justify-between gap-4">
           <div className="min-w-0 space-y-1">
-            <div className="flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-[#0284c7]" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Siap &amp; Sesi Aktif
-              </span>
-            </div>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Siap &amp; Sesi Aktif
+            </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 {readyCount}
@@ -589,22 +533,8 @@ export function ComponentsTableCrudView() {
             </div>
           </div>
 
-          <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
-            <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="17" fill="none" stroke="#e2e8f0" strokeWidth="4" />
-              <circle
-                cx="22"
-                cy="22"
-                r="17"
-                fill="none"
-                stroke="#0284c7"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 17}`}
-                strokeDashoffset={`${2 * Math.PI * 17 * (1 - readyPct / 100)}`}
-              />
-            </svg>
-            <span className="absolute text-[10px] font-bold text-slate-800">{readyPct}%</span>
+          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xs shrink-0 ${GRAD.info}`}>
+            <Radio className="w-5 h-5" />
           </div>
         </div>
       </div>
