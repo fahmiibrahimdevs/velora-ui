@@ -7,6 +7,7 @@ import { RecentExamsTable } from './components/dashboard/RecentExamsTable';
 import { useDashboardData } from './hooks/useDashboardData';
 import { AdvancedFormsView } from './components/forms/AdvancedFormsView';
 import { EditorView } from './components/forms/EditorView';
+import { ValidationView } from './components/forms/ValidationView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15469,6 +15470,10 @@ export function App() {
       title: 'Editor',
       breadcrumbs: ['Dashboard', 'Forms', 'Editor'],
     },
+    validation: {
+      title: 'Form Validation',
+      breadcrumbs: ['Dashboard', 'Forms', 'Form Validation'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -15531,6 +15536,8 @@ export function App() {
         return <AdvancedFormsView />;
       case 'editor':
         return <EditorView />;
+      case 'validation':
+        return <ValidationView />;
       case 'forms':
         return <MataPelajaranView />;
       case 'card':
