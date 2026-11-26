@@ -6,6 +6,7 @@ import { StatCards } from './components/dashboard/StatCards';
 import { RecentExamsTable } from './components/dashboard/RecentExamsTable';
 import { useDashboardData } from './hooks/useDashboardData';
 import { AdvancedFormsView } from './components/forms/AdvancedFormsView';
+import { EditorView } from './components/forms/EditorView';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -15464,6 +15465,10 @@ export function App() {
       title: 'Advanced Forms',
       breadcrumbs: ['Dashboard', 'Forms', 'Advanced Forms'],
     },
+    editor: {
+      title: 'Editor',
+      breadcrumbs: ['Dashboard', 'Forms', 'Editor'],
+    },
     datatables: {
       title: 'DataTables Module',
       breadcrumbs: ['Velora UI', 'Modules', 'DataTables'],
@@ -15524,6 +15529,8 @@ export function App() {
         return <KelasView />;
       case 'advanced-form':
         return <AdvancedFormsView />;
+      case 'editor':
+        return <EditorView />;
       case 'forms':
         return <MataPelajaranView />;
       case 'card':

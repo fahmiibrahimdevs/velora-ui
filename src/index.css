@@ -19,3 +19,142 @@
 .sidebar-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Scoped WYSIWYG & Code Editor styling (overrides Tailwind Preflight resets inside rich text canvas) */
+.wysiwyg-content {
+  outline: none;
+  line-height: 1.65;
+  color: #1e293b;
+}
+
+.wysiwyg-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0.75em 0 0.35em;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.wysiwyg-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.7em 0 0.3em;
+  line-height: 1.3;
+  color: #0f172a;
+}
+
+.wysiwyg-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0.6em 0 0.25em;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+.wysiwyg-content p {
+  margin: 0.45em 0;
+}
+
+.wysiwyg-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.5em 0;
+}
+
+.wysiwyg-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5em 0;
+}
+
+.wysiwyg-content li {
+  margin: 0.2em 0;
+}
+
+.wysiwyg-content blockquote {
+  border-left: 4px solid #175cd3;
+  background-color: #eff6ff;
+  padding: 0.65rem 1rem;
+  margin: 0.75em 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #334155;
+  font-style: italic;
+}
+
+.wysiwyg-content pre {
+  background-color: #0f172a;
+  color: #e2e8f0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  margin: 0.75em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+.wysiwyg-content code {
+  background-color: #f1f5f9;
+  color: #be123c;
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+.wysiwyg-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.wysiwyg-content a {
+  color: #175cd3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wysiwyg-content hr {
+  border: none;
+  border-top: 1px solid #cbd5e1;
+  margin: 1rem 0;
+}
+
+.wysiwyg-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.875rem;
+}
+
+.wysiwyg-content th,
+.wysiwyg-content td {
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  min-width: 60px;
+}
+
+.wysiwyg-content th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.wysiwyg-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 0.75rem 0;
+  display: block;
+}
+
+.wysiwyg-content font[face*="Georgia"],
+.wysiwyg-content [style*="Georgia"] {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+}
+
+.wysiwyg-content font[face*="monospace"],
+.wysiwyg-content [style*="monospace"],
+.code-editor-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
