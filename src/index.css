@@ -155,6 +155,9 @@
 
 .wysiwyg-content font[face*="monospace"],
 .wysiwyg-content [style*="monospace"],
-.code-editor-mono {
+.code-editor-mono,
+.code-editor-mono * {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-variant-ligatures: none;
+  tab-size: 2;
 }

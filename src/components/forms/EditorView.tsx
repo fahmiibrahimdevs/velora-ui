@@ -72,6 +72,359 @@ function escapeHtml(str: string) {
     .replace(/"/g, '&quot;');
 }
 
+// ============================================================================
+// LIGHTWEIGHT ZERO-DEP SYNTAX HIGHLIGHTER (100% character-exact for caret sync)
+// ============================================================================
+
+type CodeLanguage = 'html' | 'css' | 'javascript' | 'json';
+
+function tokenizeWithRegex(
+  code: string,
+  regex: RegExp,
+  renderMatch: (match: RegExpExecArray, key: number) => React.ReactNode
+): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let key = 0;
+  regex.lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(code)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push(code.slice(lastIndex, match.index));
+    }
+    nodes.push(renderMatch(match, key++));
+    lastIndex = regex.lastIndex;
+    if (match[0].length === 0) {
+      regex.lastIndex++;
+    }
+  }
+  if (lastIndex < code.length) {
+    nodes.push(code.slice(lastIndex));
+  }
+  return nodes;
+}
+
+function highlightCss(code: string, isDark: boolean): React.ReactNode[] {
+  const regex =
+    /(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(#[0-9a-fA-F]{3,8}\b)|(\b\d+(?:\.\d+)?(?:px|rem|em|%|vh|vw|s|ms|deg)?\b)|([.#:]?[A-Za-z_-][\w-]*(?=\s*[,:{]))|([A-Za-z-]+(?=\s*:))|([{};:,])/g;
+
+  return tokenizeWithRegex(code, regex, (m, k) => {
+    if (m[1]) {
+      return (
+        <span key={k} className={isDark ? 'text-slate-500 italic' : 'text-slate-400 italic'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[2]) {
+      return (
+        <span key={k} className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[3]) {
+      return (
+        <span key={k} className={isDark ? 'text-pink-400' : 'text-pink-600'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[4]) {
+      return (
+        <span key={k} className={isDark ? 'text-amber-300' : 'text-orange-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[5]) {
+      return (
+        <span key={k} className={isDark ? 'text-yellow-300' : 'text-amber-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[6]) {
+      return (
+        <span key={k} className={isDark ? 'text-sky-300' : 'text-sky-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    return (
+      <span key={k} className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+        {m[0]}
+      </span>
+    );
+  });
+}
+
+function highlightJs(code: string, isDark: boolean): React.ReactNode[] {
+  const regex =
+    /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b(?:const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|default|try|catch|finally|throw|new|typeof|instanceof|in|of|async|await|import|export|from|class|extends|super|this|true|false|null|undefined)\b)|(\b\d+(?:\.\d+)?\b)|(\b[A-Za-z_$][\w$]*(?=\s*\())|([{}()[\].,:;+\-*/=<>!&|?]+)/g;
+
+  return tokenizeWithRegex(code, regex, (m, k) => {
+    if (m[1]) {
+      return (
+        <span key={k} className={isDark ? 'text-slate-500 italic' : 'text-slate-400 italic'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[2]) {
+      return (
+        <span key={k} className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[3]) {
+      return (
+        <span key={k} className={isDark ? 'text-violet-400' : 'text-purple-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[4]) {
+      return (
+        <span key={k} className={isDark ? 'text-amber-300' : 'text-orange-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[5]) {
+      return (
+        <span key={k} className={isDark ? 'text-blue-400' : 'text-blue-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    return (
+      <span key={k} className={isDark ? 'text-sky-400' : 'text-sky-700'}>
+        {m[0]}
+      </span>
+    );
+  });
+}
+
+function highlightJson(code: string, isDark: boolean): React.ReactNode[] {
+  const regex =
+    /("(?:\\.|[^"\\])*"(?=\s*:))|("(?:\\.|[^"\\])*")|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|([{}[\]:,])/g;
+
+  return tokenizeWithRegex(code, regex, (m, k) => {
+    if (m[1]) {
+      return (
+        <span key={k} className={isDark ? 'text-sky-300' : 'text-sky-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[2]) {
+      return (
+        <span key={k} className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[3]) {
+      return (
+        <span key={k} className={isDark ? 'text-violet-400' : 'text-purple-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[4]) {
+      return (
+        <span key={k} className={isDark ? 'text-amber-300' : 'text-orange-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    return (
+      <span key={k} className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+        {m[0]}
+      </span>
+    );
+  });
+}
+
+function highlightHtmlTag(tagText: string, isDark: boolean): React.ReactNode[] {
+  const attrRegex = /(<\/?[A-Za-z][A-Za-z0-9-]*)|(\/?>)|([A-Za-z_:][\w:.-]*(?=\s*=))|(=)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g;
+  return tokenizeWithRegex(tagText, attrRegex, (m, k) => {
+    if (m[1] || m[2]) {
+      return (
+        <span key={k} className={isDark ? 'text-rose-400' : 'text-rose-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[3]) {
+      return (
+        <span key={k} className={isDark ? 'text-amber-300' : 'text-amber-700'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[4]) {
+      return (
+        <span key={k} className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+          {m[0]}
+        </span>
+      );
+    }
+    return (
+      <span key={k} className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+        {m[0]}
+      </span>
+    );
+  });
+}
+
+function highlightHtml(code: string, isDark: boolean): React.ReactNode[] {
+  const regex =
+    /(<!--[\s\S]*?-->)|(<style\b[^>]*>)([\s\S]*?)(<\/style>)|(<script\b[^>]*>)([\s\S]*?)(<\/script>)|(<\/?[A-Za-z][A-Za-z0-9-]*(?:\s+[^>]*)?>)|(&[A-Za-z0-9#]+;)/gi;
+
+  return tokenizeWithRegex(code, regex, (m, k) => {
+    if (m[1]) {
+      return (
+        <span key={k} className={isDark ? 'text-slate-500 italic' : 'text-slate-400 italic'}>
+          {m[0]}
+        </span>
+      );
+    }
+    if (m[2] !== undefined) {
+      return (
+        <React.Fragment key={k}>
+          {highlightHtmlTag(m[2], isDark)}
+          {highlightCss(m[3], isDark)}
+          {highlightHtmlTag(m[4], isDark)}
+        </React.Fragment>
+      );
+    }
+    if (m[5] !== undefined) {
+      return (
+        <React.Fragment key={k}>
+          {highlightHtmlTag(m[5], isDark)}
+          {highlightJs(m[6], isDark)}
+          {highlightHtmlTag(m[7], isDark)}
+        </React.Fragment>
+      );
+    }
+    if (m[8]) {
+      return <React.Fragment key={k}>{highlightHtmlTag(m[8], isDark)}</React.Fragment>;
+    }
+    return (
+      <span key={k} className={isDark ? 'text-amber-300' : 'text-orange-700'}>
+        {m[0]}
+      </span>
+    );
+  });
+}
+
+function highlightCode(code: string, lang: CodeLanguage, theme: 'dark' | 'light'): React.ReactNode[] {
+  const isDark = theme === 'dark';
+  switch (lang) {
+    case 'css':
+      return highlightCss(code, isDark);
+    case 'javascript':
+      return highlightJs(code, isDark);
+    case 'json':
+      return highlightJson(code, isDark);
+    case 'html':
+    default:
+      return highlightHtml(code, isDark);
+  }
+}
+
+interface SyntaxCodeEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  language: CodeLanguage;
+  theme?: 'dark' | 'light';
+  showLineNumbers?: boolean;
+  className?: string;
+}
+
+function SyntaxCodeEditor({
+  value,
+  onChange,
+  language,
+  theme = 'dark',
+  showLineNumbers = true,
+  className = '',
+}: SyntaxCodeEditorProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const lines = value.split('\n');
+  const isDark = theme === 'dark';
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const el = e.currentTarget;
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const updated = value.slice(0, start) + '  ' + value.slice(end);
+      onChange(updated);
+      requestAnimationFrame(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = textareaRef.current.selectionEnd = start + 2;
+        }
+      });
+    }
+  };
+
+  return (
+    <div
+      className={`flex overflow-auto ${
+        isDark ? 'bg-[#0f172a] text-slate-100' : 'bg-white text-slate-800'
+      } ${className}`}
+    >
+      {showLineNumbers && (
+        <div
+          aria-hidden="true"
+          className={`code-editor-mono select-none py-3.5 px-3 text-right text-xs leading-6 border-r shrink-0 ${
+            isDark
+              ? 'bg-[#0b1120] border-slate-800 text-slate-500'
+              : 'bg-slate-50 border-slate-200 text-slate-400'
+          }`}
+        >
+          {lines.map((_, idx) => (
+            <div key={idx}>{idx + 1}</div>
+          ))}
+        </div>
+      )}
+
+      {/* Overlay Grid: pre provides syntax colors & exact sizing; transparent textarea handles input/caret */}
+      <div className="grid flex-1 min-w-max">
+        <pre
+          aria-hidden="true"
+          className={`col-start-1 row-start-1 code-editor-mono py-3.5 px-4 text-xs leading-6 whitespace-pre pointer-events-none m-0 ${
+            isDark ? 'text-slate-100' : 'text-slate-800'
+          }`}
+        >
+          {highlightCode(value, language, theme)}
+          {value.endsWith('\n') ? ' ' : ''}
+        </pre>
+
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoComplete="off"
+          autoCorrect="off"
+          className={`col-start-1 row-start-1 code-editor-mono w-full h-full py-3.5 px-4 text-xs leading-6 whitespace-pre overflow-hidden resize-none bg-transparent text-transparent focus:outline-none m-0 selection:bg-[#175cd3]/35 ${
+            isDark ? 'caret-white' : 'caret-slate-900'
+          }`}
+        />
+      </div>
+    </div>
+  );
+}
+
 const SIMPLE_INITIAL_HTML = `<p>Selamat datang di <strong>Simple WYSIWYG Editor</strong>! Anda dapat langsung mengetik atau memformat teks di sini.</p><ul><li>Gunakan toolbar di atas untuk <em>Italic</em>, <u>Underline</u>, atau membuat daftar.</li><li>Sisipkan tautan aktif menggunakan tombol <strong>Link</strong>.</li></ul>`;
 
 const ADVANCED_TEMPLATES: Record<string, { title: string; html: string }> = {
@@ -321,7 +674,6 @@ export function EditorView() {
   const [codeBuffers, setCodeBuffers] = useState(CODE_SAMPLES);
   const [codeTheme, setCodeTheme] = useState<'dark' | 'light'>('dark');
   const [showCodeOutput, setShowCodeOutput] = useState(false);
-  const codeTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // =========================================================================
   // INITIALIZE CONTENTEDITABLE ON MOUNT
@@ -693,22 +1045,6 @@ export function EditorView() {
   // Code Editor Helpers
   const activeCode = codeBuffers[codeLang];
   const codeLines = activeCode.split('\n');
-
-  const handleCodeTab = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const el = e.currentTarget;
-      const start = el.selectionStart;
-      const end = el.selectionEnd;
-      const updated = activeCode.slice(0, start) + '  ' + activeCode.slice(end);
-      setCodeBuffers((prev) => ({ ...prev, [codeLang]: updated }));
-      requestAnimationFrame(() => {
-        if (codeTextareaRef.current) {
-          codeTextareaRef.current.selectionStart = codeTextareaRef.current.selectionEnd = start + 2;
-        }
-      });
-    }
-  };
 
   const handleFormatCode = () => {
     if (codeLang === 'json') {
@@ -1892,15 +2228,14 @@ export function EditorView() {
               </div>
             )}
 
-            {/* Raw HTML Source Editor Mode */}
+            {/* Raw HTML Source Editor Mode (Syntax Highlighted) */}
             {advMode === 'code' && (
-              <textarea
+              <SyntaxCodeEditor
                 value={advHtml}
-                onChange={(e) => setAdvHtml(e.target.value)}
-                spellCheck={false}
-                className={`code-editor-mono w-full bg-[#0f172a] text-slate-100 px-5 py-4 text-xs leading-relaxed focus:outline-none resize-none ${
-                  advFullscreen ? 'h-full' : 'min-h-[300px] max-h-[520px]'
-                }`}
+                onChange={setAdvHtml}
+                language="html"
+                theme="dark"
+                className={advFullscreen ? 'h-full' : 'min-h-[300px] max-h-[520px]'}
               />
             )}
           </div>
@@ -2064,41 +2399,17 @@ export function EditorView() {
             </div>
           </div>
 
-          {/* Code Grid: Line Numbers + Editor (+ Optional Live HTML Preview) */}
+          {/* Code Grid: Line Numbers + Syntax Highlighted Editor (+ Optional Live HTML Preview) */}
           <div className={`grid ${showCodeOutput && codeLang === 'html' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-            <div
-              className={`flex min-h-[260px] max-h-[380px] overflow-auto ${
-                codeTheme === 'dark' ? 'bg-[#0f172a] text-slate-100' : 'bg-white text-slate-800'
-              }`}
-            >
-              {/* Line Numbers Gutter */}
-              <div
-                className={`code-editor-mono select-none py-3.5 px-3 text-right text-xs leading-6 border-r shrink-0 ${
-                  codeTheme === 'dark'
-                    ? 'bg-[#0b1120] border-slate-800 text-slate-500'
-                    : 'bg-slate-50 border-slate-200 text-slate-400'
-                }`}
-              >
-                {codeLines.map((_, idx) => (
-                  <div key={idx}>{idx + 1}</div>
-                ))}
-              </div>
-
-              {/* Editable Code Textarea */}
-              <textarea
-                ref={codeTextareaRef}
-                value={activeCode}
-                onChange={(e) =>
-                  setCodeBuffers((prev) => ({ ...prev, [codeLang]: e.target.value }))
-                }
-                onKeyDown={handleCodeTab}
-                spellCheck={false}
-                rows={Math.max(10, codeLines.length)}
-                className={`code-editor-mono flex-1 py-3.5 px-4 text-xs leading-6 bg-transparent focus:outline-none resize-none whitespace-pre overflow-x-auto ${
-                  codeTheme === 'dark' ? 'text-slate-100' : 'text-slate-800'
-                }`}
-              />
-            </div>
+            <SyntaxCodeEditor
+              value={activeCode}
+              onChange={(val) =>
+                setCodeBuffers((prev) => ({ ...prev, [codeLang]: val }))
+              }
+              language={codeLang}
+              theme={codeTheme}
+              className="min-h-[260px] max-h-[380px]"
+            />
 
             {/* Sandboxed Live Output Preview for HTML */}
             {showCodeOutput && codeLang === 'html' && (
