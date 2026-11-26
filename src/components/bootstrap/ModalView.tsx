@@ -403,6 +403,12 @@ const COMMAND_ITEMS = [
 
 const EXPORT_COLUMNS = ['ID Transaksi', 'Nama Pelanggan', 'Metode Bayar', 'Total Nominal', 'Status', 'Tanggal'];
 
+function formatThousandDot(rawDigits: string): string {
+  const digits = rawDigits.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+  if (!digits) return '';
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
 export function ModalView() {
   const [activeModal, setActiveModal] = useState<ModalId | null>(null);
   const [activeCategory, setActiveCategory] = useState<AppCategory>('all');
@@ -2208,16 +2214,21 @@ export function ModalView() {
 
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Estimasi Anggaran (Number)
+                    Estimasi Anggaran (Nominal Rupiah)
                   </label>
-                  <input
-                    type="number"
-                    min={0}
-                    step={50000}
-                    value={formBudget}
-                    onChange={(e) => setFormBudget(e.target.value)}
-                    className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl outline-none focus:border-[#175cd3]"
-                  />
+                  <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#175cd3] focus-within:ring-2 focus-within:ring-[#175cd3]/15 transition-all bg-white">
+                    <div className="px-3.5 py-2 bg-slate-50/80 border-r border-slate-200 flex items-center justify-center text-xs sm:text-sm font-semibold text-slate-600 select-none">
+                      Rp
+                    </div>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={formatThousandDot(formBudget)}
+                      onChange={(e) => setFormBudget(e.target.value.replace(/\D/g, ''))}
+                      placeholder="0"
+                      className="w-full px-3 py-2 text-xs sm:text-sm text-slate-800 outline-none tabular-nums"
+                    />
+                  </div>
                 </div>
 
                 <div>
