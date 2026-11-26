@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Plus,
   GraduationCap,
@@ -17,6 +17,9 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  Filter,
+  Check,
   Building2,
 } from 'lucide-react';
 import { showToast, showSuccess, confirmDialog } from '../../lib/swal';
@@ -119,14 +122,26 @@ function getWaliInitials(name: string): string {
 export function ComponentsTableCrudView() {
   const [records, setRecords] = useState<RombelRecord[]>(loadInitialRecords);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTingkat, setSelectedTingkat] = useState<'Semua' | TingkatType>('Semua');
+  const [selectedTingkats, setSelectedTingkats] = useState<TingkatType[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<'Semua' | StatusCbtType>('Semua');
-  const [density, setDensity] = useState<'comfortable' | 'compact'>('compact');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterDropdownRef = useRef<HTMLDivElement | null>(null);
   const [sortField, setSortField] = useState<SortField>('nama');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  // Close filter popover on outside click
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(e.target as Node)) {
+        setIsFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
 
   // Modal state
   const [formModalOpen, setFormModalOpen] = useState(false);
@@ -149,6 +164,14 @@ export function ComponentsTableCrudView() {
     [records]
   );
 
+  const activeFilterCount = selectedTingkats.length + (selectedStatus !== 'Semua' ? 1 : 0);
+
+  const resetAllFilters = () => {
+    setSelectedTingkats([]);
+    setSelectedStatus('Semua');
+    setCurrentPage(1);
+  };
+
   // Filtered + Sorted Data
   const filteredAndSorted = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
@@ -160,7 +183,7 @@ export function ComponentsTableCrudView() {
         c.wali.toLowerCase().includes(q) ||
         c.jurusan.toLowerCase().includes(q) ||
         c.lab.toLowerCase().includes(q);
-      const matchTingkat = selectedTingkat === 'Semua' || c.tingkat === selectedTingkat;
+      const matchTingkat = selectedTingkats.length === 0 || selectedTingkats.includes(c.tingkat);
       const matchStatus = selectedStatus === 'Semua' || c.status === selectedStatus;
       return matchSearch && matchTingkat && matchStatus;
     });
@@ -174,7 +197,7 @@ export function ComponentsTableCrudView() {
       }
       return sortDir === 'asc' ? cmp : -cmp;
     });
-  }, [records, searchTerm, selectedTingkat, selectedStatus, sortField, sortDir]);
+  }, [records, searchTerm, selectedTingkats, selectedStatus, sortField, sortDir]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
@@ -385,8 +408,8 @@ export function ComponentsTableCrudView() {
     showToast('Data tabel dikembalikan ke kondisi awal.', 'info');
   };
 
-  const cellPad = density === 'compact' ? 'py-2 px-3.5' : 'py-3.5 px-4';
-  const headPad = density === 'compact' ? 'py-2.5 px-3.5' : 'py-3 px-4';
+  const cellPad = 'py-2 px-3.5';
+  const headPad = 'py-2.5 px-3.5';
 
   const statusBadgeClass = (s: StatusCbtType) =>
     s === 'Siap Ujian' ? GRAD.success : s === 'Sesi Aktif' ? GRAD.info : GRAD.secondary;
@@ -473,9 +496,9 @@ export function ComponentsTableCrudView() {
       </div>
 
       {/* MAIN INTERACTIVE TABLE CARD */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        {/* CARD HEADER */}
-        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-visible">
+        {/* CARD HEADER (Title on Left, Filter Popover + Ekspor on Right) */}
+        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-t-2xl">
           <div>
             <h4 className="text-base font-bold text-[#1351b8]">
               Daftar Rombongan Belajar &amp; CRUD Manajemen
@@ -484,13 +507,153 @@ export function ComponentsTableCrudView() {
               Pilih satu atau lebih baris dengan checkbox untuk tindakan massal atau kelola data kelas langsung.
             </p>
           </div>
-          <span className={`px-3 py-1 rounded-full text-[11px] font-semibold self-start sm:self-auto ${GRAD.info}`}>
-            {filteredAndSorted.length} Rombel Terdata
-          </span>
+
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            {/* Filter Dropdown Popover */}
+            <div className="relative" ref={filterDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen((v) => !v)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs ${
+                  activeFilterCount > 0 || isFilterOpen
+                    ? 'bg-blue-50/90 border border-blue-300 text-[#1351b8] ring-2 ring-blue-500/15'
+                    : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <Filter className={`w-3.5 h-3.5 ${activeFilterCount > 0 ? 'text-[#1351b8]' : 'text-slate-500'}`} />
+                <span>Filter</span>
+                {activeFilterCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-[#175cd3] text-white text-[10px] font-bold flex items-center justify-center">
+                    {activeFilterCount}
+                  </span>
+                )}
+                <ChevronDown
+                  className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${
+                    isFilterOpen ? 'rotate-180 text-[#1351b8]' : ''
+                  }`}
+                />
+              </button>
+
+              {isFilterOpen && (
+                <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-blue-50 text-[#175cd3] flex items-center justify-center">
+                        <Filter className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-bold text-slate-800 text-sm">Filter Data Rombel</span>
+                    </div>
+                    {activeFilterCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={resetAllFilters}
+                        className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer"
+                      >
+                        Reset Semua
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Tingkat Multi-Select */}
+                  <div className="py-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Tingkat Kelas
+                      </span>
+                      {selectedTingkats.length > 0 && (
+                        <span className="text-[10px] font-semibold text-[#175cd3]">
+                          {selectedTingkats.length} dipilih
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(['X', 'XI', 'XII'] as const).map((t) => {
+                        const checked = selectedTingkats.includes(t);
+                        return (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => {
+                              setSelectedTingkats((prev) =>
+                                prev.includes(t) ? prev.filter((item) => item !== t) : [...prev, t]
+                              );
+                              setCurrentPage(1);
+                            }}
+                            className={`px-2 py-1.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1 cursor-pointer transition-all ${
+                              checked
+                                ? 'bg-blue-50 border-blue-300 text-[#175cd3] ring-2 ring-[#175cd3]/15'
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                            }`}
+                          >
+                            <span>Kelas {t}</span>
+                            {checked && <Check className="w-3 h-3" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Status CBT Radio */}
+                  <div className="py-3 border-b border-slate-100">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                      Status CBT
+                    </div>
+                    <div className="space-y-1">
+                      {(['Semua', 'Siap Ujian', 'Sesi Aktif', 'Selesai'] as const).map((st) => {
+                        const active = selectedStatus === st;
+                        return (
+                          <label
+                            key={st}
+                            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors ${
+                              active ? 'bg-blue-50 text-[#175cd3] font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span>{st === 'Semua' ? 'Semua Status' : st}</span>
+                            <input
+                              type="radio"
+                              name="rombelStatusFilter"
+                              checked={active}
+                              onChange={() => {
+                                setSelectedStatus(st);
+                                setCurrentPage(1);
+                              }}
+                              className="w-3.5 h-3.5 accent-[#175cd3] cursor-pointer"
+                            />
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="pt-3 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {filteredAndSorted.length} data ditemukan
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsFilterOpen(false)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+                    >
+                      Terapkan
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Ekspor</span>
+            </button>
+          </div>
         </div>
 
-        {/* ROW 1: Show Entries on Left, Search + Status Select + Ekspor on Right (1 Horizontal Line like DataTables) */}
-        <div className="px-5 sm:px-6 pt-4 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        {/* ROW 1: PURE SHOW ENTRIES (LEFT) & SEARCH (RIGHT) ONLY */}
+        <div className="px-5 sm:px-6 py-3.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <span>Tampilkan</span>
             <select
@@ -510,93 +673,79 @@ export function ComponentsTableCrudView() {
             <span>data</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="relative w-full sm:w-56">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
+          <div className="relative w-full sm:w-64">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Cari kode, nama kelas, wali..."
+              className="w-full pl-8.5 pr-7 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm('');
                   setCurrentPage(1);
                 }}
-                placeholder="Cari rombel, jurusan, wali..."
-                className="w-full pl-8.5 pr-7 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
-              />
-              {searchTerm && (
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ACTIVE FILTER CHIPS BAR */}
+        {activeFilterCount > 0 && (
+          <div className="px-5 sm:px-6 py-2 bg-slate-50/80 border-b border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+            <span className="text-slate-500 font-medium text-[11px]">Filter Aktif:</span>
+            {selectedTingkats.map((t) => (
+              <span
+                key={t}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs"
+              >
+                <span>Kelas {t}</span>
                 <button
                   type="button"
                   onClick={() => {
-                    setSearchTerm('');
+                    setSelectedTingkats((prev) => prev.filter((item) => item !== t));
                     setCurrentPage(1);
                   }}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  className="text-slate-400 hover:text-rose-600 cursor-pointer"
                 >
                   <X className="w-3 h-3" />
                 </button>
-              )}
-            </div>
-
-            <select
-              value={selectedStatus}
-              onChange={(e) => {
-                setSelectedStatus(e.target.value as 'Semua' | StatusCbtType);
-                setCurrentPage(1);
-              }}
-              className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#175cd3] cursor-pointer"
-            >
-              <option value="Semua">Semua Status</option>
-              <option value="Siap Ujian">Siap Ujian</option>
-              <option value="Sesi Aktif">Sesi Aktif</option>
-              <option value="Selesai">Selesai</option>
-            </select>
-
+              </span>
+            ))}
+            {selectedStatus !== 'Semua' && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs">
+                <span>Status: {selectedStatus}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedStatus('Semua');
+                    setCurrentPage(1);
+                  }}
+                  className="text-slate-400 hover:text-rose-600 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
             <button
               type="button"
-              onClick={handleExportCsv}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+              onClick={resetAllFilters}
+              className="text-[11px] text-[#175cd3] hover:underline font-semibold sm:ml-auto cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Ekspor</span>
+              Hapus Semua Filter
             </button>
           </div>
-        </div>
-
-        {/* ROW 2: Filter Pill Tabs Below Row 1 (Just Like Image 2) + Density Switch */}
-        <div className="px-5 sm:px-6 pb-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            {(['Semua', 'X', 'XI', 'XII'] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => {
-                  setSelectedTingkat(t);
-                  setCurrentPage(1);
-                }}
-                className={`px-3.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${
-                  selectedTingkat === t ? `${GRAD.primary} shadow-xs` : GRAD.light
-                }`}
-              >
-                {t === 'Semua' ? 'Semua' : `Kelas ${t}`}
-              </button>
-            ))}
-          </div>
-
-          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-0.5">
-            {(['compact', 'comfortable'] as const).map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => setDensity(d)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize cursor-pointer transition-all ${
-                  density === d ? `${GRAD.primaryStatic} shadow-xs` : 'text-slate-600'
-                }`}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* SELECTED ROWS BULK BANNER (Like Image 1) */}
         {selectedIds.length > 0 && (
