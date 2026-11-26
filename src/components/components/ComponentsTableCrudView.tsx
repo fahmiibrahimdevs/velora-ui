@@ -467,112 +467,152 @@ export function ComponentsTableCrudView() {
         </div>
       </div>
 
-      {/* Compact Live KPI Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Total Rombel */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.primaryStatic}`}>
-                <GraduationCap className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-semibold text-slate-600">Total Rombel</span>
+      {/* Unified 4-Segment Executive KPI Strip (Stripe/Linear Bento Pattern with Live Mini Visuals) */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 overflow-hidden">
+        {/* Segment 1: Total Rombel + Mini Tier Bar Chart */}
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center gap-1.5">
+              <GraduationCap className="w-3.5 h-3.5 text-[#175cd3]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Total Rombel
+              </span>
             </div>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.primaryStatic}`}>
-              3 Tingkat
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                {records.length}
+              </span>
+              <span className="text-xs font-medium text-slate-500">Kelas</span>
+            </div>
+            <div className="text-[11px] text-slate-600">
+              X ({tingkatCounts.X}) &bull; XI ({tingkatCounts.XI}) &bull; XII ({tingkatCounts.XII})
+            </div>
           </div>
 
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold text-slate-900">{records.length}</span>
-            <span className="text-xs text-slate-500">Kelas Aktif</span>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
-            <span>X: <strong className="text-slate-900">{tingkatCounts.X}</strong></span>
-            <span>XI: <strong className="text-slate-900">{tingkatCounts.XI}</strong></span>
-            <span>XII: <strong className="text-slate-900">{tingkatCounts.XII}</strong></span>
+          <div className="flex items-end gap-1.5 h-11 shrink-0 px-2 py-1.5 rounded-xl bg-slate-50/80 border border-slate-100">
+            {[
+              { label: 'X', val: tingkatCounts.X },
+              { label: 'XI', val: tingkatCounts.XI },
+              { label: 'XII', val: tingkatCounts.XII },
+            ].map((bar) => {
+              const maxBar = Math.max(1, tingkatCounts.X, tingkatCounts.XI, tingkatCounts.XII);
+              const px = Math.max(8, Math.round((bar.val / maxBar) * 26));
+              return (
+                <div key={bar.label} className="flex flex-col items-center gap-0.5" title={`Kelas ${bar.label}: ${bar.val}`}>
+                  <div className={`w-3 rounded-xs ${GRAD.primaryStatic}`} style={{ height: `${px}px` }} />
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Card 2: Total Siswa */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.success}`}>
-                <Users className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-semibold text-slate-600">Siswa Terdaftar</span>
+        {/* Segment 2: Total Siswa + Circular Occupancy Ring */}
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Siswa Terdaftar
+              </span>
             </div>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
-              {occupancyPct}% Terisi
-            </span>
-          </div>
-
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold text-slate-900">{totalSiswa.toLocaleString()}</span>
-            <span className="text-xs text-slate-500">/ {totalKapasitas.toLocaleString()} Kursi</span>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100">
-            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div className={`h-full rounded-full ${GRAD.success}`} style={{ width: `${occupancyPct}%` }} />
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                {totalSiswa.toLocaleString()}
+              </span>
+              <span className="text-xs font-medium text-slate-500">Siswa</span>
+            </div>
+            <div className="text-[11px] text-slate-600">
+              Dari <strong className="text-slate-800">{totalKapasitas.toLocaleString()}</strong> kapasitas kursi
             </div>
           </div>
-        </div>
 
-        {/* Card 3: Rata-rata per Kelas */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.warning}`}>
-                <Sparkles className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-semibold text-slate-600">Rata-rata Kelas</span>
-            </div>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.warning}`}>
-              Maks 36
-            </span>
-          </div>
-
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold text-slate-900">{avgSiswa}</span>
-            <span className="text-xs text-slate-500">Siswa / Rombel</span>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100">
-            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div
-                className={`h-full rounded-full ${GRAD.warning}`}
-                style={{ width: `${Math.min(100, Math.round((avgSiswa / 36) * 100))}%` }}
+          <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
+            <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="17" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+              <circle
+                cx="22"
+                cy="22"
+                r="17"
+                fill="none"
+                stroke="#16a34a"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 17}`}
+                strokeDashoffset={`${2 * Math.PI * 17 * (1 - occupancyPct / 100)}`}
               />
-            </div>
+            </svg>
+            <span className="absolute text-[10px] font-bold text-slate-800">{occupancyPct}%</span>
           </div>
         </div>
 
-        {/* Card 4: Kesiapan Ujian */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs ${GRAD.info}`}>
-                <Radio className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-semibold text-slate-600">Kesiapan CBT</span>
+        {/* Segment 3: Rata-rata per Kelas + Sparkline */}
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Rata-rata Kelas
+              </span>
             </div>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.info}`}>
-              {readyPct}% Ready
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                {avgSiswa}
+              </span>
+              <span className="text-xs font-medium text-slate-500">Siswa/Rombel</span>
+            </div>
+            <div className="text-[11px] text-slate-600">
+              Standar ideal maks <strong className="text-slate-800">36</strong> siswa
+            </div>
           </div>
 
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold text-slate-900">{readyCount}</span>
-            <span className="text-xs text-slate-500">/ {records.length} Kelas Siap</span>
+          <svg className="w-16 h-10 shrink-0 overflow-visible" viewBox="0 0 64 32">
+            <path
+              d="M 2,24 Q 14,10 24,18 T 46,12 T 62,6"
+              fill="none"
+              stroke="#d97706"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+            />
+            <circle cx="62" cy="6" r="3" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
+          </svg>
+        </div>
+
+        {/* Segment 4: Kesiapan CBT + Circular Readiness Ring */}
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-[#0284c7]" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Kesiapan CBT
+              </span>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                {readyCount}
+              </span>
+              <span className="text-xs font-medium text-slate-500">/ {records.length} Siap</span>
+            </div>
+            <div className="text-[11px] text-slate-600">
+              Siap {statusCounts.siap} &bull; Aktif {statusCounts.aktif} &bull; Selesai {statusCounts.selesai}
+            </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
-            <span>Siap: <strong className="text-emerald-700">{statusCounts.siap}</strong></span>
-            <span>Aktif: <strong className="text-[#0284c7]">{statusCounts.aktif}</strong></span>
-            <span>Selesai: <strong className="text-slate-700">{statusCounts.selesai}</strong></span>
+          <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
+            <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="17" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+              <circle
+                cx="22"
+                cy="22"
+                r="17"
+                fill="none"
+                stroke="#0284c7"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 17}`}
+                strokeDashoffset={`${2 * Math.PI * 17 * (1 - readyPct / 100)}`}
+              />
+            </svg>
+            <span className="absolute text-[10px] font-bold text-slate-800">{readyPct}%</span>
           </div>
         </div>
       </div>
