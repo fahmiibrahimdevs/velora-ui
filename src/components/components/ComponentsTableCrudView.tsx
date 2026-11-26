@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Filter,
+  Building2,
 } from 'lucide-react';
 import { showToast, showSuccess, confirmDialog } from '../../lib/swal';
 
@@ -30,12 +30,11 @@ const GRAD = {
   danger: 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white',
   success: 'bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white',
   light: 'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] text-slate-800 border border-slate-200/80',
-  dark: 'bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white',
 };
 
 type TingkatType = 'X' | 'XI' | 'XII';
 type StatusCbtType = 'Siap Ujian' | 'Sesi Aktif' | 'Selesai';
-type SortField = 'kode' | 'nama' | 'siswa';
+type SortField = 'nama' | 'siswa' | 'tingkat';
 type SortDir = 'asc' | 'desc';
 
 export interface RombelRecord {
@@ -55,14 +54,14 @@ const STORAGE_KEY = 'velora_crud_rombel_v1';
 
 const DEFAULT_RECORDS: RombelRecord[] = [
   { id: 1, kode: 'X-RPL-1', nama: 'Sepuluh RPL 1', tingkat: 'X', jurusan: 'Rekayasa Perangkat Lunak', wali: 'Budi Santoso, S.Kom', siswa: 36, kapasitas: 36, lab: 'Lab CBT 1', status: 'Siap Ujian' },
-  { id: 2, kode: 'X-RPL-2', nama: 'Sepuluh RPL 2', tingkat: 'X', jurusan: 'Rekayasa Perangkat Lunak', wali: 'Agus Setiawan, S.Kom', siswa: 36, kapasitas: 36, lab: 'Lab CBT 1', status: 'Siap Ujian' },
+  { id: 2, kode: 'X-RPL-2', nama: 'Sepuluh RPL 2', tingkat: 'X', jurusan: 'Rekayasa Perangkat Lunak', wali: 'Agus Setiawan, S.Kom', siswa: 34, kapasitas: 36, lab: 'Lab CBT 1', status: 'Siap Ujian' },
   { id: 3, kode: 'X-TKJ-1', nama: 'Sepuluh TKJ 1', tingkat: 'X', jurusan: 'Teknik Komputer Jaringan', wali: 'Rina Astuti, S.Pd', siswa: 35, kapasitas: 36, lab: 'Lab CBT 2', status: 'Siap Ujian' },
-  { id: 4, kode: 'X-TKJ-2', nama: 'Sepuluh TKJ 2', tingkat: 'X', jurusan: 'Teknik Komputer Jaringan', wali: 'Eko Prasetyo, S.T', siswa: 35, kapasitas: 36, lab: 'Lab CBT 2', status: 'Siap Ujian' },
-  { id: 5, kode: 'X-DKV-1', nama: 'Sepuluh DKV 1', tingkat: 'X', jurusan: 'Desain Komunikasi Visual', wali: 'Maya Indah, S.Ds', siswa: 34, kapasitas: 36, lab: 'Lab Multimedia', status: 'Siap Ujian' },
+  { id: 4, kode: 'X-TKJ-2', nama: 'Sepuluh TKJ 2', tingkat: 'X', jurusan: 'Teknik Komputer Jaringan', wali: 'Eko Prasetyo, S.T', siswa: 28, kapasitas: 36, lab: 'Lab CBT 2', status: 'Sesi Aktif' },
+  { id: 5, kode: 'X-DKV-1', nama: 'Sepuluh DKV 1', tingkat: 'X', jurusan: 'Desain Komunikasi Visual', wali: 'Maya Indah, S.Ds', siswa: 32, kapasitas: 36, lab: 'Lab Multimedia', status: 'Siap Ujian' },
   { id: 6, kode: 'X-AKL-1', nama: 'Sepuluh AKL 1', tingkat: 'X', jurusan: 'Akuntansi Keuangan', wali: 'Sri Wahyuni, S.E', siswa: 36, kapasitas: 36, lab: 'Lab CBT 3', status: 'Siap Ujian' },
-  { id: 7, kode: 'XI-MIPA-1', nama: 'Sebelas MIPA 1', tingkat: 'XI', jurusan: 'MIPA Unggulan', wali: 'Ahmad Fauzi, M.Pd', siswa: 34, kapasitas: 36, lab: 'Lab CBT 4', status: 'Sesi Aktif' },
+  { id: 7, kode: 'XI-MIPA-1', nama: 'Sebelas MIPA 1', tingkat: 'XI', jurusan: 'MIPA Unggulan', wali: 'Ahmad Fauzi, M.Pd', siswa: 30, kapasitas: 36, lab: 'Lab CBT 4', status: 'Sesi Aktif' },
   { id: 8, kode: 'XI-MIPA-2', nama: 'Sebelas MIPA 2', tingkat: 'XI', jurusan: 'MIPA Reguler', wali: 'Nurul Hidayati, M.Si', siswa: 35, kapasitas: 36, lab: 'Lab CBT 4', status: 'Sesi Aktif' },
-  { id: 9, kode: 'XI-IPS-1', nama: 'Sebelas IPS 1', tingkat: 'XI', jurusan: 'Ilmu Pengetahuan Sosial', wali: 'Siti Rahma, S.Pd', siswa: 32, kapasitas: 36, lab: 'Lab CBT 5', status: 'Siap Ujian' },
+  { id: 9, kode: 'XI-IPS-1', nama: 'Sebelas IPS 1', tingkat: 'XI', jurusan: 'Ilmu Pengetahuan Sosial', wali: 'Siti Rahma, S.Pd', siswa: 18, kapasitas: 36, lab: 'Lab CBT 5', status: 'Siap Ujian' },
   { id: 10, kode: 'XI-IPS-2', nama: 'Sebelas IPS 2', tingkat: 'XI', jurusan: 'Ilmu Pengetahuan Sosial', wali: 'Bambang Irawan, M.Pd', siswa: 33, kapasitas: 36, lab: 'Lab CBT 5', status: 'Siap Ujian' },
   { id: 11, kode: 'XI-RPL-1', nama: 'Sebelas RPL 1', tingkat: 'XI', jurusan: 'Rekayasa Perangkat Lunak', wali: 'Fahmi Nugroho, S.Kom', siswa: 36, kapasitas: 36, lab: 'Lab CBT 1', status: 'Siap Ujian' },
   { id: 12, kode: 'XI-TKJ-1', nama: 'Sebelas TKJ 1', tingkat: 'XI', jurusan: 'Teknik Komputer Jaringan', wali: 'Aris Munandar, S.T', siswa: 34, kapasitas: 36, lab: 'Lab CBT 2', status: 'Siap Ujian' },
@@ -109,12 +108,21 @@ function loadInitialRecords(): RombelRecord[] {
   return DEFAULT_RECORDS;
 }
 
+function getWaliInitials(name: string): string {
+  const clean = name.split(',')[0].trim();
+  const parts = clean.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'WK';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
+
 export function ComponentsTableCrudView() {
   const [records, setRecords] = useState<RombelRecord[]>(loadInitialRecords);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTingkat, setSelectedTingkat] = useState<'Semua' | TingkatType>('Semua');
   const [selectedStatus, setSelectedStatus] = useState<'Semua' | StatusCbtType>('Semua');
-  const [sortField, setSortField] = useState<SortField>('kode');
+  const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
+  const [sortField, setSortField] = useState<SortField>('nama');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
@@ -187,10 +195,12 @@ export function ComponentsTableCrudView() {
     );
   };
 
+  const isAllVisibleSelected =
+    paginatedRows.length > 0 && paginatedRows.every((r) => selectedIds.includes(r.id));
+
   const toggleAllVisible = () => {
     const visibleIds = paginatedRows.map((r) => r.id);
-    const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id));
-    if (allSelected) {
+    if (isAllVisibleSelected) {
       setSelectedIds((prev) => prev.filter((id) => !visibleIds.includes(id)));
     } else {
       setSelectedIds((prev) => Array.from(new Set([...prev, ...visibleIds])));
@@ -375,6 +385,8 @@ export function ComponentsTableCrudView() {
     showToast('Data tabel dikembalikan ke kondisi awal.', 'info');
   };
 
+  const cellPad = density === 'compact' ? 'py-2.5 px-4' : 'py-3.5 px-4';
+
   const statusBadgeClass = (s: StatusCbtType) =>
     s === 'Siap Ujian' ? GRAD.success : s === 'Sesi Aktif' ? GRAD.info : GRAD.secondary;
 
@@ -387,7 +399,7 @@ export function ComponentsTableCrudView() {
           <div>
             <h2 className="text-xl font-bold text-slate-800 tracking-tight">Data Kelas &amp; Rombel</h2>
             <p className="text-sm text-slate-500 mt-0.5">
-              Manajemen CRUD lengkap rombongan belajar, kapasitas ruang CBT, alokasi wali kelas, serta aksi massal.
+              Manajemen CRUD interaktif rombongan belajar dengan seleksi baris massal, filter bertingkat, dan kontrol kepadatan.
             </p>
           </div>
         </div>
@@ -399,15 +411,7 @@ export function ComponentsTableCrudView() {
             className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer ${GRAD.light}`}
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Data</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleExportCsv}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.info}`}
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Ekspor CSV</span>
+            <span>Reset</span>
           </button>
           <button
             type="button"
@@ -415,7 +419,7 @@ export function ComponentsTableCrudView() {
             className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
           >
             <Plus className="w-4 h-4" />
-            <span>Tambah Rombel Baru</span>
+            <span>Tambah Rombel</span>
           </button>
         </div>
       </div>
@@ -467,50 +471,31 @@ export function ComponentsTableCrudView() {
         </div>
       </div>
 
-      {/* Main CRUD Table Card */}
+      {/* MAIN INTERACTIVE TABLE CARD */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        {/* Toolbar */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col xl:flex-row xl:items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-600">
-              <span>Tampilkan</span>
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
-              >
-                {[5, 10, 25, 50].map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-              <span>data</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <Filter className="w-3.5 h-3.5 text-slate-400" />
-              <select
-                value={selectedStatus}
-                onChange={(e) => {
-                  setSelectedStatus(e.target.value as 'Semua' | StatusCbtType);
-                  setCurrentPage(1);
-                }}
-                className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3]"
-              >
-                <option value="Semua">Semua Status</option>
-                <option value="Siap Ujian">Siap Ujian</option>
-                <option value="Sesi Aktif">Sesi Aktif</option>
-                <option value="Selesai">Selesai</option>
-              </select>
-            </div>
+        {/* ROW 1: Show Entries on Left, Search + Status Select + Ekspor on Right (1 Horizontal Line like DataTables) */}
+        <div className="px-5 sm:px-6 pt-5 pb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <span>Tampilkan</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#175cd3] cursor-pointer"
+            >
+              {[5, 10, 25, 50].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+            <span>data</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
-            <div className="relative w-full sm:w-64">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="relative w-full sm:w-56">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
@@ -519,229 +504,297 @@ export function ComponentsTableCrudView() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Cari kode, kelas, wali, lab..."
-                className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
+                placeholder="Cari rombel, jurusan, wali..."
+                className="w-full pl-8.5 pr-7 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-[#175cd3]"
               />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1">
-              {(['Semua', 'X', 'XI', 'XII'] as const).map((t) => (
+              {searchTerm && (
                 <button
-                  key={t}
                   type="button"
                   onClick={() => {
-                    setSelectedTingkat(t);
+                    setSearchTerm('');
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
-                    selectedTingkat === t ? `${GRAD.primary} shadow-xs` : GRAD.light
-                  }`}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
-                  {t === 'Semua' ? 'Semua' : `Kelas ${t}`}
+                  <X className="w-3 h-3" />
                 </button>
-              ))}
+              )}
             </div>
+
+            <select
+              value={selectedStatus}
+              onChange={(e) => {
+                setSelectedStatus(e.target.value as 'Semua' | StatusCbtType);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#175cd3] cursor-pointer"
+            >
+              <option value="Semua">Semua Status</option>
+              <option value="Siap Ujian">Siap Ujian</option>
+              <option value="Sesi Aktif">Sesi Aktif</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer ${GRAD.primary}`}
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Ekspor</span>
+            </button>
           </div>
         </div>
 
-        {/* Bulk Selection Action Strip */}
+        {/* ROW 2: Filter Pill Tabs Below Row 1 (Just Like Image 2) + Density Switch */}
+        <div className="px-5 sm:px-6 pb-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {(['Semua', 'X', 'XI', 'XII'] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => {
+                  setSelectedTingkat(t);
+                  setCurrentPage(1);
+                }}
+                className={`px-3.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${
+                  selectedTingkat === t ? `${GRAD.primary} shadow-xs` : GRAD.light
+                }`}
+              >
+                {t === 'Semua' ? 'Semua' : `Kelas ${t}`}
+              </button>
+            ))}
+          </div>
+
+          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-0.5">
+            {(['comfortable', 'compact'] as const).map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => setDensity(d)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize cursor-pointer transition-all ${
+                  density === d ? `${GRAD.primaryStatic} shadow-xs` : 'text-slate-600'
+                }`}
+              >
+                {d}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* SELECTED ROWS BULK BANNER (Like Image 1) */}
         {selectedIds.length > 0 && (
-          <div className="px-5 py-3 bg-blue-50/40 border-b border-blue-100 flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-bold text-slate-800">
-              {selectedIds.length} rombel dipilih
-            </span>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 px-5 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2.5 text-xs text-blue-900">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span className="font-semibold">{selectedIds.length} rombel terpilih</span>
+            </div>
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => handleBulkStatus('Siap Ujian')}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.success}`}
+                className="px-2.5 py-1 bg-white text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-50 font-semibold text-[11px] cursor-pointer"
               >
-                Set Siap Ujian
-              </button>
-              <button
-                type="button"
-                onClick={() => handleBulkStatus('Sesi Aktif')}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.info}`}
-              >
-                Set Sesi Aktif
+                Tandai Siap Ujian
               </button>
               <button
                 type="button"
                 onClick={() => handleBulkStatus('Selesai')}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.light}`}
+                className="px-2.5 py-1 bg-white text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-50 font-semibold text-[11px] cursor-pointer"
               >
-                Set Selesai
+                Tandai Selesai
               </button>
               <button
                 type="button"
                 onClick={handleBulkDelete}
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer ${GRAD.danger}`}
+                className="px-2.5 py-1 bg-white text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-50 font-semibold text-[11px] cursor-pointer"
               >
-                <Trash2 className="w-3 h-3" /> Hapus Terpilih
+                Hapus Terpilih
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedIds([])}
+                className="px-2 py-1 text-slate-600 hover:text-slate-900 font-medium text-[11px] cursor-pointer"
+              >
+                Batal Pilihan
               </button>
             </div>
           </div>
         )}
 
-        {/* Table Content */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[920px] text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-slate-200/80 text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-50/60">
-                <th className="py-3.5 px-4 w-10">
-                  <input
-                    type="checkbox"
-                    checked={paginatedRows.length > 0 && paginatedRows.every((r) => selectedIds.includes(r.id))}
-                    onChange={toggleAllVisible}
-                    className="w-4 h-4 rounded accent-[#175cd3] cursor-pointer"
-                  />
-                </th>
-                <th className="py-3.5 px-3 w-12">No</th>
-                <th className="py-3.5 px-4">
-                  <button
-                    type="button"
-                    onClick={() => handleSort('kode')}
-                    className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
-                  >
-                    <span>Kode Rombel</span>
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="py-3.5 px-4">
-                  <button
-                    type="button"
-                    onClick={() => handleSort('nama')}
-                    className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
-                  >
-                    <span>Nama Kelas</span>
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="py-3.5 px-3">Tingkat</th>
-                <th className="py-3.5 px-4">Jurusan &amp; Ruang Lab</th>
-                <th className="py-3.5 px-4">Wali Kelas</th>
-                <th className="py-3.5 px-4">
-                  <button
-                    type="button"
-                    onClick={() => handleSort('siswa')}
-                    className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
-                  >
-                    <span>Siswa</span>
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="py-3.5 px-3 text-center">Status CBT</th>
-                <th className="py-3.5 px-4 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
-              {paginatedRows.length === 0 ? (
-                <tr>
-                  <td colSpan={10} className="py-10 text-center text-slate-500">
-                    Tidak ada data kelas yang sesuai. Klik <strong>Tambah Rombel Baru</strong> untuk membuat data baru.
-                  </td>
-                </tr>
-              ) : (
-                paginatedRows.map((row, idx) => {
-                  const pct = Math.min(100, Math.round((row.siswa / row.kapasitas) * 100));
-                  const checked = selectedIds.includes(row.id);
-                  return (
-                    <tr
-                      key={row.id}
-                      className={`transition-colors ${checked ? 'bg-blue-50/35' : 'hover:bg-slate-50/70'}`}
+        {/* TABLE CONTENT (Clean Layout Matching Image 1) */}
+        <div className="p-4 sm:p-5">
+          <div className="overflow-x-auto border border-slate-200/80 rounded-xl">
+            <table className="w-full min-w-[820px] text-left border-collapse table-auto">
+              <thead>
+                <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
+                  <th className="py-3 px-4 w-10 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isAllVisibleSelected}
+                      onChange={toggleAllVisible}
+                      className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
+                    />
+                  </th>
+                  <th className="py-3 px-4 min-w-[210px]">
+                    <button
+                      type="button"
+                      onClick={() => handleSort('nama')}
+                      className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
                     >
-                      <td className="py-3.5 px-4">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleRow(row.id)}
-                          className="w-4 h-4 rounded accent-[#175cd3] cursor-pointer"
-                        />
-                      </td>
-                      <td className="py-3.5 px-3 font-mono text-slate-400">
-                        {(safePage - 1) * pageSize + idx + 1}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <button
-                          type="button"
-                          onClick={() => setDetailRecord(row)}
-                          className="font-mono font-bold text-[#175cd3] hover:underline cursor-pointer"
-                        >
-                          {row.kode}
-                        </button>
-                      </td>
-                      <td className="py-3.5 px-4 font-semibold text-slate-900">{row.nama}</td>
-                      <td className="py-3.5 px-3 whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-semibold ${GRAD.light}`}>
-                          Kelas {row.tingkat}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-slate-800">{row.jurusan}</div>
-                        <div className="text-[11px] text-slate-500">{row.lab}</div>
-                      </td>
-                      <td className="py-3.5 px-4 font-medium text-slate-800">{row.wali}</td>
-                      <td className="py-3.5 px-4 min-w-[110px]">
-                        <div className="flex items-center justify-between text-[11px] mb-1">
-                          <span className="font-bold text-slate-900">
-                            {row.siswa}/{row.kapasitas}
+                      <span>Kelas &amp; Jurusan</span>
+                      <ArrowUpDown className="w-3 h-3" />
+                    </button>
+                  </th>
+                  <th className="py-3 px-4 min-w-[180px]">Wali Kelas</th>
+                  <th className="py-3 px-4 min-w-[140px]">
+                    <button
+                      type="button"
+                      onClick={() => handleSort('tingkat')}
+                      className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
+                    >
+                      <span>Ruang &amp; Tingkat</span>
+                      <ArrowUpDown className="w-3 h-3" />
+                    </button>
+                  </th>
+                  <th className="py-3 px-4 min-w-[155px]">
+                    <button
+                      type="button"
+                      onClick={() => handleSort('siswa')}
+                      className="inline-flex items-center gap-1 font-bold uppercase cursor-pointer hover:text-[#175cd3]"
+                    >
+                      <span>Okupansi Siswa</span>
+                      <ArrowUpDown className="w-3 h-3" />
+                    </button>
+                  </th>
+                  <th className="py-3 px-4 text-center min-w-[100px]">Status CBT</th>
+                  <th className="py-3 px-4 text-center min-w-[95px]">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                {paginatedRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-slate-500">
+                      Tidak ada rombel yang cocok. Klik <strong>Tambah Rombel</strong> untuk membuat data baru.
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedRows.map((row) => {
+                    const pct = Math.min(100, Math.round((row.siswa / row.kapasitas) * 100));
+                    const isChecked = selectedIds.includes(row.id);
+                    const barGrad =
+                      pct === 100
+                        ? GRAD.success
+                        : pct >= 75
+                          ? GRAD.primaryStatic
+                          : GRAD.warning;
+
+                    return (
+                      <tr
+                        key={row.id}
+                        onClick={() => toggleRow(row.id)}
+                        className={`transition-colors cursor-pointer ${
+                          isChecked ? 'bg-blue-50/45 hover:bg-blue-50/70' : 'hover:bg-slate-50/70'
+                        }`}
+                      >
+                        <td className={`${cellPad} text-center`} onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleRow(row.id)}
+                            className="w-4 h-4 rounded border-slate-300 text-[#1351b8] focus:ring-[#1351b8] cursor-pointer"
+                          />
+                        </td>
+
+                        <td className={cellPad}>
+                          <div className="font-semibold text-slate-800">
+                            <span className="text-[#175cd3] font-bold">{row.kode}</span> &bull; {row.nama}
+                          </div>
+                          <div className="text-[11px] text-slate-500 mt-0.5">{row.jurusan}</div>
+                        </td>
+
+                        <td className={`${cellPad} whitespace-nowrap`}>
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-full border-2 border-white bg-gradient-to-tr from-[#175cd3] to-[#0f3ba0] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs shrink-0">
+                              {getWaliInitials(row.wali)}
+                            </div>
+                            <span className="font-medium text-slate-800">{row.wali}</span>
+                          </div>
+                        </td>
+
+                        <td className={`${cellPad} whitespace-nowrap text-slate-600`}>
+                          <div className="flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                            <span>
+                              {row.lab} &bull; Kelas {row.tingkat}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className={`${cellPad} whitespace-nowrap`}>
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-300 ${barGrad}`}
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-bold text-slate-700">
+                              {row.siswa}/{row.kapasitas}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className={`${cellPad} text-center whitespace-nowrap`}>
+                          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${statusBadgeClass(row.status)}`}>
+                            {row.status}
                           </span>
-                          <span className="text-slate-500">{pct}%</span>
-                        </div>
-                        <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                          <div className={`h-full rounded-full ${GRAD.primaryStatic}`} style={{ width: `${pct}%` }} />
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-3 text-center whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${statusBadgeClass(row.status)}`}>
-                          {row.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setDetailRecord(row)}
-                            className={`p-1.5 rounded-lg cursor-pointer ${GRAD.light}`}
-                            title="Lihat Detail"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => openEditModal(row)}
-                            className={`p-1.5 rounded-lg cursor-pointer ${GRAD.warning}`}
-                            title="Edit Data"
-                          >
-                            <Edit3 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteRow(row)}
-                            className={`p-1.5 rounded-lg cursor-pointer ${GRAD.danger}`}
-                            title="Hapus Data"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                        </td>
+
+                        <td className={`${cellPad} text-center whitespace-nowrap`} onClick={(e) => e.stopPropagation()}>
+                          <div className="inline-flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setDetailRecord(row)}
+                              title="Lihat Detail"
+                              className="p-1.5 text-slate-500 hover:text-[#175cd3] hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => openEditModal(row)}
+                              title="Edit Rombel"
+                              className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteRow(row)}
+                              title="Hapus Rombel"
+                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Pagination Footer */}
-        <div className="px-5 py-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
+        {/* PAGINATION FOOTER (Matching Image 1) */}
+        <div className="px-5 sm:px-6 pb-5 pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
           <div>
             Menampilkan{' '}
-            <strong>
-              {filteredAndSorted.length === 0 ? 0 : (safePage - 1) * pageSize + 1}
-            </strong>{' '}
-            sampai <strong>{Math.min(safePage * pageSize, filteredAndSorted.length)}</strong> dari{' '}
-            <strong>{filteredAndSorted.length}</strong> data
+            <strong>{filteredAndSorted.length === 0 ? 0 : (safePage - 1) * pageSize + 1}</strong> -{' '}
+            <strong>{Math.min(safePage * pageSize, filteredAndSorted.length)}</strong> dari{' '}
+            <strong>{filteredAndSorted.length}</strong> rombel
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -749,10 +802,9 @@ export function ComponentsTableCrudView() {
               type="button"
               disabled={safePage <= 1}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${GRAD.light}`}
+              className="w-8 h-8 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
-              <span>Sebelumnya</span>
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
@@ -760,7 +812,9 @@ export function ComponentsTableCrudView() {
                 type="button"
                 onClick={() => setCurrentPage(page)}
                 className={`w-8 h-8 rounded-xl text-xs font-semibold cursor-pointer ${
-                  safePage === page ? `${GRAD.primaryStatic} shadow-xs` : GRAD.light
+                  safePage === page
+                    ? `${GRAD.primaryStatic} shadow-xs`
+                    : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 {page}
@@ -770,9 +824,8 @@ export function ComponentsTableCrudView() {
               type="button"
               disabled={safePage >= totalPages}
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${GRAD.light}`}
+              className="w-8 h-8 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
             >
-              <span>Selanjutnya</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
