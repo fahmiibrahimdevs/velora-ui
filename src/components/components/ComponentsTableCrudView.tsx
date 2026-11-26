@@ -653,7 +653,7 @@ export function ComponentsTableCrudView() {
         </div>
 
         {/* ROW 1: PURE SHOW ENTRIES (LEFT) & SEARCH (RIGHT) ONLY */}
-        <div className="px-5 sm:px-6 py-3.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="px-5 sm:px-6 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <span>Tampilkan</span>
             <select
@@ -787,10 +787,9 @@ export function ComponentsTableCrudView() {
           </div>
         )}
 
-        {/* TABLE CONTENT (Clean Layout Matching Image 1) */}
-        <div className="p-4 sm:p-5">
-          <div className="overflow-x-auto border border-slate-200/80 rounded-xl">
-            <table className="w-full min-w-[820px] text-left border-collapse table-auto">
+        {/* TABLE CONTENT (Flush Clean Layout Matching Image 1) */}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[820px] text-left border-collapse table-auto">
               <thead>
                 <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600 whitespace-nowrap">
                   <th className={`${headPad} w-10 text-center`}>
@@ -950,11 +949,10 @@ export function ComponentsTableCrudView() {
                 )}
               </tbody>
             </table>
-          </div>
         </div>
 
         {/* PAGINATION FOOTER (Matching Image 1) */}
-        <div className="px-5 sm:px-6 pb-5 pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
+        <div className="px-5 sm:px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
           <div>
             Menampilkan{' '}
             <strong>{filteredAndSorted.length === 0 ? 0 : (safePage - 1) * pageSize + 1}</strong> -{' '}
