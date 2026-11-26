@@ -1069,7 +1069,7 @@ export function EditorView() {
   const btnClass = (active: boolean) =>
     `p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
       active
-        ? 'bg-[#175cd3] text-white shadow-xs'
+        ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs'
         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
     }`;
 
@@ -1285,7 +1285,7 @@ export function EditorView() {
                         </button>
                         <button
                           type="submit"
-                          className="px-3 py-1 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg cursor-pointer"
+                          className="px-3 py-1 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
                         >
                           Sisipkan
                         </button>
@@ -1356,7 +1356,7 @@ export function EditorView() {
                 }
                 setSimplePreviewModal(true);
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs transition-all active:scale-95 cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
               Publish Post
@@ -1713,7 +1713,7 @@ export function EditorView() {
                         execAdvCmd('foreColor', customHexColor);
                         setAdvPopover(null);
                       }}
-                      className="flex-1 py-1 bg-[#175cd3] text-white text-xs font-semibold rounded-lg cursor-pointer"
+                      className="flex-1 py-1 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg cursor-pointer"
                     >
                       Terapkan Custom
                     </button>
@@ -1949,7 +1949,7 @@ export function EditorView() {
                     </button>
                     <button
                       type="submit"
-                      className="px-3 py-1 bg-[#175cd3] text-white text-xs font-semibold rounded-lg cursor-pointer"
+                      className="px-3 py-1 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg cursor-pointer"
                     >
                       Sisipkan
                     </button>
@@ -2062,7 +2062,7 @@ export function EditorView() {
                     </button>
                     <button
                       type="submit"
-                      className="px-3 py-1 bg-[#175cd3] text-white text-xs font-semibold rounded-lg cursor-pointer"
+                      className="px-3 py-1 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg cursor-pointer"
                     >
                       Sisipkan Gambar
                     </button>
@@ -2294,7 +2294,7 @@ export function EditorView() {
                     `"${advTitle}" (${advStats.words} kata) berhasil dipublikasikan.`
                   );
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer transition-all active:scale-95"
               >
                 <Check className="w-3.5 h-3.5" />
                 <span>Publish</span>
@@ -2360,9 +2360,9 @@ export function EditorView() {
                 <button
                   type="button"
                   onClick={() => setShowCodeOutput(!showCodeOutput)}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border cursor-pointer transition-colors ${
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border cursor-pointer transition-all ${
                     showCodeOutput
-                      ? 'bg-[#175cd3] text-white border-[#175cd3]'
+                      ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white border-[#175cd3]'
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
@@ -2476,7 +2476,7 @@ export function EditorView() {
                     setSimplePreviewModal(false);
                     showSuccess('Berhasil Diterbitkan!', `Artikel "${simpleTitle}" telah disimpan.`);
                   }}
-                  className="px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   Konfirmasi Publish
                 </button>

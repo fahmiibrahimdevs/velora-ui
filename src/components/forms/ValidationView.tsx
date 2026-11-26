@@ -574,7 +574,7 @@ export function ValidationView() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <Send className="w-3.5 h-3.5" />
                   Submit
@@ -794,7 +794,7 @@ export function ValidationView() {
               <div className="pt-2 flex justify-end">
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <ShieldCheck className="w-4 h-4" />
                   Validasi &amp; Daftar
@@ -887,7 +887,7 @@ export function ValidationView() {
                         onClick={() => setCtrlPlan(tier)}
                         className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                           active
-                            ? 'bg-[#175cd3] border-[#175cd3] text-white shadow-xs'
+                            ? 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] border-[#175cd3] text-white shadow-xs'
                             : ctrlSubmitted && ctrlErrors.plan
                             ? 'bg-white border-rose-300 text-slate-700 hover:bg-rose-50/40'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -1041,7 +1041,7 @@ export function ValidationView() {
               <div className="pt-2 flex justify-end">
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   Validasi Kontrol
@@ -1204,7 +1204,7 @@ export function ValidationView() {
                       showToast('Perbaiki tooltip berwarna merah.', 'warning');
                     }
                   }}
-                  className="px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   Submit Tooltip Form
                 </button>
@@ -1332,7 +1332,7 @@ export function ValidationView() {
                 <button
                   type="submit"
                   disabled={srvLoading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] disabled:opacity-60 text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] disabled:opacity-60 text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   {srvLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1479,7 +1479,7 @@ export function ValidationView() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#175cd3] hover:bg-[#1450be] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-all active:scale-95"
                 >
                   Periksa Pola
                 </button>
