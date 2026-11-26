@@ -45,6 +45,7 @@ import { ContactView } from './components/utilities/ContactView';
 import { InvoiceView } from './components/utilities/InvoiceView';
 import { SubscribeView } from './components/utilities/SubscribeView';
 import { ComponentsTableCrudView } from './components/components/ComponentsTableCrudView';
+import { KanbanBoardSection } from './components/components/KanbanBoardSection';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -2030,6 +2031,11 @@ function CardsView() {
           ))}
         </div>
       </div>
+
+      {/* ======================================================== */}
+      {/* 6. Interactive Kanban Board (Cross-Column Drag & Drop)   */}
+      {/* ======================================================== */}
+      <KanbanBoardSection />
 
       {/* ======================================================== */}
       {/* Lightbox Modal for "My Picture" */}
