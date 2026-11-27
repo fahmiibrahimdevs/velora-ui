@@ -51,7 +51,6 @@ const navSections: NavSection[] = [
         icon: Columns3,
         children: [
           { id: 'layout-default', label: 'Default Layout' },
-          { id: 'layout-transparent', label: 'Transparent Sidebar' },
           { id: 'layout-top-navigation', label: 'Top Navigation' },
         ],
       },

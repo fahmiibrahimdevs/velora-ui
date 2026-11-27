@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { TopNavLayout } from './TopNavLayout';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface AdminLayoutProps {
   onSelectMenu: (id: string) => void;
   pageTitle: string;
   breadcrumbs?: string[];
+  layoutMode?: 'default' | 'top-navigation';
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({
@@ -16,9 +18,23 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onSelectMenu,
   pageTitle,
   breadcrumbs = ['Dashboard', 'CBT Components', 'Card'],
+  layoutMode = 'default',
 }) => {
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (layoutMode === 'top-navigation') {
+    return (
+      <TopNavLayout
+        activeMenu={activeMenu}
+        onSelectMenu={onSelectMenu}
+        pageTitle={pageTitle}
+        breadcrumbs={breadcrumbs}
+      >
+        {children}
+      </TopNavLayout>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f4f6f9] text-slate-800 flex font-sans">

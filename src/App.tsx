@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { AdminLayout } from './components/layout/AdminLayout';
+import { LayoutExampleView } from './components/layout/LayoutExampleView';
 import { StatCards } from './components/dashboard/StatCards';
 import { RecentExamsTable } from './components/dashboard/RecentExamsTable';
 import { useDashboardData } from './hooks/useDashboardData';
@@ -14652,37 +14653,67 @@ const getInitialMenu = (): string => {
   if (typeof window !== 'undefined') {
     const hash = window.location.hash.replace(/^#\/?/, '').trim();
     if (hash) {
-      return hash;
+      return hash === 'layout-transparent' ? 'layout-default' : hash;
     }
     try {
       const saved = localStorage.getItem('velora_active_menu');
-      if (saved) return saved;
+      if (saved) return saved === 'layout-transparent' ? 'layout-default' : saved;
     } catch {}
   }
   return 'general-dashboard';
 };
 
+const getInitialLayoutMode = (menu: string): 'default' | 'top-navigation' => {
+  if (menu === 'layout-top-navigation') return 'top-navigation';
+  if (menu === 'layout-default') return 'default';
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('velora_layout_mode');
+      if (saved === 'top-navigation') return 'top-navigation';
+    } catch {}
+  }
+  return 'default';
+};
+
 export function App() {
   const [activeMenu, setActiveMenu] = useState<string>(getInitialMenu);
+  const [layoutMode, setLayoutMode] = useState<'default' | 'top-navigation'>(() =>
+    getInitialLayoutMode(getInitialMenu()),
+  );
   const [settingSection, setSettingSection] = useState<
     'general' | 'seo' | 'email' | 'system' | 'security' | 'automation'
   >('general');
 
   const handleSelectMenu = (id: string) => {
-    setActiveMenu(id);
-    if (typeof window !== 'undefined') {
-      window.location.hash = `#/${id}`;
+    const normalizedId = id === 'layout-transparent' ? 'layout-default' : id;
+    setActiveMenu(normalizedId);
+    if (normalizedId === 'layout-top-navigation') {
+      setLayoutMode('top-navigation');
       try {
-        localStorage.setItem('velora_active_menu', id);
+        localStorage.setItem('velora_layout_mode', 'top-navigation');
+      } catch {}
+    } else if (normalizedId === 'layout-default') {
+      setLayoutMode('default');
+      try {
+        localStorage.setItem('velora_layout_mode', 'default');
+      } catch {}
+    }
+    if (typeof window !== 'undefined') {
+      window.location.hash = `#/${normalizedId}`;
+      try {
+        localStorage.setItem('velora_active_menu', normalizedId);
       } catch {}
     }
   };
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace(/^#\/?/, '').trim();
+      const rawHash = window.location.hash.replace(/^#\/?/, '').trim();
+      const hash = rawHash === 'layout-transparent' ? 'layout-default' : rawHash;
       if (hash && hash !== activeMenu) {
         setActiveMenu(hash);
+        if (hash === 'layout-top-navigation') setLayoutMode('top-navigation');
+        if (hash === 'layout-default') setLayoutMode('default');
         try {
           localStorage.setItem('velora_active_menu', hash);
         } catch {}
@@ -14718,6 +14749,14 @@ export function App() {
     'blank-page': {
       title: 'Blank Page',
       breadcrumbs: ['Velora UI', 'Starter', 'Blank Page'],
+    },
+    'layout-default': {
+      title: 'Default Layout',
+      breadcrumbs: ['Dashboard', 'Layout', 'Default Layout'],
+    },
+    'layout-top-navigation': {
+      title: 'Top Navigation',
+      breadcrumbs: ['Dashboard', 'Layout', 'Top Navigation'],
     },
     alert: {
       title: 'Alert Showcase',
@@ -15068,6 +15107,10 @@ export function App() {
         return <ButtonsView />;
       case 'blank-page':
         return <KelasView />;
+      case 'layout-default':
+        return <LayoutExampleView variant="default" onSwitchLayout={handleSelectMenu} />;
+      case 'layout-top-navigation':
+        return <LayoutExampleView variant="top-navigation" onSwitchLayout={handleSelectMenu} />;
       case 'activities':
         return <ActivitiesView />;
       case 'chat-inbox':
@@ -15171,6 +15214,7 @@ export function App() {
         onSelectMenu={handleSelectMenu}
         pageTitle={currentMeta.title}
         breadcrumbs={currentMeta.breadcrumbs}
+        layoutMode={layoutMode}
       >
         {renderContent()}
       </AdminLayout>
