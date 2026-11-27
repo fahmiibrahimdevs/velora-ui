@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AlertOctagon,
   AlertTriangle,
   ArrowRight,
   Bell,
@@ -8,6 +9,7 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  ClipboardCheck,
   Clock,
   Command,
   Compass,
@@ -20,10 +22,12 @@ import {
   EyeOff,
   FileSpreadsheet,
   FileText,
+  History,
   Image as ImageIcon,
   KeyRound,
   Layers,
   Link2,
+  ListChecks,
   Lock,
   Mail,
   MapPin,
@@ -33,6 +37,7 @@ import {
   Phone,
   Plus,
   QrCode,
+  Receipt,
   RefreshCw,
   Search,
   Send,
@@ -46,65 +51,14 @@ import {
   UploadCloud,
   UserCheck,
   Users,
+  Wallet,
   X,
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
-
-// =====================================================================
-// VELORA UI GRADIENT TOKENS (aligned with ButtonsView)
-// =====================================================================
-const GRAD = {
-  primary:
-    'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] hover:from-[#1450be] hover:to-[#0c2e82] text-white',
-  primaryStatic: 'bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white',
-  secondary:
-    'bg-gradient-to-r from-[#cbd5e1] to-[#94a3b8] hover:from-[#94a3b8] hover:to-[#64748b] text-white',
-  info:
-    'bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] text-white',
-  warning:
-    'bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#ea580c] hover:to-[#b45309] text-white',
-  danger:
-    'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] hover:from-[#dc2626] hover:to-[#991b1b] text-white',
-  success:
-    'bg-gradient-to-r from-[#22c55e] to-[#15803d] hover:from-[#16a34a] hover:to-[#166534] text-white',
-  light:
-    'bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] hover:from-[#e2e8f0] hover:to-[#cbd5e1] text-slate-800 border border-slate-200/80',
-  dark:
-    'bg-gradient-to-r from-[#1e293b] to-[#020617] hover:from-[#0f172a] hover:to-[#000000] text-white',
-} as const;
-
-type ModalId =
-  | 'payment-success'
-  | 'payment-checkout'
-  | 'upgrade-plan'
-  | 'product-quickview'
-  | 'shipping-address'
-  | 'otp-verify'
-  | 'change-password'
-  | 'cookie-consent'
-  | 'invite-team'
-  | 'share-access'
-  | 'profile-detail'
-  | 'event-rsvp'
-  | 'multi-input-form'
-  | 'command-palette'
-  | 'upload-dropzone'
-  | 'export-filter'
-  | 'drawer-detail'
-  | 'feedback-rating'
-  | 'onboarding-tour'
-  | 'notification-inbox'
-  | 'media-lightbox'
-  | 'demo'
-  | 'center'
-  | 'confirm'
-  | 'bootstrap'
-  | 'buttons'
-  | 'footer-bg'
-  | 'login'
-  | 'footer-extra';
+import { formatThousandDot, GRAD, type ModalId, ModalShell } from './modalShared';
+import { ExtendedModals } from './ExtendedModals';
 
 type AppCategory = 'all' | 'forms' | 'payment' | 'security' | 'workspace' | 'utility';
 
@@ -121,7 +75,7 @@ interface AppModalCardItem {
 }
 
 const CATEGORY_TABS: { id: AppCategory; label: string }[] = [
-  { id: 'all', label: 'Semua UI (21)' },
+  { id: 'all', label: 'Semua UI (30)' },
   { id: 'forms', label: 'Forms & Multi-Input' },
   { id: 'payment', label: 'Payment & Commerce' },
   { id: 'workspace', label: 'Profile & Team' },
@@ -361,37 +315,106 @@ const APP_MODAL_CARDS: AppModalCardItem[] = [
     icon: Star,
     ctaLabel: 'Beri Penilaian',
   },
+  {
+    id: 'danger-zone-confirm',
+    category: 'security',
+    title: 'Danger Zone (Type-to-Confirm)',
+    desc: 'Konfirmasi penghapusan kritikal ala GitHub/Vercel yang mewajibkan pengetikan frase keamanan sebelum tombol aktif.',
+    badge: 'Safety Gate',
+    badgeGrad: GRAD.danger,
+    iconGrad: GRAD.danger,
+    icon: AlertOctagon,
+    ctaLabel: 'Coba Danger Zone',
+  },
+  {
+    id: 'session-timeout',
+    category: 'security',
+    title: 'Session Timeout & Re-Auth',
+    desc: 'Dialog peringatan sesi login hampir habis dengan hitung mundur live, input PIN cepat, dan perpanjang sesi.',
+    badge: 'Session Guard',
+    badgeGrad: GRAD.warning,
+    iconGrad: GRAD.warning,
+    icon: Clock,
+    ctaLabel: 'Simulasi Timeout',
+  },
+  {
+    id: 'api-key-create',
+    category: 'security',
+    title: 'Create API Key & Access Token',
+    desc: 'Pembuatan secret token server-to-server dengan pilihan scope akses dan tampilan token sekali lihat (copy-once).',
+    badge: 'Developer API',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: KeyRound,
+    ctaLabel: 'Generate API Key',
+  },
+  {
+    id: 'invoice-detail',
+    category: 'payment',
+    title: 'Invoice Detail & Print Preview',
+    desc: 'Pratinjau faktur korporat lengkap dengan rincian item, hitung PPN 11%, badge status lunas, dan tombol cetak.',
+    badge: 'Billing Invoice',
+    badgeGrad: GRAD.primaryStatic,
+    iconGrad: GRAD.primaryStatic,
+    icon: Receipt,
+    ctaLabel: 'Lihat Invoice',
+  },
+  {
+    id: 'topup-wallet',
+    category: 'payment',
+    title: 'Top-Up Saldo & Nominal Cepat',
+    desc: 'Pilih chip nominal instan atau input Rp custom berformat titik, metode QRIS/VA, dan kalkulasi biaya admin.',
+    badge: 'Wallet Top-Up',
+    badgeGrad: GRAD.success,
+    iconGrad: GRAD.success,
+    icon: Wallet,
+    ctaLabel: 'Isi Saldo',
+  },
+  {
+    id: 'approval-request',
+    category: 'workspace',
+    title: 'Approval Pengajuan (Approve / Reject)',
+    desc: 'Modal persetujuan HR/Finance untuk reimbursement atau kasbon dengan input alasan wajib saat menolak pengajuan.',
+    badge: 'HRM Approval',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: ClipboardCheck,
+    ctaLabel: 'Review Pengajuan',
+  },
+  {
+    id: 'wizard-stepper',
+    category: 'forms',
+    title: 'Multi-Step Form Wizard (3 Tahap)',
+    desc: 'Form bertahap terstruktur dengan header stepper bernomor, anggaran format Rp titik, hingga ringkasan konfirmasi.',
+    badge: 'Wizard Flow',
+    badgeGrad: GRAD.primaryStatic,
+    iconGrad: GRAD.primaryStatic,
+    icon: ListChecks,
+    ctaLabel: 'Mulai Wizard',
+  },
+  {
+    id: 'csv-import',
+    category: 'forms',
+    title: 'Import Excel / CSV & Validasi',
+    desc: 'Unggah spreadsheet lalu tampilkan pratinjau tabel baris valid vs error validasi sebelum data diproses.',
+    badge: 'Bulk Importer',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: FileSpreadsheet,
+    ctaLabel: 'Buka Importer',
+  },
+  {
+    id: 'audit-trail',
+    category: 'utility',
+    title: 'Audit Trail & History Diff',
+    desc: 'Riwayat perubahan data lengkap dengan perbandingan Before → After, kategori log, dan alamat IP aktor.',
+    badge: 'Activity Log',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: History,
+    ctaLabel: 'Lihat Audit Log',
+  },
 ];
-
-interface ModalShellProps {
-  onClose: () => void;
-  maxWidth?: string;
-  align?: 'center' | 'top';
-  children: React.ReactNode;
-}
-
-function ModalShell({
-  onClose,
-  maxWidth = 'max-w-lg',
-  align = 'center',
-  children,
-}: ModalShellProps) {
-  return (
-    <div
-      onClick={onClose}
-      className={`fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-2xs flex justify-center p-4 overflow-y-auto animate-in fade-in duration-200 ${
-        align === 'top' ? 'items-start pt-14 sm:pt-20' : 'items-center'
-      }`}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`bg-white rounded-2xl ${maxWidth} w-full overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200 my-auto`}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 const COMMAND_ITEMS = [
   { label: 'Buka Kanban Board', hint: 'Features • Workflow', hash: '#/kanban', tag: 'Navigasi' },
@@ -402,12 +425,6 @@ const COMMAND_ITEMS = [
 ];
 
 const EXPORT_COLUMNS = ['ID Transaksi', 'Nama Pelanggan', 'Metode Bayar', 'Total Nominal', 'Status', 'Tanggal'];
-
-function formatThousandDot(rawDigits: string): string {
-  const digits = rawDigits.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
-  if (!digits) return '';
-  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
 
 export function ModalView() {
   const [activeModal, setActiveModal] = useState<ModalId | null>(null);
@@ -3398,6 +3415,11 @@ export function ModalView() {
           </div>
         </ModalShell>
       )}
+
+      {/* ======================================================== */}
+      {/* EXTENDED ENTERPRISE & APP MODALS (9 UI) */}
+      {/* ======================================================== */}
+      <ExtendedModals activeModal={activeModal} onClose={closeModal} />
 
       {/* ======================================================== */}
       {/* CLASSIC BOOTSTRAP & STISLA MODALS */}
