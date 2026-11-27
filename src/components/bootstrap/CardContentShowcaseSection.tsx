@@ -17,8 +17,13 @@ import {
 import { showToast } from '../../lib/swal';
 import { FeatureSectionHeader } from '../features/FeatureSectionHeader';
 import { formatThousandDot, GRAD } from './modalShared';
+import {
+  CardContentShowcaseExtra,
+  type CardShowcaseCategory,
+} from './CardContentShowcaseExtra';
 
 export function CardContentShowcaseSection() {
+  const [filter, setFilter] = useState<CardShowcaseCategory>('all');
   // 1. Profile Card state
   const [following, setFollowing] = useState(false);
 
@@ -61,15 +66,40 @@ export function CardContentShowcaseSection() {
     setNewTodo('');
   };
 
+  const show = (cat: Exclude<CardShowcaseCategory, 'all'>) => filter === 'all' || filter === cat;
+
   return (
     <div className="space-y-6">
       <FeatureSectionHeader
-        title="Card Content Variations"
-        description="Contoh penerapan berbagai isi konten di dalam Card: Profil Pengguna, Form Input, Checklist Progres, Statistik Revenue, Tagihan Paket, Artikel, Timeline, dan Pengaturan Switch."
+        title="Card Content Variations (19 Examples)"
+        description="Koleksi lengkap berbagai variasi isi konten Card: Profil, Form Input, Checklist Sprint, Produk E-Commerce, Corporate Card, Tim, Tabel Ringkas, Grafik Bar, FAQ Accordion, hingga Timeline."
       />
+
+      {/* Cardless Filter Strip matching Velora UI standards */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { id: 'all' as const, label: 'Semua Card (19)' },
+          { id: 'forms' as const, label: 'Form, Upload & API (5)' },
+          { id: 'team' as const, label: 'Profil, Tim & Chat (4)' },
+          { id: 'finance' as const, label: 'Finance, Produk & Tabel (6)' },
+          { id: 'content' as const, label: 'Artikel, Grafik & FAQ (4)' },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setFilter(tab.id)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+              filter === tab.id ? `${GRAD.primary} shadow-xs` : GRAD.light
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
         {/* 1. PROFILE CARD */}
+        {show('team') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
           <div className="h-24 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] relative">
             <span className={`absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${GRAD.success}`}>
@@ -134,8 +164,10 @@ export function CardContentShowcaseSection() {
             </div>
           </div>
         </div>
+        )}
 
         {/* 2. QUICK FORM INPUT CARD */}
+        {show('forms') && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -237,8 +269,10 @@ export function CardContentShowcaseSection() {
             </button>
           </div>
         </form>
+        )}
 
         {/* 3. CHECKLIST & PROGRESS TRACKER CARD */}
+        {show('forms') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-2">
             <div>
@@ -299,8 +333,10 @@ export function CardContentShowcaseSection() {
             </form>
           </div>
         </div>
+        )}
 
         {/* 4. REVENUE & BREAKDOWN METRICS CARD */}
+        {show('finance') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-2">
             <h4 className="text-sm sm:text-base font-bold text-[#1351b8]">Ringkasan Pendapatan</h4>
@@ -358,8 +394,10 @@ export function CardContentShowcaseSection() {
             </div>
           </div>
         </div>
+        )}
 
         {/* 5. SUBSCRIPTION / BILLING SUMMARY CARD */}
+        {show('finance') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -413,8 +451,10 @@ export function CardContentShowcaseSection() {
             </button>
           </div>
         </div>
+        )}
 
         {/* 6. ARTICLE / PREFERENCES & TIMELINE MIX CARD */}
+        {show('content') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col justify-between">
           <div className="h-28 bg-gradient-to-tr from-[#175cd3] via-[#0ea5e9] to-[#22c55e] p-5 flex flex-col justify-between text-white">
             <div className="flex items-center justify-between">
@@ -494,8 +534,10 @@ export function CardContentShowcaseSection() {
             </button>
           </div>
         </div>
+        )}
 
         {/* 7. RECENT TIMELINE ACTIVITY CARD */}
+        {show('content') && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden lg:col-span-2 xl:col-span-3">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
             <div>
@@ -547,6 +589,10 @@ export function CardContentShowcaseSection() {
             ))}
           </div>
         </div>
+        )}
+
+        {/* 8 - 19 EXTRA CARD EXAMPLES */}
+        <CardContentShowcaseExtra filter={filter} />
       </div>
     </div>
   );
