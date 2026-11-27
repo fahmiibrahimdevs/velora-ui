@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChevronRight,
   ChevronDown,
   X,
   LogOut,
-  Search,
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
 import { navSections } from './navRegistry';
@@ -31,31 +30,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
-  const [sidebarFilter, setSidebarFilter] = useState('');
-
-  const trimmedFilter = sidebarFilter.trim().toLowerCase();
-
-  const displayedSections = useMemo(() => {
-    if (!trimmedFilter) return navSections;
-    return navSections
-      .map((sec) => {
-        const items = sec.items
-          .map((item) => {
-            const parentMatches = item.label.toLowerCase().includes(trimmedFilter);
-            if (!item.children || item.children.length === 0) {
-              return parentMatches ? item : null;
-            }
-            if (parentMatches) return item;
-            const matchingChildren = item.children.filter((c) =>
-              c.label.toLowerCase().includes(trimmedFilter),
-            );
-            return matchingChildren.length > 0 ? { ...item, children: matchingChildren } : null;
-          })
-          .filter((x): x is NonNullable<typeof x> => x !== null);
-        return items.length > 0 ? { ...sec, items } : null;
-      })
-      .filter((x): x is NonNullable<typeof x> => x !== null);
-  }, [trimmedFilter]);
 
   // Toggle dropdown: jika buka yang lain, yang sebelumnya otomatis tertutup
   const toggleDropdown = (id: string) => {
@@ -116,47 +90,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
-      {/* Quick Filter Menu (Expanded Sidebar only) */}
-      {!isCollapsed && (
-        <div className="px-4 pt-3 pb-1 shrink-0">
-          <div className="relative flex items-center">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
-            <input
-              type="text"
-              value={sidebarFilter}
-              onChange={(e) => setSidebarFilter(e.target.value)}
-              placeholder="Cari menu..."
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200/80 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-[#1351b8] transition-colors"
-              aria-label="Filter menu sidebar"
-            />
-            {sidebarFilter && (
-              <button
-                type="button"
-                onClick={() => setSidebarFilter('')}
-                className="absolute right-2 p-0.5 text-slate-400 hover:text-slate-700 cursor-pointer"
-                aria-label="Hapus filter"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Navigation Sections */}
       <div
         className={`flex-1 px-0 ${
           isCollapsed
             ? 'py-3 space-y-1.5 overflow-visible'
-            : 'py-2 space-y-4 overflow-y-auto sidebar-scrollbar'
+            : 'py-3.5 space-y-4 overflow-y-auto sidebar-scrollbar'
         }`}
       >
-        {!isCollapsed && displayedSections.length === 0 ? (
-          <div className="px-6 py-8 text-center text-xs text-slate-500">
-            Menu &quot;{sidebarFilter}&quot; tidak ditemukan.
-          </div>
-        ) : (
-          displayedSections.map((section) => (
+        {navSections.map((section) => (
           <div key={section.title} className={isCollapsed ? 'space-y-1.5' : 'space-y-1'}>
             {/* Section Header: Rata Kiri di pl-5 */}
             {!isCollapsed && (
@@ -169,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const hasChildren = Boolean(item.children && item.children.length > 0);
-                const isGroupOpen = Boolean(trimmedFilter) || openDropdownId === item.id;
+                const isGroupOpen = openDropdownId === item.id;
                 const isChildActive = hasChildren && item.children?.some((c) => c.id === activeId);
                 const isDirectActive = activeId === item.id;
 
@@ -382,8 +324,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               })}
             </div>
           </div>
-          ))
-        )}
+        ))}
       </div>
 
       {/* Footer / Quick Logout Button */}
