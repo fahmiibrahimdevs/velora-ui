@@ -15,9 +15,9 @@ import {
   Settings,
   Shapes,
   User,
+  X,
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
-import { Sidebar } from './Sidebar';
 
 interface TopNavLayoutProps {
   children: React.ReactNode;
@@ -41,6 +41,9 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
   const [hoverLevel2Open, setHoverLevel2Open] = useState(false);
   const [hoverLevel3Open, setHoverLevel3Open] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileGroup, setMobileGroup] = useState<string | null>('dashboard');
+  const [mobileHoverMeOpen, setMobileHoverMeOpen] = useState(false);
+  const [mobileLevel3Open, setMobileLevel3Open] = useState(false);
 
   const handleLogout = async () => {
     setUserDropdownOpen(false);
@@ -295,15 +298,337 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
         </div>
       </header>
 
-      {/* Mobile Sidebar Slide-Out Drawer (uses standard Velora Sidebar on < lg) */}
-      <Sidebar
-        activeId={activeMenu}
-        onSelect={navigateAndClose}
-        isOpenMobile={mobileMenuOpen}
-        onCloseMobile={() => setMobileMenuOpen(false)}
-        isCollapsed={false}
-        mobileOnly
-      />
+      {/* Mobile Slide-Out Sidebar Drawer with Top Navigation Menu Structure */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${
+          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+        />
+
+        <aside
+          className={`absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-white border-r border-slate-200/90 shadow-2xl flex flex-col transform transition-transform duration-300 ease-out ${
+            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          {/* Drawer Brand Header */}
+          <div className="h-[72px] flex items-center justify-center px-4 shrink-0 border-b border-slate-100 bg-white relative">
+            <span className="text-[18px] font-black tracking-[0.25em] uppercase font-sans text-[#1351b8]">
+              VELORA UI
+            </span>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute right-3 p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer"
+              aria-label="Tutup Sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Drawer Body — exact Top Navigation sections & nested dropdowns */}
+          <div className="flex-1 overflow-y-auto py-4 space-y-5 text-xs select-none">
+            {/* Section 1: TOPBAR ITEMS */}
+            <div className="space-y-1">
+              <h3 className="px-5 pb-1.5 text-[11px] font-bold tracking-[1.4px] uppercase text-slate-400">
+                TOPBAR
+              </h3>
+
+              {/* Application Accordion */}
+              <div className={mobileGroup === 'app' ? 'bg-[#f8fafb] border-y border-slate-100' : ''}>
+                <button
+                  type="button"
+                  onClick={() => setMobileGroup((g) => (g === 'app' ? null : 'app'))}
+                  className="w-full px-5 py-2.5 flex items-center justify-between text-slate-700 font-semibold hover:text-[#175cd3] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Shapes className="w-4 h-4 text-slate-500" />
+                    Application
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${
+                      mobileGroup === 'app' ? 'rotate-180 text-[#175cd3]' : ''
+                    }`}
+                  />
+                </button>
+                {mobileGroup === 'app' && (
+                  <div className="pl-11 pr-4 pb-2.5 space-y-1.5 text-slate-600">
+                    <button
+                      type="button"
+                      onClick={() => navigateAndClose('general-dashboard')}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      General Dashboard
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigateAndClose('kanban')}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      Kanban Board
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigateAndClose('modal')}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      Modal Showcase (36+)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => navigateAndClose('tickets')}
+                className="w-full px-5 py-2.5 flex items-center gap-2.5 text-slate-700 font-semibold hover:text-[#175cd3] cursor-pointer"
+              >
+                <Mail className="w-4 h-4 text-slate-500" />
+                Report Something
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  showToast('Semua service berjalan normal • Uptime 99.98%', 'success');
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full px-5 py-2.5 flex items-center gap-2.5 text-slate-700 font-semibold hover:text-[#175cd3] cursor-pointer"
+              >
+                <Server className="w-4 h-4 text-emerald-600" />
+                Server Status
+              </button>
+            </div>
+
+            {/* Section 2: TOP NAVIGATION */}
+            <div className="space-y-1">
+              <h3 className="px-5 pb-1.5 text-[11px] font-bold tracking-[1.4px] uppercase text-slate-400">
+                TOP NAVIGATION
+              </h3>
+
+              {/* Dashboard */}
+              <div className={mobileGroup === 'dashboard' ? 'bg-[#f8fafb] border-y border-slate-100' : ''}>
+                <button
+                  type="button"
+                  onClick={() => setMobileGroup((g) => (g === 'dashboard' ? null : 'dashboard'))}
+                  className={`w-full px-5 py-2.5 flex items-center justify-between font-semibold cursor-pointer ${
+                    isDashboardActive ? 'text-[#175cd3]' : 'text-slate-700 hover:text-[#175cd3]'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Flame className="w-4 h-4" />
+                    Dashboard
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${
+                      mobileGroup === 'dashboard' ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {mobileGroup === 'dashboard' && (
+                  <div className="pl-11 pr-4 pb-2.5 space-y-1.5 text-slate-600">
+                    <button
+                      type="button"
+                      onClick={() => navigateAndClose('general-dashboard')}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      General Dashboard
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigateAndClose('ecommerce-dashboard')}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      Ecommerce Dashboard
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Top Navigation Example link */}
+              <button
+                type="button"
+                onClick={() => navigateAndClose('layout-top-navigation')}
+                className={`w-full px-5 py-2.5 flex items-center gap-2.5 font-semibold cursor-pointer ${
+                  isLayoutActive
+                    ? 'text-[#175cd3] bg-blue-50/50 border-r-2 border-[#175cd3]'
+                    : 'text-slate-700 hover:text-[#175cd3]'
+                }`}
+              >
+                <Heart className="w-4 h-4" />
+                Top Navigation
+              </button>
+
+              {/* Multiple Dropdown (Nested 3 levels inside mobile drawer) */}
+              <div className={mobileGroup === 'multiple' ? 'bg-[#f8fafb] border-y border-slate-100' : ''}>
+                <button
+                  type="button"
+                  onClick={() => setMobileGroup((g) => (g === 'multiple' ? null : 'multiple'))}
+                  className="w-full px-5 py-2.5 flex items-center justify-between text-slate-700 font-semibold hover:text-[#175cd3] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Copy className="w-4 h-4 text-slate-500" />
+                    Multiple Dropdown
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${
+                      mobileGroup === 'multiple' ? 'rotate-180 text-[#175cd3]' : ''
+                    }`}
+                  />
+                </button>
+                {mobileGroup === 'multiple' && (
+                  <div className="pl-11 pr-4 pb-2.5 space-y-1.5 text-slate-600">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        showToast('Not Dropdown Link diklik!', 'info');
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                    >
+                      Not Dropdown Link
+                    </button>
+
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setMobileHoverMeOpen((prev) => !prev)}
+                        className="w-full text-left py-1 font-semibold text-slate-800 hover:text-[#175cd3] flex items-center justify-between cursor-pointer"
+                      >
+                        <span>Hover Me</span>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform ${
+                            mobileHoverMeOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+
+                      {mobileHoverMeOpen && (
+                        <div className="pl-3 mt-1 space-y-1 border-l border-slate-200">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              showToast('Submenu Level 2 - Link diklik!', 'info');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                          >
+                            Link
+                          </button>
+
+                          <div>
+                            <button
+                              type="button"
+                              onClick={() => setMobileLevel3Open((prev) => !prev)}
+                              className="w-full text-left py-1 font-semibold text-slate-800 hover:text-[#175cd3] flex items-center justify-between cursor-pointer"
+                            >
+                              <span>Link</span>
+                              <ChevronDown
+                                className={`w-3.5 h-3.5 transition-transform ${
+                                  mobileLevel3Open ? 'rotate-180' : ''
+                                }`}
+                              />
+                            </button>
+
+                            {mobileLevel3Open && (
+                              <div className="pl-3 mt-1 space-y-1 border-l border-slate-200">
+                                {['Link', 'Link 2', 'Link 3'].map((lbl) => (
+                                  <button
+                                    key={lbl}
+                                    type="button"
+                                    onClick={() => {
+                                      showToast(`Nested Level 3 (${lbl}) dipilih!`, 'success');
+                                      setMobileMenuOpen(false);
+                                    }}
+                                    className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                                  >
+                                    {lbl}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              showToast('Submenu Level 2 - Link 3 diklik!', 'info');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 hover:text-[#175cd3] cursor-pointer"
+                          >
+                            Link 3
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Explore UI Pages */}
+              <div className={mobileGroup === 'explore' ? 'bg-[#f8fafb] border-y border-slate-100' : ''}>
+                <button
+                  type="button"
+                  onClick={() => setMobileGroup((g) => (g === 'explore' ? null : 'explore'))}
+                  className="w-full px-5 py-2.5 flex items-center justify-between text-slate-700 font-semibold hover:text-[#175cd3] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Shapes className="w-4 h-4 text-slate-500" />
+                    Explore UI Pages
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${
+                      mobileGroup === 'explore' ? 'rotate-180 text-[#175cd3]' : ''
+                    }`}
+                  />
+                </button>
+                {mobileGroup === 'explore' && (
+                  <div className="pl-11 pr-4 pb-2.5 space-y-1.5 text-slate-600">
+                    {[
+                      { id: 'modal', label: 'Modal Showcase (36+)' },
+                      { id: 'empty-states', label: 'Empty & Skeleton Loaders' },
+                      { id: 'kanban', label: 'Kanban Board' },
+                      { id: 'file-manager', label: 'File Manager' },
+                      { id: 'chat-inbox', label: 'Chat Inbox' },
+                      { id: 'notifications', label: 'Notification Center' },
+                      { id: 'activities', label: 'Activities Timeline' },
+                    ].map((it) => (
+                      <button
+                        key={it.id}
+                        type="button"
+                        onClick={() => navigateAndClose(it.id)}
+                        className={`block w-full text-left py-1 cursor-pointer ${
+                          activeMenu === it.id
+                            ? 'text-[#175cd3] font-semibold'
+                            : 'hover:text-[#175cd3]'
+                        }`}
+                      >
+                        {it.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Drawer Footer */}
+          <div className="p-3 border-t border-slate-100 bg-white">
+            <button
+              type="button"
+              onClick={() => navigateAndClose('layout-default')}
+              className="w-full py-2.5 px-3 rounded-xl text-xs font-semibold bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] hover:from-[#e2e8f0] hover:to-[#cbd5e1] text-slate-800 border border-slate-200/80 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Columns3 className="w-4 h-4 text-[#175cd3]" />
+              <span>Kembali ke Default Sidebar</span>
+            </button>
+          </div>
+        </aside>
+      </div>
 
       {/* ======================================================== */}
       {/* BAR 2: SECONDARY WHITE HORIZONTAL NAVIGATION (MATCHES PRIMARY HEIGHT) */}

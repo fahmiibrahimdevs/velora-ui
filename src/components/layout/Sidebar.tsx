@@ -25,7 +25,6 @@ interface SidebarProps {
   isOpenMobile: boolean;
   onCloseMobile: () => void;
   isCollapsed: boolean;
-  mobileOnly?: boolean;
 }
 
 const navSections: NavSection[] = [
@@ -205,7 +204,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isOpenMobile,
   onCloseMobile,
   isCollapsed,
-  mobileOnly = false,
 }) => {
   // Hanya 1 dropdown yang bisa terbuka pada saat bersamaan (Accordion mode)
   const [openDropdownId, setOpenDropdownId] = useState<string | null>('dashboard-group');
@@ -548,15 +546,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {!mobileOnly && (
-        <aside
-          className={`hidden lg:block fixed inset-y-0 left-0 z-30 transition-all duration-300 ease-in-out ${
-            isCollapsed ? 'w-20' : 'w-64'
-          } shadow-xs`}
-        >
-          {sidebarContent}
-        </aside>
-      )}
+      <aside
+        className={`hidden lg:block fixed inset-y-0 left-0 z-30 transition-all duration-300 ease-in-out ${
+          isCollapsed ? 'w-20' : 'w-64'
+        } shadow-xs`}
+      >
+        {sidebarContent}
+      </aside>
 
       <div
         className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${
