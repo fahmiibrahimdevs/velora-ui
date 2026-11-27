@@ -77,10 +77,10 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
   return (
     <div className="min-h-screen bg-[#f4f6f9] text-slate-800 flex flex-col font-sans">
       {/* ======================================================== */}
-      {/* BAR 1: PRIMARY ROYAL BLUE TOPBAR */}
+      {/* BAR 1: PRIMARY ROYAL BLUE TOPBAR (FULL-WIDTH SPACE-BETWEEN) */}
       {/* ======================================================== */}
       <header className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs sticky top-0 z-40">
-        <div className={`${containerCls} h-[70px] flex items-center justify-between gap-4`}>
+        <div className="w-full px-6 sm:px-8 h-[72px] flex items-center justify-between gap-4">
           {/* Left: Brand & Top Utility Links */}
           <div className="flex items-center gap-6">
             <button
@@ -296,14 +296,14 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
       </header>
 
       {/* ======================================================== */}
-      {/* BAR 2: SECONDARY WHITE HORIZONTAL NAVIGATION */}
+      {/* BAR 2: SECONDARY WHITE HORIZONTAL NAVIGATION (MATCHES PRIMARY HEIGHT) */}
       {/* ======================================================== */}
       <div className="bg-white border-b border-slate-200/80 shadow-2xs relative z-30">
-        <div className={`${containerCls} hidden lg:flex items-center justify-between gap-6`}>
-          <nav className="flex items-center gap-7">
+        <div className={`${containerCls} hidden lg:flex items-center justify-between gap-6 h-[72px]`}>
+          <nav className="flex items-center gap-7 h-full">
             {/* 1. Dashboard Dropdown */}
             <div
-              className="relative"
+              className="relative h-full flex items-center"
               onMouseEnter={() => setOpenNavMenu('dashboard')}
               onMouseLeave={() => setOpenNavMenu(null)}
             >
@@ -312,7 +312,7 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
                 onClick={() =>
                   setOpenNavMenu((prev) => (prev === 'dashboard' ? null : 'dashboard'))
                 }
-                className={`py-4 text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
+                className={`h-full text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
                   isDashboardActive
                     ? 'border-[#175cd3] text-[#175cd3]'
                     : 'border-transparent text-slate-600 hover:text-[#175cd3]'
@@ -345,14 +345,14 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
 
             {/* 2. Top Navigation / Layout Switcher */}
             <div
-              className="relative"
+              className="relative h-full flex items-center"
               onMouseEnter={() => setOpenNavMenu('layout')}
               onMouseLeave={() => setOpenNavMenu(null)}
             >
               <button
                 type="button"
                 onClick={() => navigateAndClose('layout-top-navigation')}
-                className={`py-4 text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
+                className={`h-full text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
                   isLayoutActive
                     ? 'border-[#175cd3] text-[#175cd3]'
                     : 'border-transparent text-slate-600 hover:text-[#175cd3]'
@@ -384,7 +384,7 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
 
             {/* 3. Multiple Dropdown (3-level nested hover menu matching reference!) */}
             <div
-              className="relative"
+              className="relative h-full flex items-center"
               onMouseEnter={() => setOpenNavMenu('multiple')}
               onMouseLeave={() => {
                 setOpenNavMenu(null);
@@ -397,7 +397,7 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
                 onClick={() =>
                   setOpenNavMenu((prev) => (prev === 'multiple' ? null : 'multiple'))
                 }
-                className="py-4 text-xs font-semibold inline-flex items-center gap-2 border-b-2 border-transparent text-slate-600 hover:text-[#175cd3] transition-colors cursor-pointer"
+                className="h-full text-xs font-semibold inline-flex items-center gap-2 border-b-2 border-transparent text-slate-600 hover:text-[#175cd3] transition-colors cursor-pointer"
               >
                 <Copy className="w-4 h-4" />
                 <span>Multiple Dropdown</span>
@@ -501,7 +501,7 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
 
             {/* 4. Quick Components & Pages */}
             <div
-              className="relative"
+              className="relative h-full flex items-center"
               onMouseEnter={() => setOpenNavMenu('components')}
               onMouseLeave={() => setOpenNavMenu(null)}
             >
@@ -510,7 +510,7 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
                 onClick={() =>
                   setOpenNavMenu((prev) => (prev === 'components' ? null : 'components'))
                 }
-                className={`py-4 text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
+                className={`h-full text-xs font-semibold inline-flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
                   ['modal', 'empty-states', 'kanban', 'file-manager', 'chat-inbox'].includes(
                     activeMenu,
                   )
