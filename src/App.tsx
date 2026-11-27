@@ -14663,9 +14663,16 @@ const getInitialMenu = (): string => {
   return 'general-dashboard';
 };
 
+const SIDEBAR_RESET_ROUTES = new Set([
+  'layout-default',
+  'general-dashboard',
+  'ecommerce-dashboard',
+  'dashboard',
+]);
+
 const getInitialLayoutMode = (menu: string): 'default' | 'top-navigation' => {
   if (menu === 'layout-top-navigation') return 'top-navigation';
-  if (menu === 'layout-default') return 'default';
+  if (SIDEBAR_RESET_ROUTES.has(menu)) return 'default';
   if (typeof window !== 'undefined') {
     try {
       const saved = localStorage.getItem('velora_layout_mode');
@@ -14692,7 +14699,7 @@ export function App() {
       try {
         localStorage.setItem('velora_layout_mode', 'top-navigation');
       } catch {}
-    } else if (normalizedId === 'layout-default') {
+    } else if (SIDEBAR_RESET_ROUTES.has(normalizedId)) {
       setLayoutMode('default');
       try {
         localStorage.setItem('velora_layout_mode', 'default');
@@ -14712,8 +14719,17 @@ export function App() {
       const hash = rawHash === 'layout-transparent' ? 'layout-default' : rawHash;
       if (hash && hash !== activeMenu) {
         setActiveMenu(hash);
-        if (hash === 'layout-top-navigation') setLayoutMode('top-navigation');
-        if (hash === 'layout-default') setLayoutMode('default');
+        if (hash === 'layout-top-navigation') {
+          setLayoutMode('top-navigation');
+          try {
+            localStorage.setItem('velora_layout_mode', 'top-navigation');
+          } catch {}
+        } else if (SIDEBAR_RESET_ROUTES.has(hash)) {
+          setLayoutMode('default');
+          try {
+            localStorage.setItem('velora_layout_mode', 'default');
+          } catch {}
+        }
         try {
           localStorage.setItem('velora_active_menu', hash);
         } catch {}
