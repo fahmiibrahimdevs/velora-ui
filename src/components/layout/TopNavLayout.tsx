@@ -886,16 +886,6 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
               )}
             </div>
           </nav>
-
-          {/* Quick switch right button */}
-          <button
-            type="button"
-            onClick={() => navigateAndClose('layout-default')}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-[#f8fafc] to-[#e2e8f0] hover:from-[#e2e8f0] hover:to-[#cbd5e1] text-slate-800 border border-slate-200/80 inline-flex items-center gap-1.5 cursor-pointer"
-          >
-            <Columns3 className="w-3.5 h-3.5 text-[#175cd3]" />
-            <span>Default Sidebar</span>
-          </button>
         </div>
       </div>
 

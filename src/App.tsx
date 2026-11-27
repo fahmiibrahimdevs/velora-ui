@@ -15124,9 +15124,8 @@ export function App() {
       case 'blank-page':
         return <KelasView />;
       case 'layout-default':
-        return <LayoutExampleView variant="default" onSwitchLayout={handleSelectMenu} />;
       case 'layout-top-navigation':
-        return <LayoutExampleView variant="top-navigation" onSwitchLayout={handleSelectMenu} />;
+        return <LayoutExampleView />;
       case 'activities':
         return <ActivitiesView />;
       case 'chat-inbox':
