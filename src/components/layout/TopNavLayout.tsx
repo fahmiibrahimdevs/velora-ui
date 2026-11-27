@@ -900,33 +900,40 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
       </div>
 
       {/* ======================================================== */}
+      {/* SUB-HEADER BAR: FLUSH ON MOBILE (MATCHING DEFAULT), CARD ON DESKTOP */}
+      {/* ======================================================== */}
+      <div className="bg-white border-b border-slate-200/80 shadow-xs lg:bg-transparent lg:border-b-0 lg:shadow-none">
+        <div className="w-full px-6 sm:px-8 py-3.5 sm:py-4 lg:max-w-[1520px] lg:mx-auto lg:px-10 lg:pt-6 lg:pb-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 lg:bg-white lg:rounded-xl lg:border lg:border-slate-200/80 lg:px-6 lg:py-4 lg:shadow-2xs">
+            <h1 className="text-xl sm:text-2xl lg:text-xl font-bold text-slate-800 tracking-tight">
+              {pageTitle}
+            </h1>
+
+            <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+              {breadcrumbs.map((crumb, idx) => {
+                const isLast = idx === breadcrumbs.length - 1;
+                return (
+                  <React.Fragment key={idx}>
+                    {idx > 0 && <span className="text-slate-400">/</span>}
+                    {isLast ? (
+                      <span className="text-slate-600 font-semibold">{crumb}</span>
+                    ) : (
+                      <span className="text-[#1351b8] hover:underline cursor-pointer">
+                        {crumb}
+                      </span>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
       {/* WIDE CONTENT CONTAINER (SPACIOUS WIDTH) */}
       {/* ======================================================== */}
       <div className={`${containerCls} flex-1 flex flex-col py-6 space-y-6`}>
-        {/* Sub-Header White Card Bar matching Top Navigation layout */}
-        <div className="bg-white rounded-xl border border-slate-200/80 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
-          <h1 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
-            {pageTitle}
-          </h1>
-
-          <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-            {breadcrumbs.map((crumb, idx) => {
-              const isLast = idx === breadcrumbs.length - 1;
-              return (
-                <React.Fragment key={idx}>
-                  {idx > 0 && <span className="text-slate-400">/</span>}
-                  {isLast ? (
-                    <span className="text-slate-600 font-semibold">{crumb}</span>
-                  ) : (
-                    <span className="text-[#1351b8] hover:underline cursor-pointer">
-                      {crumb}
-                    </span>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </nav>
-        </div>
 
         {/* Main Page Body */}
         <main className="flex-1 w-full space-y-6">{children}</main>
