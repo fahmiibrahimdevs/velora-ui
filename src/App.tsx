@@ -52,6 +52,8 @@ import { ChatInboxView } from './components/features/ChatInboxView';
 import { FileManagerView } from './components/features/FileManagerView';
 import { NotificationsCenterView } from './components/features/NotificationsCenterView';
 import { ModalView } from './components/bootstrap/ModalView';
+import { CardContentShowcaseSection } from './components/bootstrap/CardContentShowcaseSection';
+import { FeatureSectionHeader } from './components/features/FeatureSectionHeader';
 import { showToast, showSuccess } from './lib/swal';
 import {
   FileSpreadsheet,
@@ -1364,16 +1366,10 @@ function CardsView() {
       {/* SECTION 1: CARDS */}
       {/* ======================================================== */}
       <div className="space-y-4">
-        {/* Section Header with Blue Pill Accent */}
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-800">Cards</h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Bootstrap’s cards provide a flexible and extensible content container with multiple variants and options.
-          </p>
-        </div>
+        <FeatureSectionHeader
+          title="Cards"
+          description="Bootstrap's cards provide a flexible and extensible content container with multiple variants and options."
+        />
 
         {/* 2-Column Responsive Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
@@ -2037,6 +2033,11 @@ function CardsView() {
           ))}
         </div>
       </div>
+
+      {/* ======================================================== */}
+      {/* SECTION 6: CARD CONTENT VARIATIONS */}
+      {/* ======================================================== */}
+      <CardContentShowcaseSection />
 
       {/* ======================================================== */}
       {/* Lightbox Modal for "My Picture" */}
