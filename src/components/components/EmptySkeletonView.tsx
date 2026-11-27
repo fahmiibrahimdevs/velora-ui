@@ -14,6 +14,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from '../features/FeatureSectionHeader';
 
 const GRAD = {
   primary:
@@ -38,22 +39,14 @@ export function EmptySkeletonView() {
   const [isLoadingSim, setIsLoadingSim] = useState(true);
 
   return (
-    <div className="space-y-8">
-      {/* Header & Controls */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
-              Empty States &amp; Skeleton Loaders
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Koleksi pola UI saat data belum tersedia, pencarian nihil, akses ditolak, serta shimmer loading state siap pakai.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <FeatureSectionHeader
+          title="Empty States & Skeleton Loaders"
+          description="Koleksi pola UI saat data belum tersedia, pencarian nihil, akses ditolak, serta shimmer loading state siap pakai."
+        />
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto">
           {[
             { id: 'all' as const, label: 'Semua Pola' },
             { id: 'empty' as const, label: 'Empty States (6)' },

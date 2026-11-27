@@ -9,6 +9,7 @@ import {
   Tag,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary:
@@ -207,20 +208,12 @@ export function ChatInboxView() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
-              Live Chat &amp; Helpdesk Inbox
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Workspace layanan pelanggan 3-kolom dengan daftar obrolan, balasan cepat, status penyelesaian, dan profil CRM.
-          </p>
-        </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${GRAD.success}`}>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <FeatureSectionHeader
+          title="Live Chat & Helpdesk Inbox"
+          description="Workspace layanan pelanggan 3-kolom dengan daftar obrolan, balasan cepat, status penyelesaian, dan profil CRM."
+        />
+        <span className={`px-3 py-1 rounded-full text-xs font-semibold shrink-0 self-start lg:self-auto ${GRAD.success}`}>
           Agen Online • SLA &lt; 2 menit
         </span>
       </div>

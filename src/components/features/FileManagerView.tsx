@@ -20,6 +20,7 @@ import {
   UploadCloud,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary:
@@ -232,21 +233,13 @@ export function FileManagerView() {
 
   return (
     <div className="space-y-6">
-      {/* Page Title */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
-              File Manager &amp; Cloud Explorer
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Manajemen dokumen workspace lengkap dengan folder direktori, pencarian instan, rename file, dan panel inspektor.
-          </p>
-        </div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <FeatureSectionHeader
+          title="File Manager & Cloud Explorer"
+          description="Manajemen dokumen workspace lengkap dengan folder direktori, pencarian instan, rename file, dan panel inspektor."
+        />
 
-        <label className={`px-4 py-2.5 rounded-xl text-xs font-semibold shadow-xs inline-flex items-center gap-2 cursor-pointer shrink-0 ${GRAD.primary}`}>
+        <label className={`px-4 py-2.5 rounded-xl text-xs font-semibold shadow-xs inline-flex items-center gap-2 cursor-pointer shrink-0 self-start lg:self-auto ${GRAD.primary}`}>
           <UploadCloud className="w-4 h-4" />
           Unggah Berkas Baru
           <input type="file" multiple onChange={handleUploadPick} className="hidden" />

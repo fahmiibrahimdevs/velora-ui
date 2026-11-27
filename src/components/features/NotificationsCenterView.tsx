@@ -10,6 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from './FeatureSectionHeader';
 
 const GRAD = {
   primary:
@@ -126,26 +127,18 @@ export function NotificationsCenterView() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
-              Notification Center &amp; Alert Preferences
-            </h2>
-            {unreadCount > 0 && (
-              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${GRAD.danger}`}>
-                {unreadCount} Baru
-              </span>
-            )}
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Pusat notifikasi sistem beserta pengaturan kanal peringatan Email, Push Browser, dan WhatsApp.
-          </p>
-        </div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <FeatureSectionHeader
+          title="Notification Center"
+          description="Pusat notifikasi sistem beserta pengaturan kanal peringatan Email, Push Browser, dan WhatsApp."
+        />
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto">
+          {unreadCount > 0 && (
+            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${GRAD.warning}`}>
+              {unreadCount} Belum Dibaca
+            </span>
+          )}
           <button
             type="button"
             onClick={markAllRead}

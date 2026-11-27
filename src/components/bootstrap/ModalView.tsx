@@ -62,6 +62,7 @@ import {
   ZoomOut,
 } from 'lucide-react';
 import { showToast } from '../../lib/swal';
+import { FeatureSectionHeader } from '../features/FeatureSectionHeader';
 import { formatThousandDot, GRAD, type ModalId, ModalShell } from './modalShared';
 import { ExtendedModals } from './ExtendedModals';
 import { AttachmentSignatureModals } from './AttachmentSignatureModals';
@@ -811,23 +812,17 @@ export function ModalView() {
     notifTab === 'unread' ? notifications.filter((n) => n.unread) : notifications;
 
   return (
-    <div className="space-y-8">
-      {/* Page Title */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="w-8 h-2.5 bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] rounded-full inline-block" />
-          <h2 className="text-base sm:text-lg font-bold text-slate-900">Modal Showcase & Application UI</h2>
-        </div>
-        <p className="text-xs sm:text-sm text-slate-600">
-          Kumpulan modal modern siap pakai untuk kebutuhan aplikasi (Payment Receipt, Checkout, 2FA OTP, Command Palette, Drawer) serta contoh standar Bootstrap Modal.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <FeatureSectionHeader
+        title="Modal Showcase & Application UI"
+        description="Kumpulan 36+ modal modern siap pakai untuk kebutuhan aplikasi (Bukti Transfer & PDF, Payment Receipt, Checkout, 2FA OTP, Wizard) serta contoh standar Bootstrap Modal."
+      />
 
       {/* ======================================================== */}
       {/* SECTION 1: APPLICATION UI MODAL GALLERY */}
       {/* ======================================================== */}
       <div className="space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>
             <h3 className="text-sm sm:text-base font-bold text-slate-900">
               Application UI Modals
