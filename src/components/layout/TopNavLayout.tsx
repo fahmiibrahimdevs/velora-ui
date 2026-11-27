@@ -15,9 +15,9 @@ import {
   Settings,
   Shapes,
   User,
-  X,
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
+import { Sidebar } from './Sidebar';
 
 interface TopNavLayoutProps {
   children: React.ReactNode;
@@ -81,8 +81,17 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
       {/* ======================================================== */}
       <header className="bg-gradient-to-r from-[#175cd3] to-[#0f3ba0] text-white shadow-xs sticky top-0 z-40">
         <div className="w-full px-6 sm:px-8 h-[72px] flex items-center justify-between gap-4">
-          {/* Left: Brand & Top Utility Links */}
-          <div className="flex items-center gap-6">
+          {/* Left: Mobile Sidebar Toggle, Brand & Top Utility Links */}
+          <div className="flex items-center gap-3 sm:gap-6">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden p-2 -ml-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Buka Sidebar Menu"
+            >
+              <Menu className="w-5 h-5" strokeWidth={2.5} />
+            </button>
+
             <button
               type="button"
               onClick={() => navigateAndClose('general-dashboard')}
@@ -282,18 +291,19 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
                 </>
               )}
             </div>
-
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 cursor-pointer"
-              aria-label="Toggle Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Sidebar Slide-Out Drawer (uses standard Velora Sidebar on < lg) */}
+      <Sidebar
+        activeId={activeMenu}
+        onSelect={navigateAndClose}
+        isOpenMobile={mobileMenuOpen}
+        onCloseMobile={() => setMobileMenuOpen(false)}
+        isCollapsed={false}
+        mobileOnly
+      />
 
       {/* ======================================================== */}
       {/* BAR 2: SECONDARY WHITE HORIZONTAL NAVIGATION (MATCHES PRIMARY HEIGHT) */}
@@ -562,30 +572,6 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
             <span>Default Sidebar</span>
           </button>
         </div>
-
-        {/* Mobile Drawer Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-100 px-4 py-3 space-y-2 bg-white text-xs">
-            {[
-              { id: 'general-dashboard', label: 'General Dashboard' },
-              { id: 'layout-top-navigation', label: 'Top Navigation Example' },
-              { id: 'modal', label: 'Modal Showcase' },
-              { id: 'kanban', label: 'Kanban Board' },
-              { id: 'file-manager', label: 'File Manager' },
-              { id: 'chat-inbox', label: 'Chat Inbox' },
-              { id: 'layout-default', label: 'Kembali ke Default Sidebar' },
-            ].map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => navigateAndClose(item.id)}
-                className="block w-full text-left px-3 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#175cd3] cursor-pointer"
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* ======================================================== */}
