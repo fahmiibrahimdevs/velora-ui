@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Bell,
   ChevronDown,
   ChevronRight,
   Columns3,
@@ -18,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
+import { TopbarPopovers } from './TopbarPopovers';
 
 interface TopNavLayoutProps {
   children: React.ReactNode;
@@ -201,25 +201,13 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
               </button>
             </form>
 
-            <button
-              type="button"
-              onClick={() => navigateAndClose('chat-inbox')}
-              className="relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-              title="Pesan Masuk"
-            >
-              <Mail className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-[#1351b8]" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigateAndClose('notifications')}
-              className="relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-              title="Notifikasi"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-[#1351b8]" />
-            </button>
+            <TopbarPopovers
+              onNavigate={navigateAndClose}
+              onBeforeOpen={() => {
+                setUserDropdownOpen(false);
+                setAppMenuOpen(false);
+              }}
+            />
 
             {/* Profile Dropdown */}
             <div className="relative">

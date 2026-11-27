@@ -60,6 +60,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             onToggleMobile={() => setIsOpenMobile(true)}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+            onNavigate={onSelectMenu}
           />
 
           {/* Sub-Header Bar: Putih menyatu langsung di bawah Navbar Biru */}

@@ -2,24 +2,25 @@ import React, { useState } from 'react';
 import {
   Menu,
   Search,
-  Mail,
-  Bell,
   ChevronDown,
   User,
   Settings,
   LogOut,
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
+import { TopbarPopovers } from './TopbarPopovers';
 
 interface TopbarProps {
   onToggleMobile: () => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
+  onNavigate?: (id: string) => void;
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
   onToggleMobile,
   onToggleCollapse,
+  onNavigate,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -37,14 +38,6 @@ export const Topbar: React.FC<TopbarProps> = ({
     if (confirmed) {
       showToast('Anda telah berhasil keluar dari sistem.', 'info');
     }
-  };
-
-  const handleNotifications = () => {
-    showToast('2 notifikasi ujian baru tersedia.', 'info');
-  };
-
-  const handleMessages = () => {
-    showToast('Tidak ada pesan baru.', 'info');
   };
 
   return (
@@ -85,25 +78,10 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {/* Right: Mail, Bell, & User Profile Dropdown */}
       <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
-        {/* Mail Icon */}
-        <button
-          onClick={handleMessages}
-          className="relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-          title="Pesan Masuk"
-        >
-          <Mail className="w-5 h-5" strokeWidth={2} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-[#1351b8]" />
-        </button>
-
-        {/* Bell Icon */}
-        <button
-          onClick={handleNotifications}
-          className="relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-          title="Notifikasi"
-        >
-          <Bell className="w-5 h-5" strokeWidth={2} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-[#1351b8]" />
-        </button>
+        <TopbarPopovers
+          onNavigate={onNavigate}
+          onBeforeOpen={() => setIsDropdownOpen(false)}
+        />
 
         {/* User Profile Pill Dropdown */}
         <div className="relative">
@@ -138,9 +116,10 @@ export const Topbar: React.FC<TopbarProps> = ({
                 <button
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    showToast('Buka profil pengguna', 'info');
+                    if (onNavigate) onNavigate('profile');
+                    else showToast('Buka profil pengguna', 'info');
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium"
+                  className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
                 >
                   <User className="w-4 h-4 text-slate-400" />
                   Profil Akun
@@ -149,9 +128,10 @@ export const Topbar: React.FC<TopbarProps> = ({
                 <button
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    showToast('Buka pengaturan', 'info');
+                    if (onNavigate) onNavigate('settings');
+                    else showToast('Buka pengaturan', 'info');
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium"
+                  className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
                 >
                   <Settings className="w-4 h-4 text-slate-400" />
                   Pengaturan
