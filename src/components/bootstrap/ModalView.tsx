@@ -9,6 +9,7 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  CheckSquare,
   ClipboardCheck,
   Clock,
   Command,
@@ -20,10 +21,12 @@ import {
   Download,
   Eye,
   EyeOff,
+  FileCheck,
   FileSpreadsheet,
   FileText,
   History,
   Image as ImageIcon,
+  Keyboard,
   KeyRound,
   Layers,
   Link2,
@@ -34,6 +37,7 @@ import {
   Package,
   PanelRight,
   Paperclip,
+  PenTool,
   Phone,
   Plus,
   QrCode,
@@ -52,6 +56,7 @@ import {
   UserCheck,
   Users,
   Wallet,
+  Wrench,
   X,
   ZoomIn,
   ZoomOut,
@@ -59,6 +64,7 @@ import {
 import { showToast } from '../../lib/swal';
 import { formatThousandDot, GRAD, type ModalId, ModalShell } from './modalShared';
 import { ExtendedModals } from './ExtendedModals';
+import { AttachmentSignatureModals } from './AttachmentSignatureModals';
 
 type AppCategory = 'all' | 'forms' | 'payment' | 'security' | 'workspace' | 'utility';
 
@@ -75,7 +81,7 @@ interface AppModalCardItem {
 }
 
 const CATEGORY_TABS: { id: AppCategory; label: string }[] = [
-  { id: 'all', label: 'Semua UI (30)' },
+  { id: 'all', label: 'Semua UI (36)' },
   { id: 'forms', label: 'Forms & Multi-Input' },
   { id: 'payment', label: 'Payment & Commerce' },
   { id: 'workspace', label: 'Profile & Team' },
@@ -413,6 +419,72 @@ const APP_MODAL_CARDS: AppModalCardItem[] = [
     iconGrad: GRAD.dark,
     icon: History,
     ctaLabel: 'Lihat Audit Log',
+  },
+  {
+    id: 'transfer-proof-viewer',
+    category: 'payment',
+    title: 'Bukti Transfer & PDF Viewer',
+    desc: 'Penampil bukti transfer gambar & dokumen PDF lengkap dengan zoom, rotate 90°, navigasi halaman, uji file lokal, dan verifikasi Finance.',
+    badge: 'Document & Proof',
+    badgeGrad: GRAD.primaryStatic,
+    iconGrad: GRAD.primaryStatic,
+    icon: FileCheck,
+    ctaLabel: 'Lihat Bukti & PDF',
+  },
+  {
+    id: 'signature-pad',
+    category: 'forms',
+    title: 'Tanda Tangan Digital (E-Sign)',
+    desc: 'Canvas tanda tangan interaktif pakai mouse/touch lengkap dengan pilih warna tinta, bersihkan, dan mode ketik nama.',
+    badge: 'E-Signature',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: PenTool,
+    ctaLabel: 'Buka Tanda Tangan',
+  },
+  {
+    id: 'bulk-action',
+    category: 'workspace',
+    title: 'Bulk Action (Aksi Massal Data)',
+    desc: 'Kelola banyak item terpilih sekaligus: ubah status serentak, pindah divisi, atau arsip/hapus massal.',
+    badge: 'Batch Edit',
+    badgeGrad: GRAD.info,
+    iconGrad: GRAD.info,
+    icon: CheckSquare,
+    ctaLabel: 'Coba Bulk Action',
+  },
+  {
+    id: 'qr-authenticator',
+    category: 'security',
+    title: 'QR Authenticator & Presensi',
+    desc: 'Modal pairing Google Authenticator 2FA dan tiket QR Check-in event lengkap dengan salin kode manual & unduh QR.',
+    badge: 'QR & 2FA',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: QrCode,
+    ctaLabel: 'Buka QR Code',
+  },
+  {
+    id: 'system-maintenance',
+    category: 'utility',
+    title: 'Maintenance & Release Alert',
+    desc: 'Modal pengumuman jadwal pemeliharaan server atau catatan rilis fitur baru beserta pengingat email.',
+    badge: 'System Notice',
+    badgeGrad: GRAD.warning,
+    iconGrad: GRAD.warning,
+    icon: Wrench,
+    ctaLabel: 'Lihat Pengumuman',
+  },
+  {
+    id: 'keyboard-shortcuts',
+    category: 'utility',
+    title: 'Keyboard Shortcuts Cheatsheet',
+    desc: 'Panduan pintasan keyboard terstruktur dengan filter pencarian cepat untuk navigasi aplikasi dan Kanban.',
+    badge: 'Power User (?)',
+    badgeGrad: GRAD.dark,
+    iconGrad: GRAD.dark,
+    icon: Keyboard,
+    ctaLabel: 'Lihat Shortcut',
   },
 ];
 
@@ -3417,9 +3489,10 @@ export function ModalView() {
       )}
 
       {/* ======================================================== */}
-      {/* EXTENDED ENTERPRISE & APP MODALS (9 UI) */}
+      {/* EXTENDED ENTERPRISE & APP MODALS */}
       {/* ======================================================== */}
       <ExtendedModals activeModal={activeModal} onClose={closeModal} />
+      <AttachmentSignatureModals activeModal={activeModal} onClose={closeModal} />
 
       {/* ======================================================== */}
       {/* CLASSIC BOOTSTRAP & STISLA MODALS */}
