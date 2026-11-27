@@ -100,6 +100,7 @@ const navSections: NavSection[] = [
           { id: 'article', label: 'Article' },
           { id: 'avatar', label: 'Avatar' },
           { id: 'chat-box', label: 'Chat Box' },
+          { id: 'empty-states', label: 'Empty & Skeleton' },
           { id: 'gallery', label: 'Gallery' },
           { id: 'multiple-upload', label: 'Multiple Upload' },
           { id: 'statistic', label: 'Statistic' },
@@ -172,7 +173,10 @@ const navSections: NavSection[] = [
         icon: Bike,
         children: [
           { id: 'activities', label: 'Activities' },
+          { id: 'chat-inbox', label: 'Chat Inbox' },
+          { id: 'file-manager', label: 'File Manager' },
           { id: 'kanban', label: 'Kanban' },
+          { id: 'notifications', label: 'Notification Center' },
           { id: 'post-create', label: 'Post Create' },
           { id: 'posts', label: 'Posts' },
           { id: 'profile', label: 'Profile' },

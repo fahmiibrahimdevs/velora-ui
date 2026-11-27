@@ -45,7 +45,11 @@ import { ContactView } from './components/utilities/ContactView';
 import { InvoiceView } from './components/utilities/InvoiceView';
 import { SubscribeView } from './components/utilities/SubscribeView';
 import { ComponentsTableCrudView } from './components/components/ComponentsTableCrudView';
+import { EmptySkeletonView } from './components/components/EmptySkeletonView';
 import { KanbanView } from './components/features/KanbanView';
+import { ChatInboxView } from './components/features/ChatInboxView';
+import { FileManagerView } from './components/features/FileManagerView';
+import { NotificationsCenterView } from './components/features/NotificationsCenterView';
 import { ModalView } from './components/bootstrap/ModalView';
 import { showToast, showSuccess } from './lib/swal';
 import {
@@ -14895,9 +14899,25 @@ export function App() {
       title: 'Activities',
       breadcrumbs: ['Dashboard', 'Features', 'Activities'],
     },
+    'chat-inbox': {
+      title: 'Chat Inbox',
+      breadcrumbs: ['Dashboard', 'Features', 'Chat Inbox'],
+    },
+    'empty-states': {
+      title: 'Empty States & Skeleton',
+      breadcrumbs: ['Dashboard', 'Components', 'Empty & Skeleton'],
+    },
+    'file-manager': {
+      title: 'File Manager',
+      breadcrumbs: ['Dashboard', 'Features', 'File Manager'],
+    },
     kanban: {
       title: 'Kanban',
       breadcrumbs: ['Dashboard', 'Features', 'Kanban'],
+    },
+    notifications: {
+      title: 'Notification Center',
+      breadcrumbs: ['Dashboard', 'Features', 'Notification Center'],
     },
     'post-create': {
       title: 'Post Create',
@@ -15050,8 +15070,16 @@ export function App() {
         return <KelasView />;
       case 'activities':
         return <ActivitiesView />;
+      case 'chat-inbox':
+        return <ChatInboxView />;
+      case 'empty-states':
+        return <EmptySkeletonView />;
+      case 'file-manager':
+        return <FileManagerView />;
       case 'kanban':
         return <KanbanView />;
+      case 'notifications':
+        return <NotificationsCenterView />;
       case 'post-create':
         return <PostCreateView onNavigate={handleSelectMenu} />;
       case 'posts':
