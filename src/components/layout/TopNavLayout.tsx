@@ -9,7 +9,6 @@ import {
   LogOut,
   Mail,
   Menu,
-  Search,
   Server,
   Settings,
   Shapes,
@@ -18,6 +17,9 @@ import {
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
 import { TopbarPopovers } from './TopbarPopovers';
+import { GlobalSearchBar } from './GlobalSearchBar';
+import { BackToTopButton } from './BackToTopButton';
+import { resolveBreadcrumbRoute } from './navRegistry';
 
 interface TopNavLayoutProps {
   children: React.ReactNode;
@@ -40,7 +42,6 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
   const [openNavMenu, setOpenNavMenu] = useState<string | null>(null);
   const [hoverLevel2Open, setHoverLevel2Open] = useState(false);
   const [hoverLevel3Open, setHoverLevel3Open] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [mobileGroup, setMobileGroup] = useState<string | null>('dashboard');
   const [mobileHoverMeOpen, setMobileHoverMeOpen] = useState(false);
   const [mobileLevel3Open, setMobileLevel3Open] = useState(false);
@@ -174,32 +175,12 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
             </nav>
           </div>
 
-          {/* Right: Search Input, Mail, Bell, Profile */}
+          {/* Right: Live Search Input, Mail, Bell, Profile */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (searchQuery.trim()) {
-                  showToast(`Mencari "${searchQuery}"...`, 'info');
-                }
-              }}
-              className="hidden md:block relative w-56 xl:w-72"
-            >
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search"
-                className="w-full bg-white text-slate-800 placeholder-slate-400 text-xs sm:text-sm pl-4 pr-10 py-2 rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-              <button
-                type="submit"
-                className="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-slate-800 flex items-center justify-center cursor-pointer"
-                title="Cari"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-            </form>
+            <GlobalSearchBar
+              onNavigate={navigateAndClose}
+              className="hidden md:block w-56 xl:w-72"
+            />
 
             <TopbarPopovers
               onNavigate={navigateAndClose}
@@ -896,9 +877,13 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
                     {isLast ? (
                       <span className="text-slate-600 font-semibold">{crumb}</span>
                     ) : (
-                      <span className="text-[#1351b8] hover:underline cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={() => navigateAndClose(resolveBreadcrumbRoute(crumb))}
+                        className="text-[#1351b8] hover:underline cursor-pointer font-medium"
+                      >
                         {crumb}
-                      </span>
+                      </button>
                     )}
                   </React.Fragment>
                 );
@@ -916,6 +901,8 @@ export const TopNavLayout: React.FC<TopNavLayoutProps> = ({
         {/* Main Page Body */}
         <main className="flex-1 w-full space-y-6">{children}</main>
       </div>
+
+      <BackToTopButton />
 
       {/* ======================================================== */}
       {/* CLEAN FOOTER ALIGNED WITH WIDE CONTAINER */}

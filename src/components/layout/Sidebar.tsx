@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Flame,
-  Columns3,
-  Square,
-  Boxes,
-  Shapes,
-  FileText,
-  Plug,
-  User,
-  AlertCircle,
-  Bike,
-  MoreHorizontal,
   ChevronRight,
   ChevronDown,
   X,
   LogOut,
+  Search,
 } from 'lucide-react';
-import type { NavSection } from '../../types';
 import { confirmDialog, showToast } from '../../lib/swal';
+import { navSections } from './navRegistry';
 
 interface SidebarProps {
   activeId: string;
@@ -26,177 +16,6 @@ interface SidebarProps {
   onCloseMobile: () => void;
   isCollapsed: boolean;
 }
-
-const navSections: NavSection[] = [
-  {
-    title: 'DASHBOARD',
-    items: [
-      {
-        id: 'dashboard-group',
-        label: 'Dashboard',
-        icon: Flame,
-        children: [
-          { id: 'general-dashboard', label: 'General Dashboard' },
-          { id: 'ecommerce-dashboard', label: 'Ecommerce Dashboard' },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'STARTER',
-    items: [
-      {
-        id: 'layout-group',
-        label: 'Layout',
-        icon: Columns3,
-        children: [
-          { id: 'layout-default', label: 'Default Layout' },
-          { id: 'layout-top-navigation', label: 'Top Navigation' },
-        ],
-      },
-      {
-        id: 'blank-page',
-        label: 'Blank Page',
-        icon: Square,
-      },
-      {
-        id: 'bootstrap-group',
-        label: 'Bootstrap',
-        icon: Boxes,
-        children: [
-          { id: 'alert', label: 'Alert' },
-          { id: 'badge', label: 'Badge' },
-          { id: 'breadcrumb', label: 'Breadcrumb' },
-          { id: 'buttons', label: 'Buttons' },
-          { id: 'card', label: 'Card' },
-          { id: 'carousel', label: 'Carousel' },
-          { id: 'collapse', label: 'Collapse' },
-          { id: 'dropdown', label: 'Dropdown' },
-          { id: 'form', label: 'Form' },
-          { id: 'list-group', label: 'List Group' },
-          { id: 'media-object', label: 'Media Object' },
-          { id: 'modal', label: 'Modal' },
-          { id: 'nav', label: 'Nav' },
-          { id: 'navbar', label: 'Navbar' },
-          { id: 'pagination', label: 'Pagination' },
-          { id: 'popover', label: 'Popover' },
-          { id: 'progress', label: 'Progress' },
-          { id: 'table', label: 'Table' },
-          { id: 'tooltip', label: 'Tooltip' },
-          { id: 'typography', label: 'Typography' },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'VELORA UI',
-    items: [
-      {
-        id: 'components-group',
-        label: 'Components',
-        icon: Shapes,
-        children: [
-          { id: 'article', label: 'Article' },
-          { id: 'avatar', label: 'Avatar' },
-          { id: 'chat-box', label: 'Chat Box' },
-          { id: 'empty-states', label: 'Empty & Skeleton' },
-          { id: 'gallery', label: 'Gallery' },
-          { id: 'multiple-upload', label: 'Multiple Upload' },
-          { id: 'statistic', label: 'Statistic' },
-          { id: 'tab', label: 'Tab' },
-          { id: 'components-table', label: 'Table' },
-          { id: 'user', label: 'User' },
-        ],
-      },
-      {
-        id: 'forms-group',
-        label: 'Forms',
-        icon: FileText,
-        children: [
-          { id: 'advanced-form', label: 'Advanced Form' },
-          { id: 'editor', label: 'Editor' },
-          { id: 'validation', label: 'Validation' },
-          { id: 'upload-files', label: 'Upload Files' },
-        ],
-      },
-      {
-        id: 'modules-group',
-        label: 'Modules',
-        icon: Plug,
-        children: [
-          { id: 'calendar', label: 'Calendar' },
-          { id: 'chartjs', label: 'ChartJS' },
-          { id: 'datatables', label: 'DataTables' },
-          { id: 'flag', label: 'Flag' },
-          { id: 'font-awesome', label: 'Font Awesome' },
-          { id: 'ion-icons', label: 'Ion Icons' },
-          { id: 'owl-carousel', label: 'Owl Carousel' },
-          { id: 'sparkline', label: 'Sparkline' },
-          { id: 'sweet-alert', label: 'Sweet Alert' },
-          { id: 'toastr', label: 'Toastr' },
-          { id: 'vector-map', label: 'Vector Map' },
-          { id: 'weather-icon', label: 'Weather Icon' },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'PAGES',
-    items: [
-      {
-        id: 'auth-group',
-        label: 'Auth',
-        icon: User,
-        children: [
-          { id: 'forgot-password', label: 'Forgot Password' },
-          { id: 'login', label: 'Login' },
-          { id: 'login-2', label: 'Login 2' },
-          { id: 'register', label: 'Register' },
-          { id: 'reset-password', label: 'Reset Password' },
-        ],
-      },
-      {
-        id: 'errors-group',
-        label: 'Errors',
-        icon: AlertCircle,
-        children: [
-          { id: 'error-503', label: '503' },
-          { id: 'error-403', label: '403' },
-          { id: 'error-404', label: '404' },
-          { id: 'error-500', label: '500' },
-        ],
-      },
-      {
-        id: 'features-group',
-        label: 'Features',
-        icon: Bike,
-        children: [
-          { id: 'activities', label: 'Activities' },
-          { id: 'chat-inbox', label: 'Chat Inbox' },
-          { id: 'file-manager', label: 'File Manager' },
-          { id: 'kanban', label: 'Kanban' },
-          { id: 'notifications', label: 'Notification Center' },
-          { id: 'post-create', label: 'Post Create' },
-          { id: 'posts', label: 'Posts' },
-          { id: 'profile', label: 'Profile' },
-          { id: 'settings', label: 'Settings' },
-          { id: 'setting-detail', label: 'Setting Detail' },
-          { id: 'tickets', label: 'Tickets' },
-        ],
-      },
-      {
-        id: 'utilities-group',
-        label: 'Utilities',
-        icon: MoreHorizontal,
-        children: [
-          { id: 'contact', label: 'Contact' },
-          { id: 'invoice', label: 'Invoice' },
-          { id: 'subscribe', label: 'Subscribe' },
-        ],
-      },
-    ],
-  },
-];
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeId,
@@ -212,6 +31,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
+  const [sidebarFilter, setSidebarFilter] = useState('');
+
+  const trimmedFilter = sidebarFilter.trim().toLowerCase();
+
+  const displayedSections = useMemo(() => {
+    if (!trimmedFilter) return navSections;
+    return navSections
+      .map((sec) => {
+        const items = sec.items
+          .map((item) => {
+            const parentMatches = item.label.toLowerCase().includes(trimmedFilter);
+            if (!item.children || item.children.length === 0) {
+              return parentMatches ? item : null;
+            }
+            if (parentMatches) return item;
+            const matchingChildren = item.children.filter((c) =>
+              c.label.toLowerCase().includes(trimmedFilter),
+            );
+            return matchingChildren.length > 0 ? { ...item, children: matchingChildren } : null;
+          })
+          .filter((x): x is NonNullable<typeof x> => x !== null);
+        return items.length > 0 ? { ...sec, items } : null;
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+  }, [trimmedFilter]);
 
   // Toggle dropdown: jika buka yang lain, yang sebelumnya otomatis tertutup
   const toggleDropdown = (id: string) => {
@@ -272,15 +116,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
+      {/* Quick Filter Menu (Expanded Sidebar only) */}
+      {!isCollapsed && (
+        <div className="px-4 pt-3 pb-1 shrink-0">
+          <div className="relative flex items-center">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
+            <input
+              type="text"
+              value={sidebarFilter}
+              onChange={(e) => setSidebarFilter(e.target.value)}
+              placeholder="Cari menu..."
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200/80 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-[#1351b8] transition-colors"
+              aria-label="Filter menu sidebar"
+            />
+            {sidebarFilter && (
+              <button
+                type="button"
+                onClick={() => setSidebarFilter('')}
+                className="absolute right-2 p-0.5 text-slate-400 hover:text-slate-700 cursor-pointer"
+                aria-label="Hapus filter"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Navigation Sections */}
       <div
         className={`flex-1 px-0 ${
           isCollapsed
             ? 'py-3 space-y-1.5 overflow-visible'
-            : 'py-3.5 space-y-4 overflow-y-auto sidebar-scrollbar'
+            : 'py-2 space-y-4 overflow-y-auto sidebar-scrollbar'
         }`}
       >
-        {navSections.map((section) => (
+        {!isCollapsed && displayedSections.length === 0 ? (
+          <div className="px-6 py-8 text-center text-xs text-slate-500">
+            Menu &quot;{sidebarFilter}&quot; tidak ditemukan.
+          </div>
+        ) : (
+          displayedSections.map((section) => (
           <div key={section.title} className={isCollapsed ? 'space-y-1.5' : 'space-y-1'}>
             {/* Section Header: Rata Kiri di pl-5 */}
             {!isCollapsed && (
@@ -293,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const hasChildren = Boolean(item.children && item.children.length > 0);
-                const isGroupOpen = openDropdownId === item.id;
+                const isGroupOpen = Boolean(trimmedFilter) || openDropdownId === item.id;
                 const isChildActive = hasChildren && item.children?.some((c) => c.id === activeId);
                 const isDirectActive = activeId === item.id;
 
@@ -506,7 +382,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               })}
             </div>
           </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Footer / Quick Logout Button */}

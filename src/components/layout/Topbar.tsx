@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Menu,
-  Search,
   ChevronDown,
   User,
   Settings,
@@ -9,6 +8,7 @@ import {
 } from 'lucide-react';
 import { confirmDialog, showToast } from '../../lib/swal';
 import { TopbarPopovers } from './TopbarPopovers';
+import { GlobalSearchBar } from './GlobalSearchBar';
 
 interface TopbarProps {
   onToggleMobile: () => void;
@@ -59,21 +59,8 @@ export const Topbar: React.FC<TopbarProps> = ({
           <Menu className="w-5 h-5" strokeWidth={2.5} />
         </button>
 
-        {/* Search Input Bar (Matching Stisla style) */}
-        <div className="relative w-full max-w-xs sm:max-w-sm">
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full bg-white text-slate-800 placeholder-slate-400 text-xs sm:text-sm pl-4 pr-10 py-2 rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-white/40 border-none transition-all"
-          />
-          <button
-            type="button"
-            className="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-slate-800 flex items-center justify-center"
-            title="Cari"
-          >
-            <Search className="w-4 h-4" strokeWidth={2.2} />
-          </button>
-        </div>
+        {/* Live Global Search + Ctrl+K Command Palette */}
+        <GlobalSearchBar onNavigate={onNavigate} />
       </div>
 
       {/* Right: Mail, Bell, & User Profile Dropdown */}

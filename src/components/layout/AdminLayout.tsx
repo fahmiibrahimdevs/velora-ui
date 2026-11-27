@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { TopNavLayout } from './TopNavLayout';
+import { BackToTopButton } from './BackToTopButton';
+import { resolveBreadcrumbRoute } from './navRegistry';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -21,7 +23,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   layoutMode = 'default',
 }) => {
   const [isOpenMobile, setIsOpenMobile] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem('velora_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleToggleCollapse = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('velora_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   if (layoutMode === 'top-navigation') {
     return (
@@ -59,7 +78,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <Topbar
             onToggleMobile={() => setIsOpenMobile(true)}
             isCollapsed={isCollapsed}
-            onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+            onToggleCollapse={handleToggleCollapse}
             onNavigate={onSelectMenu}
           />
 
@@ -79,9 +98,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     {isLast ? (
                       <span className="text-slate-600 font-semibold">{crumb}</span>
                     ) : (
-                      <span className="text-[#1351b8] hover:underline cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={() => onSelectMenu(resolveBreadcrumbRoute(crumb))}
+                        className="text-[#1351b8] hover:underline cursor-pointer font-medium"
+                      >
                         {crumb}
-                      </span>
+                      </button>
                     )}
                   </React.Fragment>
                 );
@@ -94,6 +117,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         <main className="flex-1 w-full px-6 sm:px-8 py-7 space-y-6">
           {children}
         </main>
+
+        <BackToTopButton />
 
         {/* Full-width Clean Footer */}
         <footer className="py-4 px-6 sm:px-8 border-t border-slate-200/80 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 bg-[#f4f6f9]">

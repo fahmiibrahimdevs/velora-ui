@@ -14707,6 +14707,7 @@ export function App() {
     }
     if (typeof window !== 'undefined') {
       window.location.hash = `#/${normalizedId}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       try {
         localStorage.setItem('velora_active_menu', normalizedId);
       } catch {}
@@ -15022,6 +15023,12 @@ export function App() {
     title: formatSlug(activeMenu),
     breadcrumbs: ['Velora UI', 'Pages', formatSlug(activeMenu)],
   };
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `${currentMeta.title} — Velora UI`;
+    }
+  }, [currentMeta.title]);
 
   const renderContent = () => {
     switch (activeMenu) {
